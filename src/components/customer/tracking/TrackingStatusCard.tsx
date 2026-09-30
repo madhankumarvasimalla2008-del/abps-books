@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { Order } from '@/types';
 import { OrderStatusBadge } from '@/components/customer/orders/OrderStatusBadge';
-import { Button } from '@/components/ui/Button';
+import { buttonVariants } from '@/components/ui/Button';
 
 export interface TrackingStatusCardProps {
   order: Order;
@@ -76,16 +76,16 @@ export const TrackingStatusCard: React.FC<TrackingStatusCardProps> = ({
         </div>
 
         {showOrderLink && (
-          <Link href={`/orders/${order.id}`}>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              rightIcon={<ExternalLink className="w-3.5 h-3.5" />}
-              className="text-xs font-semibold"
-            >
-              Order Details
-            </Button>
+          <Link
+            href={`/orders/${order.id}`}
+            className={buttonVariants({
+              variant: 'outline',
+              size: 'sm',
+              className: 'text-xs font-semibold gap-1.5',
+            })}
+          >
+            <span>Order Details</span>
+            <ExternalLink className="w-3.5 h-3.5" />
           </Link>
         )}
       </div>

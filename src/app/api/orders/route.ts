@@ -1,12 +1,12 @@
 import { NextRequest } from 'next/server';
 import { ordersService } from '@/server/services/orders.service';
 import { createOrderSchema, orderFilterSchema } from '@/server/validation/orders';
-import { extractAuthContext } from '@/server/auth/guard';
+import { extractAuthContext, requireAuth } from '@/server/auth/guard';
 import { handleApiError, paginatedResponse, successResponse } from '@/server/utils/api-response';
 
 export async function GET(req: NextRequest) {
   try {
-    const ctx = await extractAuthContext(req);
+    const ctx = requireAuth(await extractAuthContext(req));
     const { searchParams } = new URL(req.url);
     const rawParams = {
       userId: searchParams.get('userId') || undefined,
@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
     };
 
     const filters = orderFilterSchema.parse(rawParams);
-    const result = await ordersService.listOrders(filters, ctx || undefined);
+    const result = await ordersService.listOrders(filters, ctx);
     return paginatedResponse(result);
   } catch (error) {
     return handleApiError(error);
@@ -32,10 +32,15 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const ctx = await extractAuthContext(req);
+    const ctx = requireAuth(await extractAuthContext(req));
     const body = await req.json();
     const validatedData = createOrderSchema.parse(body);
-    const order = await ordersService.createOrder(validatedData, ctx || undefined);
+
+    if (ctx.role === 'customer') {
+      validatedData.userId = ctx.userId;
+    }
+
+    const order = await ordersService.createOrder(validatedData, ctx);
 
     return successResponse(order, 201);
   } catch (error) {

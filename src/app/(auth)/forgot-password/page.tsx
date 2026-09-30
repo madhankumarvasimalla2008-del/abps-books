@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { BookOpen, Mail, ArrowLeft, CheckCircle2, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/context/AuthContext';
 
@@ -60,10 +60,11 @@ export default function ForgotPasswordPage() {
                 If <span className="font-semibold text-slate-900">{email}</span> matches an authorized account, an email with verification instructions has been sent.
               </p>
               <div className="pt-3">
-                <Link href="/reset-password">
-                  <Button variant="outline" size="sm" className="w-full text-xs">
-                    Proceed to Update Password
-                  </Button>
+                <Link
+                  href="/reset-password"
+                  className={buttonVariants({ variant: 'outline', size: 'sm', className: 'w-full text-xs' })}
+                >
+                  Proceed to Update Password
                 </Link>
               </div>
             </div>

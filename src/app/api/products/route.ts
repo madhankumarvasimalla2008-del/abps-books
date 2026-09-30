@@ -32,10 +32,8 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const ctx = await extractAuthContext(req);
-    if (ctx) {
-      requireRole(ctx, ['admin', 'warehouse']);
-    }
+    const ctx = requireAuth(await extractAuthContext(req));
+    requireRole(ctx, ['admin', 'warehouse']);
 
     const body = await req.json();
     const validatedData = createProductSchema.parse(body);

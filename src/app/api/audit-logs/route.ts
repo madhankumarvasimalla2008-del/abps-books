@@ -1,12 +1,14 @@
 import { NextRequest } from 'next/server';
 import { auditService } from '@/server/services/audit.service';
 import { auditLogFilterSchema, createAuditLogSchema } from '@/server/validation/audit';
-import { extractAuthContext } from '@/server/auth/guard';
+import { extractAuthContext, requireAuth, requireRole } from '@/server/auth/guard';
 import { handleApiError, paginatedResponse, successResponse } from '@/server/utils/api-response';
 
 export async function GET(req: NextRequest) {
   try {
-    const ctx = await extractAuthContext(req);
+    const ctx = requireAuth(await extractAuthContext(req));
+    requireRole(ctx, ['admin', 'branch_admin', 'warehouse', 'sales']);
+
     const { searchParams } = new URL(req.url);
     const rawParams = {
       actorId: searchParams.get('actorId') || undefined,
@@ -24,7 +26,7 @@ export async function GET(req: NextRequest) {
     };
 
     const filters = auditLogFilterSchema.parse(rawParams);
-    const result = await auditService.listLogs(filters, ctx || undefined);
+    const result = await auditService.listLogs(filters, ctx);
     return paginatedResponse(result);
   } catch (error) {
     return handleApiError(error);

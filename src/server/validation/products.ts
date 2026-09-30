@@ -37,8 +37,8 @@ export const productFilterSchema = baseFilterSchema.extend({
   status: productStatusSchema.optional(),
   minPrice: z.coerce.number().optional(),
   maxPrice: z.coerce.number().optional(),
-  isFeatured: z.enum(['true', 'false']).transform((v) => v === 'true').optional(),
-  isAbpsApproved: z.enum(['true', 'false']).transform((v) => v === 'true').optional(),
+  isFeatured: z.union([z.boolean(), z.enum(['true', 'false']).transform((v) => v === 'true')]).optional(),
+  isAbpsApproved: z.union([z.boolean(), z.enum(['true', 'false']).transform((v) => v === 'true')]).optional(),
 });
 
 export type CreateProductInput = z.infer<typeof createProductSchema>;

@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ArrowRight, ArrowLeft, ShieldCheck, Truck, FileText, CheckCircle2 } from 'lucide-react';
 import { Cart } from '@/types';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 
 export interface CartSummaryProps {
   cart: Cart;
@@ -69,27 +69,29 @@ export const CartSummary: React.FC<CartSummaryProps> = ({ cart, hasErrors = fals
             {hasErrors ? 'Resolve Unavailable Items' : 'Proceed to Checkout'}
           </Button>
         ) : (
-          <Link href="/checkout" className="block">
-            <Button
-              variant="primary"
-              size="lg"
-              className="w-full text-sm font-semibold shadow-xs hover:shadow-sm"
-              rightIcon={<ArrowRight className="w-4 h-4" />}
-            >
-              Proceed to Checkout
-            </Button>
+          <Link
+            href="/checkout"
+            className={buttonVariants({
+              variant: 'primary',
+              size: 'lg',
+              className: 'w-full text-sm font-semibold shadow-xs hover:shadow-sm gap-2',
+            })}
+          >
+            <span>Proceed to Checkout</span>
+            <ArrowRight className="w-4 h-4" />
           </Link>
         )}
 
-        <Link href="/books" className="block">
-          <Button
-            variant="outline"
-            size="md"
-            className="w-full text-xs font-semibold"
-            leftIcon={<ArrowLeft className="w-3.5 h-3.5" />}
-          >
-            Continue Shopping
-          </Button>
+        <Link
+          href="/books"
+          className={buttonVariants({
+            variant: 'outline',
+            size: 'md',
+            className: 'w-full text-xs font-semibold gap-1.5',
+          })}
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Continue Shopping</span>
         </Link>
       </div>
 

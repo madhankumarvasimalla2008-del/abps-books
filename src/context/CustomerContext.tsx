@@ -70,10 +70,10 @@ interface CustomerContextType {
 const CustomerContext = createContext<CustomerContextType | undefined>(undefined);
 
 const DEFAULT_PROFILE: CustomerProfile = {
-  name: 'Priya Desai',
-  email: 'priya.desai@abps.edu',
-  phone: '9876543210',
-  branchName: 'The Aditya Birla Public School, Kharach',
+  name: '',
+  email: '',
+  phone: '',
+  branchName: '',
 };
 
 const DEFAULT_ADDRESSES: SavedAddress[] = [
@@ -186,11 +186,13 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (user) {
       setProfile({
-        name: user.name || DEFAULT_PROFILE.name,
-        email: user.email || DEFAULT_PROFILE.email,
-        phone: user.phone || DEFAULT_PROFILE.phone,
-        branchName: user.branchName || DEFAULT_PROFILE.branchName,
+        name: user.name || '',
+        email: user.email || '',
+        phone: user.phone || '',
+        branchName: user.branchName || '',
       });
+    } else {
+      setProfile(DEFAULT_PROFILE);
     }
   }, [user]);
 

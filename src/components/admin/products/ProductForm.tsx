@@ -14,7 +14,7 @@ import {
 import { Product, GradeLevel, Subject } from '@/types';
 import { CreateProductInput, UpdateProductInput } from '@/context/ProductContext';
 import { useCategories } from '@/context/CategoryContext';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 
 const GRADE_OPTIONS: GradeLevel[] = [
   'Pre-Primary',
@@ -714,23 +714,31 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
       {/* Form Submission Actions */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
-        <Link href="/admin/products">
-          <Button variant="outline" size="md" leftIcon={<ArrowLeft className="w-4 h-4" />}>
-            Back to Catalog
-          </Button>
+        <Link
+          href="/admin/products"
+          className={buttonVariants({
+            variant: 'outline',
+            size: 'md',
+            className: 'gap-2',
+          })}
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to Catalog</span>
         </Link>
 
         <div className="flex items-center gap-3">
           {mode === 'edit' && productId && (
-            <Link href="/admin/inventory">
-              <Button
-                variant="outline"
-                size="md"
-                leftIcon={<Boxes className="w-4 h-4" />}
-                title="Manage warehouse inventory counts for this title"
-              >
-                Manage in Inventory
-              </Button>
+            <Link
+              href="/admin/inventory"
+              className={buttonVariants({
+                variant: 'outline',
+                size: 'md',
+                className: 'gap-2',
+              })}
+              title="Manage warehouse inventory counts for this title"
+            >
+              <Boxes className="w-4 h-4" />
+              <span>Manage in Inventory</span>
             </Link>
           )}
 

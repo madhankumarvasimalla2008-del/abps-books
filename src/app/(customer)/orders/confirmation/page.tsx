@@ -13,7 +13,7 @@ import {
   Calendar,
   AlertCircle,
 } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 import { useOrders } from '@/context/OrderContext';
 import { OrderItems } from '@/components/customer/orders/OrderItems';
 import { OrderSummaryCard } from '@/components/customer/orders/OrderSummaryCard';
@@ -81,20 +81,36 @@ function ConfirmationContent() {
 
         {/* Action Buttons */}
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-          <Link href={`/orders/${displayId}/track`}>
-            <Button variant="primary" size="md" rightIcon={<Truck className="w-4 h-4" />}>
-              View Tracking
-            </Button>
+          <Link
+            href={`/orders/${displayId}/track`}
+            className={buttonVariants({
+              variant: 'primary',
+              size: 'md',
+              className: 'inline-flex items-center gap-2',
+            })}
+          >
+            <span>View Tracking</span>
+            <Truck className="w-4 h-4" />
           </Link>
-          <Link href={`/orders/${displayId}`}>
-            <Button variant="outline" size="md" rightIcon={<FileText className="w-4 h-4" />}>
-              View Order Details
-            </Button>
+          <Link
+            href={`/orders/${displayId}`}
+            className={buttonVariants({
+              variant: 'outline',
+              size: 'md',
+              className: 'inline-flex items-center gap-2',
+            })}
+          >
+            <span>View Order Details</span>
+            <FileText className="w-4 h-4" />
           </Link>
-          <Link href="/orders">
-            <Button variant="secondary" size="md">
-              Order History
-            </Button>
+          <Link
+            href="/orders"
+            className={buttonVariants({
+              variant: 'secondary',
+              size: 'md',
+            })}
+          >
+            Order History
           </Link>
         </div>
       </div>
@@ -145,10 +161,16 @@ function ConfirmationContent() {
             <Building2 className="w-4 h-4 text-slate-400 shrink-0" />
             <span>Questions regarding this order? Contact the school textbook coordinator.</span>
           </div>
-          <Link href="/books">
-            <Button variant="ghost" size="sm" rightIcon={<ArrowRight className="w-3.5 h-3.5" />}>
-              Browse More Books
-            </Button>
+          <Link
+            href="/books"
+            className={buttonVariants({
+              variant: 'ghost',
+              size: 'sm',
+              className: 'inline-flex items-center gap-1.5',
+            })}
+          >
+            <span>Browse More Books</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
       </div>

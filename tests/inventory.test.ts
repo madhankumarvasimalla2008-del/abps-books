@@ -1,7 +1,9 @@
+import './setup';
 import { describe, it, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { inventoryService } from '../src/server/services/inventory.service';
 import { inventoryRepository } from '../src/server/repositories/inventory.repository';
+import { inventoryFilterSchema } from '../src/server/validation/inventory';
 import { computeInventoryStatus } from '../src/context/InventoryContext';
 import { BusinessRuleError } from '../src/server/errors';
 import { AuthContext } from '../src/server/auth/types';
@@ -239,6 +241,33 @@ describe('Phase 5.5C: Production Inventory Service & Status Invariants', () => {
           return true;
         }
       );
+    });
+  });
+
+  // --------------------------------------------------------------------------
+  // 4. Inventory Query Validation & Filter Schema
+  // --------------------------------------------------------------------------
+  describe('Inventory Query Parameter Validation', () => {
+    it('successfully parses pageSize=100 without lowStockOnly parameter', () => {
+      const parsed = inventoryFilterSchema.parse({ pageSize: '100' });
+      assert.strictEqual(parsed.pageSize, 100);
+      assert.strictEqual(parsed.lowStockOnly, undefined);
+    });
+
+    it('successfully parses string lowStockOnly="true" and lowStockOnly="false"', () => {
+      const parsedTrue = inventoryFilterSchema.parse({ pageSize: '100', lowStockOnly: 'true' });
+      assert.strictEqual(parsedTrue.lowStockOnly, true);
+
+      const parsedFalse = inventoryFilterSchema.parse({ pageSize: '100', lowStockOnly: 'false' });
+      assert.strictEqual(parsedFalse.lowStockOnly, false);
+    });
+
+    it('successfully parses boolean lowStockOnly=true and lowStockOnly=false', () => {
+      const parsedTrue = inventoryFilterSchema.parse({ pageSize: '100', lowStockOnly: true });
+      assert.strictEqual(parsedTrue.lowStockOnly, true);
+
+      const parsedFalse = inventoryFilterSchema.parse({ pageSize: '100', lowStockOnly: false });
+      assert.strictEqual(parsedFalse.lowStockOnly, false);
     });
   });
 });

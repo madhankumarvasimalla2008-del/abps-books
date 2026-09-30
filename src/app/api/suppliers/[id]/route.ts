@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { suppliersService } from '@/server/services/suppliers.service';
 import { updateSupplierSchema } from '@/server/validation/suppliers';
-import { extractAuthContext, requireRole } from '@/server/auth/guard';
+import { extractAuthContext, requireAuth, requireRole } from '@/server/auth/guard';
 import { handleApiError, successResponse } from '@/server/utils/api-response';
 
 interface RouteContext {
@@ -11,10 +11,8 @@ interface RouteContext {
 export async function GET(req: NextRequest, { params }: RouteContext) {
   try {
     const { id } = await params;
-    const ctx = await extractAuthContext(req);
-    if (ctx) {
-      requireRole(ctx, ['admin', 'branch_admin', 'warehouse', 'sales']);
-    }
+    const ctx = requireAuth(await extractAuthContext(req));
+    requireRole(ctx, ['admin', 'branch_admin', 'warehouse', 'sales']);
 
     const supplier = await suppliersService.getSupplierById(id);
     return successResponse(supplier);
@@ -26,10 +24,8 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
 export async function PUT(req: NextRequest, { params }: RouteContext) {
   try {
     const { id } = await params;
-    const ctx = await extractAuthContext(req);
-    if (ctx) {
-      requireRole(ctx, ['admin']);
-    }
+    const ctx = requireAuth(await extractAuthContext(req));
+    requireRole(ctx, ['admin']);
 
     const body = await req.json();
     const validatedData = updateSupplierSchema.parse(body);

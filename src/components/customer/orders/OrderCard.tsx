@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { Order } from '@/types';
 import { OrderStatusBadge } from './OrderStatusBadge';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 import { useOrders } from '@/context/OrderContext';
 
 export interface OrderCardProps {
@@ -151,28 +151,28 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
               Buy Again
             </Button>
 
-            <Link href={`/orders/${order.id}/track`}>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                leftIcon={<Truck className="w-3.5 h-3.5" />}
-                className="text-xs"
-              >
-                View Tracking
-              </Button>
+            <Link
+              href={`/orders/${order.id}/track`}
+              className={buttonVariants({
+                variant: 'outline',
+                size: 'sm',
+                className: 'text-xs gap-1.5',
+              })}
+            >
+              <Truck className="w-3.5 h-3.5" />
+              <span>View Tracking</span>
             </Link>
 
-            <Link href={`/orders/${order.id}`}>
-              <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                rightIcon={<ChevronRight className="w-3.5 h-3.5" />}
-                className="text-xs font-semibold"
-              >
-                View Details
-              </Button>
+            <Link
+              href={`/orders/${order.id}`}
+              className={buttonVariants({
+                variant: 'secondary',
+                size: 'sm',
+                className: 'text-xs font-semibold gap-1.5',
+              })}
+            >
+              <span>View Details</span>
+              <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
         </div>

@@ -23,7 +23,7 @@ import { useCustomers } from '@/context/CustomerContext';
 import { useOrders } from '@/context/OrderContext';
 import { Customer, Order } from '@/types';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 
 export default function AdminBranchDetailPage({
   params,
@@ -96,10 +96,14 @@ export default function AdminBranchDetailPage({
           <p className="text-xs text-slate-500 max-w-md mx-auto mt-1 mb-6">
             The requested branch with identifier &quot;{resolvedParams.id}&quot; does not exist or has been removed.
           </p>
-          <Link href="/admin/branches">
-            <Button variant="primary" size="sm">
-              Back to Branches
-            </Button>
+          <Link
+            href="/admin/branches"
+            className={buttonVariants({
+              variant: 'primary',
+              size: 'sm',
+            })}
+          >
+            Back to Branches
           </Link>
         </div>
       </div>
@@ -232,15 +236,18 @@ export default function AdminBranchDetailPage({
             Edit Branch
           </Button>
 
-          <Link href={`/branches/${branch.id}`} target="_blank">
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<ExternalLink className="w-3.5 h-3.5 text-slate-500" />}
-              title="Open customer-facing branch view in new tab"
-            >
-              Public View
-            </Button>
+          <Link
+            href={`/branches/${branch.id}`}
+            target="_blank"
+            className={buttonVariants({
+              variant: 'outline',
+              size: 'sm',
+              className: 'gap-1.5',
+            })}
+            title="Open customer-facing branch view in new tab"
+          >
+            <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
+            <span>Public View</span>
           </Link>
         </div>
       </div>
@@ -372,14 +379,16 @@ export default function AdminBranchDetailPage({
                       </span>
                     </td>
                     <td className="py-3 px-3 text-right">
-                      <Link href={`/admin/customers/${account.id}`}>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          rightIcon={<ArrowRight className="w-3 h-3" />}
-                        >
-                          View Account
-                        </Button>
+                      <Link
+                        href={`/admin/customers/${account.id}`}
+                        className={buttonVariants({
+                          variant: 'outline',
+                          size: 'sm',
+                          className: 'gap-1',
+                        })}
+                      >
+                        <span>View Account</span>
+                        <ArrowRight className="w-3 h-3" />
                       </Link>
                     </td>
                   </tr>
@@ -489,14 +498,16 @@ export default function AdminBranchDetailPage({
                         </span>
                       </td>
                       <td className="py-3 px-3 text-right">
-                        <Link href={`/admin/orders/${order.id}`}>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            rightIcon={<ArrowRight className="w-3 h-3" />}
-                          >
-                            View Order
-                          </Button>
+                        <Link
+                          href={`/admin/orders/${order.id}`}
+                          className={buttonVariants({
+                            variant: 'outline',
+                            size: 'sm',
+                            className: 'gap-1',
+                          })}
+                        >
+                          <span>View Order</span>
+                          <ArrowRight className="w-3 h-3" />
                         </Link>
                       </td>
                     </tr>

@@ -15,7 +15,7 @@ import { InventoryOverview } from '@/components/admin/dashboard/InventoryOvervie
 import { LowStockList } from '@/components/admin/dashboard/LowStockList';
 import { RecentActivity } from '@/components/admin/dashboard/RecentActivity';
 import { QuickActions } from '@/components/admin/dashboard/QuickActions';
-import { Button } from '@/components/ui/Button';
+import { buttonVariants } from '@/components/ui/Button';
 
 export default function AdminDashboardPage() {
   const { orders } = useOrders();
@@ -45,20 +45,38 @@ export default function AdminDashboardPage() {
         }
         actions={
           <div className="flex items-center gap-2">
-            <Link href="/admin/products">
-              <Button variant="outline" size="sm" leftIcon={<Plus className="w-4 h-4" />}>
-                Add Product
-              </Button>
+            <Link
+              href="/admin/products"
+              className={buttonVariants({
+                variant: 'outline',
+                size: 'sm',
+                className: 'gap-1.5',
+              })}
+            >
+              <Plus className="w-4 h-4" />
+              <span>Add Product</span>
             </Link>
-            <Link href="/admin/inventory">
-              <Button variant="outline" size="sm" leftIcon={<Boxes className="w-4 h-4" />}>
-                Inventory
-              </Button>
+            <Link
+              href="/admin/inventory"
+              className={buttonVariants({
+                variant: 'outline',
+                size: 'sm',
+                className: 'gap-1.5',
+              })}
+            >
+              <Boxes className="w-4 h-4" />
+              <span>Inventory</span>
             </Link>
-            <Link href="/admin/orders">
-              <Button variant="primary" size="sm" leftIcon={<ShoppingBag className="w-4 h-4" />}>
-                Orders
-              </Button>
+            <Link
+              href="/admin/orders"
+              className={buttonVariants({
+                variant: 'primary',
+                size: 'sm',
+                className: 'gap-1.5',
+              })}
+            >
+              <ShoppingBag className="w-4 h-4" />
+              <span>Orders</span>
             </Link>
           </div>
         }

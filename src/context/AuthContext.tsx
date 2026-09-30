@@ -3,13 +3,14 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { User, Role } from '@/types';
 import { supabaseBrowser } from '@/lib/supabase/client';
+import { getSiteOrigin } from '@/lib/site-url';
 
 interface AuthContextType {
   user: User | null;
   role: Role;
   isLoading: boolean;
   loginAs: (role: Role) => void;
-  signIn: (email: string, password: string) => Promise<{ error: string | null }>;
+  signIn: (email: string, password: string) => Promise<{ error: string | null; role?: Role }>;
   signUp: (email: string, password: string, fullName?: string, phone?: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
   logout: () => void;
@@ -68,12 +69,20 @@ export const DEMO_USERS: Record<Role, User> = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(DEMO_USERS.customer);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const syncServerSession = useCallback(async () => {
     try {
-      const res = await fetch('/api/auth/me');
+      const headers: Record<string, string> = {};
+      if (supabaseBrowser) {
+        const { data: { session } } = await supabaseBrowser.auth.getSession();
+        if (session?.access_token) {
+          headers['Authorization'] = `Bearer ${session.access_token}`;
+        }
+      }
+
+      const res = await fetch('/api/auth/me', { headers });
       if (res.ok) {
         const json = await res.json();
         if (json?.data?.authenticated && json.data.user) {
@@ -87,12 +96,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             branchId: authUser.branchId || undefined,
             createdAt: new Date().toISOString(),
           });
-          return;
+          return authUser;
+        } else {
+          setUser(null);
         }
+      } else {
+        setUser(null);
       }
     } catch {
-      // Offline or network error - retain current state
+      // Offline or network error
     }
+    return null;
   }, []);
 
   useEffect(() => {
@@ -100,17 +114,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     async function initAuth() {
       if (!supabaseBrowser) {
-        if (mounted) setIsLoading(false);
+        if (mounted) {
+          setUser(null);
+          setIsLoading(false);
+        }
         return;
       }
 
       try {
-        const { data: { session } } = await supabaseBrowser.auth.getSession();
-        if (session?.user && mounted) {
-          await syncServerSession();
-        }
+        await syncServerSession();
       } catch {
-        // Fallback to demo persona
+        if (mounted) setUser(null);
       } finally {
         if (mounted) setIsLoading(false);
       }
@@ -120,7 +134,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (supabaseBrowser) {
       const { data: { subscription } } = supabaseBrowser.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'PASSWORD_RECOVERY') {
+          if (typeof window !== 'undefined' && window.location.pathname !== '/reset-password') {
+            const search = window.location.search || '';
+            const hash = window.location.hash || '';
+            window.location.replace(`/reset-password${search}${hash}`);
+          }
+          return;
+        }
+
         if (session?.user) {
+          // If on /reset-password, avoid overwriting transient recovery state with standard customer session
+          if (typeof window !== 'undefined' && window.location.pathname === '/reset-password') {
+            return;
+          }
           await syncServerSession();
         } else if (event === 'SIGNED_OUT') {
           setUser(null);
@@ -139,10 +166,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [syncServerSession]);
 
   const loginAs = (role: Role) => {
+    if (process.env.NODE_ENV === 'production') {
+      console.warn('Demo personas are disabled in production environment');
+      return;
+    }
     setUser(DEMO_USERS[role] || DEMO_USERS.customer);
   };
 
-  const signIn = async (email: string, password: string): Promise<{ error: string | null }> => {
+  const signIn = async (email: string, password: string): Promise<{ error: string | null; role?: Role }> => {
     if (!supabaseBrowser) {
       return { error: 'Supabase client is not initialized' };
     }
@@ -155,7 +186,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { error: error.message };
       }
       if (data.user) {
-        await syncServerSession();
+        const authUser = await syncServerSession();
+        return { error: null, role: (authUser?.role as Role) || 'customer' };
       }
       return { error: null };
     } catch (err: any) {
@@ -212,8 +244,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return { error: 'Supabase client is not initialized' };
     }
     try {
+      const siteOrigin = getSiteOrigin();
+      const redirectTo = `${siteOrigin}/reset-password`;
       const { error } = await supabaseBrowser.auth.resetPasswordForEmail(email, {
-        redirectTo: typeof window !== 'undefined' ? `${window.location.origin}/reset-password` : undefined,
+        redirectTo,
       });
       if (error) {
         return { error: error.message };

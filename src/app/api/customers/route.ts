@@ -1,15 +1,13 @@
 import { NextRequest } from 'next/server';
 import { customersService } from '@/server/services/customers.service';
 import { createCustomerSchema, customerFilterSchema } from '@/server/validation/customers';
-import { extractAuthContext, requireRole } from '@/server/auth/guard';
+import { extractAuthContext, requireAuth, requireRole } from '@/server/auth/guard';
 import { handleApiError, paginatedResponse, successResponse } from '@/server/utils/api-response';
 
 export async function GET(req: NextRequest) {
   try {
-    const ctx = await extractAuthContext(req);
-    if (ctx) {
-      requireRole(ctx, ['admin', 'branch_admin', 'sales']);
-    }
+    const ctx = requireAuth(await extractAuthContext(req));
+    requireRole(ctx, ['admin', 'branch_admin', 'sales']);
 
     const { searchParams } = new URL(req.url);
     const rawParams = {

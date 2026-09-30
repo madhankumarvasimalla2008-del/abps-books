@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { SearchX, ArrowLeft, BookOpen, RotateCcw } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 
 export interface TrackingNotFoundProps {
   referenceQuery?: string;
@@ -53,28 +53,28 @@ export const TrackingNotFound: React.FC<TrackingNotFoundProps> = ({
           </Button>
         )}
 
-        <Link href="/orders">
-          <Button
-            type="button"
-            variant="secondary"
-            size="sm"
-            leftIcon={<ArrowLeft className="w-3.5 h-3.5" />}
-            className="text-xs font-semibold"
-          >
-            Back to Orders
-          </Button>
+        <Link
+          href="/orders"
+          className={buttonVariants({
+            variant: 'secondary',
+            size: 'sm',
+            className: 'text-xs font-semibold gap-1.5',
+          })}
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Back to Orders</span>
         </Link>
 
-        <Link href="/books">
-          <Button
-            type="button"
-            variant="primary"
-            size="sm"
-            leftIcon={<BookOpen className="w-3.5 h-3.5" />}
-            className="text-xs font-semibold shadow-2xs"
-          >
-            Browse Books
-          </Button>
+        <Link
+          href="/books"
+          className={buttonVariants({
+            variant: 'primary',
+            size: 'sm',
+            className: 'text-xs font-semibold shadow-2xs gap-1.5',
+          })}
+        >
+          <BookOpen className="w-3.5 h-3.5" />
+          <span>Browse Books</span>
         </Link>
       </div>
     </div>

@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { AlertCircle, ShoppingBag, ArrowLeft, RotateCcw } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { buttonVariants } from '@/components/ui/Button';
 
 export interface OrderNotFoundProps {
   orderId?: string;
@@ -36,25 +36,27 @@ export const OrderNotFound: React.FC<OrderNotFoundProps> = ({ orderId }) => {
       </div>
 
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-        <Link href="/orders" className="w-full sm:w-auto">
-          <Button
-            variant="primary"
-            size="md"
-            className="w-full"
-            leftIcon={<ArrowLeft className="w-4 h-4" />}
-          >
-            Back to My Orders
-          </Button>
+        <Link
+          href="/orders"
+          className={buttonVariants({
+            variant: 'primary',
+            size: 'md',
+            className: 'w-full sm:w-auto gap-2',
+          })}
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to My Orders</span>
         </Link>
-        <Link href="/books" className="w-full sm:w-auto">
-          <Button
-            variant="outline"
-            size="md"
-            className="w-full"
-            leftIcon={<ShoppingBag className="w-4 h-4" />}
-          >
-            Browse Books
-          </Button>
+        <Link
+          href="/books"
+          className={buttonVariants({
+            variant: 'outline',
+            size: 'md',
+            className: 'w-full sm:w-auto gap-2',
+          })}
+        >
+          <ShoppingBag className="w-4 h-4" />
+          <span>Browse Books</span>
         </Link>
       </div>
     </div>

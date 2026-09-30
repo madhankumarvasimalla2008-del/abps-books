@@ -10,7 +10,7 @@ import { CartItemList } from '@/components/customer/cart/CartItemList';
 import { CartSummary } from '@/components/customer/cart/CartSummary';
 import { CartEmptyState } from '@/components/customer/cart/CartEmptyState';
 import { CartValidationMessage } from '@/components/customer/cart/CartValidationMessage';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 
 export default function CartPage() {
   const { cart, updateQuantity, removeItem, clearCart, isInitialized } = useCart();
@@ -102,15 +102,16 @@ export default function CartPage() {
                   Resolve Issues
                 </Button>
               ) : (
-                <Link href="/checkout" className="block w-full">
-                  <Button
-                    variant="primary"
-                    size="md"
-                    className="w-full text-xs font-semibold shadow-xs"
-                    rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
-                  >
-                    Checkout ({cart.totalItems})
-                  </Button>
+                <Link
+                  href="/checkout"
+                  className={buttonVariants({
+                    variant: 'primary',
+                    size: 'md',
+                    className: 'w-full text-xs font-semibold shadow-xs inline-flex items-center justify-center gap-1.5',
+                  })}
+                >
+                  <span>Checkout ({cart.totalItems})</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               )}
             </div>

@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { customersService } from '@/server/services/customers.service';
 import { updateCustomerSchema } from '@/server/validation/customers';
-import { extractAuthContext } from '@/server/auth/guard';
+import { extractAuthContext, requireAuth } from '@/server/auth/guard';
 import { handleApiError, successResponse } from '@/server/utils/api-response';
 
 interface RouteContext {
@@ -11,8 +11,8 @@ interface RouteContext {
 export async function GET(req: NextRequest, { params }: RouteContext) {
   try {
     const { id } = await params;
-    const ctx = await extractAuthContext(req);
-    const customer = await customersService.getCustomerById(id, ctx || undefined);
+    const ctx = requireAuth(await extractAuthContext(req));
+    const customer = await customersService.getCustomerById(id, ctx);
 
     return successResponse(customer);
   } catch (error) {
@@ -23,10 +23,10 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
 export async function PUT(req: NextRequest, { params }: RouteContext) {
   try {
     const { id } = await params;
-    const ctx = await extractAuthContext(req);
+    const ctx = requireAuth(await extractAuthContext(req));
     const body = await req.json();
     const validatedData = updateCustomerSchema.parse(body);
-    const updated = await customersService.updateCustomer(id, validatedData, ctx || undefined);
+    const updated = await customersService.updateCustomer(id, validatedData, ctx);
 
     return successResponse(updated);
   } catch (error) {

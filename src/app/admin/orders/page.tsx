@@ -26,7 +26,7 @@ import { useOrders } from '@/context/OrderContext';
 import { OrderStatus, PaymentStatus } from '@/types';
 import { StatusBadge } from '@/components/admin/StatusBadge';
 import { StatCard } from '@/components/ui/StatCard';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 
 type SortKey = 'date-desc' | 'date-asc' | 'amount-desc' | 'amount-asc' | 'items-desc';
 
@@ -539,14 +539,16 @@ export default function AdminOrdersPage() {
                       {/* Actions */}
                       <td className="py-3.5 px-4 align-top text-right">
                         <div className="flex items-center justify-end gap-1.5">
-                          <Link href={`/admin/orders/${order.id}`}>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
-                            >
-                              Manage
-                            </Button>
+                          <Link
+                            href={`/admin/orders/${order.id}`}
+                            className={buttonVariants({
+                              variant: 'outline',
+                              size: 'sm',
+                              className: 'gap-1.5',
+                            })}
+                          >
+                            <span>Manage</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
                           </Link>
                         </div>
                       </td>

@@ -1,3 +1,4 @@
+import './setup';
 import { describe, it, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { purchaseOrdersService } from '../src/server/services/purchase-orders.service';

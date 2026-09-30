@@ -12,7 +12,7 @@ import {
   Percent,
 } from 'lucide-react';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 
 export default function AdminSettingsPage() {
   const [platformName, setPlatformName] = useState('ABPS Central Book Portal');
@@ -45,15 +45,27 @@ export default function AdminSettingsPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Link href="/admin/settings/roles">
-            <Button variant="outline" size="sm" leftIcon={<Shield className="w-4 h-4" />}>
-              Role Matrix
-            </Button>
+          <Link
+            href="/admin/settings/roles"
+            className={buttonVariants({
+              variant: 'outline',
+              size: 'sm',
+              className: 'gap-1.5',
+            })}
+          >
+            <Shield className="w-4 h-4" />
+            <span>Role Matrix</span>
           </Link>
-          <Link href="/admin/settings/system">
-            <Button variant="outline" size="sm" leftIcon={<Server className="w-4 h-4" />}>
-              System Health
-            </Button>
+          <Link
+            href="/admin/settings/system"
+            className={buttonVariants({
+              variant: 'outline',
+              size: 'sm',
+              className: 'gap-1.5',
+            })}
+          >
+            <Server className="w-4 h-4" />
+            <span>System Health</span>
           </Link>
         </div>
       </div>

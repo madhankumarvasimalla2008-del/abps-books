@@ -1,11 +1,40 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import { AdminHeader } from '@/components/admin/AdminHeader';
+import { useAuth } from '@/context/AuthContext';
+
+const STAFF_ROLES = ['admin', 'branch_admin', 'warehouse', 'sales'];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const { user, role, isLoading } = useAuth();
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const isStaff = Boolean(user && STAFF_ROLES.includes(role));
+
+  useEffect(() => {
+    if (!isLoading && !isStaff) {
+      router.push('/login?redirect=/admin');
+    }
+  }, [isLoading, isStaff, router]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-slate-400">Verifying admin credentials...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isStaff) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col lg:flex-row text-slate-900 antialiased">

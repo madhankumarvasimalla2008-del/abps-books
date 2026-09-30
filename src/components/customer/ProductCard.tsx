@@ -6,7 +6,7 @@ import { ShoppingCart, Check, BookOpen, Eye, Plus, Minus } from 'lucide-react';
 import { Product } from '@/types';
 import { useCart } from '@/context/CartContext';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 
 export interface ProductCardProps {
   product: Product;
@@ -184,16 +184,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
           {/* Action Buttons */}
           <div className="grid grid-cols-2 gap-2 pt-0.5">
-            <Link href={`/books/${product.id}`} className="w-full">
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full text-xs"
-                leftIcon={<Eye className="w-3.5 h-3.5" />}
-                aria-label={`View details for ${product.title}`}
-              >
-                Details
-              </Button>
+            <Link
+              href={`/books/${product.id}`}
+              className={buttonVariants({
+                variant: 'outline',
+                size: 'sm',
+                className: 'w-full text-xs gap-1.5',
+              })}
+              aria-label={`View details for ${product.title}`}
+            >
+              <Eye className="w-3.5 h-3.5" />
+              <span>Details</span>
             </Link>
 
             {isOutOfStock ? (

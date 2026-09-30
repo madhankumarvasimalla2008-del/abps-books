@@ -1,12 +1,12 @@
 import { NextRequest } from 'next/server';
 import { notificationsService } from '@/server/services/notifications.service';
-import { extractAuthContext } from '@/server/auth/guard';
+import { extractAuthContext, requireAuth } from '@/server/auth/guard';
 import { handleApiError, successResponse } from '@/server/utils/api-response';
 import { UnauthorizedError } from '@/server/errors';
 
 export async function POST(req: NextRequest) {
   try {
-    const ctx = await extractAuthContext(req);
+    const ctx = requireAuth(await extractAuthContext(req));
     let userId: string | undefined;
 
     try {
@@ -16,13 +16,13 @@ export async function POST(req: NextRequest) {
       // Empty or non-JSON body is acceptable if user context exists
     }
 
-    userId = userId || ctx?.userId;
-
-    if (!userId) {
-      throw new UnauthorizedError('User ID is required to mark notifications as read');
+    if (ctx.role === 'customer') {
+      userId = ctx.userId;
+    } else {
+      userId = userId || ctx.userId;
     }
 
-    const result = await notificationsService.markAllAsRead(userId, ctx || undefined);
+    const result = await notificationsService.markAllAsRead(userId, ctx);
     return successResponse(result);
   } catch (error) {
     return handleApiError(error);

@@ -25,7 +25,7 @@ import { useOrders } from '@/context/OrderContext';
 import { Shipment, ShipmentStatus } from '@/types';
 import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import { StatusBadge } from '@/components/admin/StatusBadge';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { Badge } from '@/components/ui/Badge';
 
@@ -520,14 +520,16 @@ export default function AdminShipmentsPage() {
                     </td>
 
                     <td className="py-3.5 px-4 text-right">
-                      <Link href={`/admin/shipments/${s.id}`}>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
-                        >
-                          Details
-                        </Button>
+                      <Link
+                        href={`/admin/shipments/${s.id}`}
+                        className={buttonVariants({
+                          variant: 'outline',
+                          size: 'sm',
+                          className: 'gap-1.5',
+                        })}
+                      >
+                        <span>Details</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
                       </Link>
                     </td>
                   </tr>

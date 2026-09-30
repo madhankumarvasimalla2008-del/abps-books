@@ -17,7 +17,7 @@ import { TrackingStatusCard } from '@/components/customer/tracking/TrackingStatu
 import { TrackingTimeline } from '@/components/customer/tracking/TrackingTimeline';
 import { TrackingDeliveryInfo } from '@/components/customer/tracking/TrackingDeliveryInfo';
 import { TrackingNotFound } from '@/components/customer/tracking/TrackingNotFound';
-import { Button } from '@/components/ui/Button';
+import { buttonVariants } from '@/components/ui/Button';
 
 export default function OrderTrackingDetailPage({
   params,
@@ -101,27 +101,27 @@ export default function OrderTrackingDetailPage({
 
         {/* Header Action Links */}
         <div className="flex items-center gap-2 flex-wrap">
-          <Link href={`/orders/${order.id}`}>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              leftIcon={<FileText className="w-3.5 h-3.5" />}
-              className="text-xs font-semibold"
-            >
-              Order Details
-            </Button>
+          <Link
+            href={`/orders/${order.id}`}
+            className={buttonVariants({
+              variant: 'outline',
+              size: 'sm',
+              className: 'text-xs font-semibold gap-1.5',
+            })}
+          >
+            <FileText className="w-3.5 h-3.5" />
+            <span>Order Details</span>
           </Link>
-          <Link href="/orders">
-            <Button
-              type="button"
-              variant="secondary"
-              size="sm"
-              leftIcon={<ArrowLeft className="w-3.5 h-3.5" />}
-              className="text-xs font-semibold"
-            >
-              Order History
-            </Button>
+          <Link
+            href="/orders"
+            className={buttonVariants({
+              variant: 'secondary',
+              size: 'sm',
+              className: 'text-xs font-semibold gap-1.5',
+            })}
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Order History</span>
           </Link>
         </div>
       </div>

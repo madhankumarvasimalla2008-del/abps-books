@@ -1,0 +1,36 @@
+{
+  "antigravity.permissions": {
+    "terminal": {
+      "allow": [
+        "npm install",
+        "npm ci",
+        "npm test",
+        "npm run *",
+        "npx tsc --noEmit",
+        "npx next *",
+        "npx tsx *",
+        "git status",
+        "git diff",
+        "git diff --check",
+        "git log",
+        "git branch",
+        "git remote -v",
+        "git ls-files",
+        "git show",
+        "git add",
+        "git commit"
+      ],
+      "deny": [
+        "git push",
+        "git reset --hard",
+        "git clean",
+        "git rebase",
+        "git branch -D",
+        "rm *",
+        "rmdir *",
+        "del *",
+        "drizzle-kit push"
+      ]
+    }
+  }
+}

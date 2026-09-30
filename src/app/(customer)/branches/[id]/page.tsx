@@ -15,7 +15,7 @@ import {
 import { MOCK_BRANCHES, MOCK_PRODUCTS, MOCK_ORDERS } from '@/data/mockData';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 import { BookCard } from '@/components/customer/BookCard';
 
 export default function BranchDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -62,14 +62,16 @@ export default function BranchDetailPage({ params }: { params: Promise<{ id: str
             </p>
           </div>
 
-          <Link href="/books">
-            <Button
-              variant="primary"
-              size="md"
-              rightIcon={<ArrowRight className="w-4 h-4" />}
-            >
-              Order Textbooks for Branch
-            </Button>
+          <Link
+            href="/books"
+            className={buttonVariants({
+              variant: 'primary',
+              size: 'md',
+              className: 'inline-flex items-center gap-2',
+            })}
+          >
+            <span>Order Textbooks for Branch</span>
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
@@ -116,10 +118,16 @@ export default function BranchDetailPage({ params }: { params: Promise<{ id: str
               Course titles available for textbook distribution to {branch.name}
             </p>
           </div>
-          <Link href="/books">
-            <Button variant="ghost" size="sm" rightIcon={<ArrowRight className="w-3.5 h-3.5" />}>
-              View All Books
-            </Button>
+          <Link
+            href="/books"
+            className={buttonVariants({
+              variant: 'ghost',
+              size: 'sm',
+              className: 'inline-flex items-center gap-1.5',
+            })}
+          >
+            <span>View All Books</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
@@ -151,10 +159,11 @@ export default function BranchDetailPage({ params }: { params: Promise<{ id: str
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <Link href={`/orders/${order.id}`}>
-                    <Button variant="outline" size="sm">
-                      View Order
-                    </Button>
+                  <Link
+                    href={`/orders/${order.id}`}
+                    className={buttonVariants({ variant: 'outline', size: 'sm' })}
+                  >
+                    View Order
                   </Link>
                 </div>
               </div>

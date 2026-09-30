@@ -31,7 +31,7 @@ import { useOrders } from '@/context/OrderContext';
 import { OrderStatus, PaymentStatus, OrderTrackingStep } from '@/types';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { StatusBadge } from '@/components/admin/StatusBadge';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 
 const ORDER_STATUS_FLOW: OrderStatus[] = [
   'Pending',
@@ -145,10 +145,16 @@ export default function AdminOrderDetailPage({
               No order matches identifier &quot;{resolvedParams.id}&quot;. The order may have been removed or the ID was entered incorrectly.
             </p>
           </div>
-          <Link href="/admin/orders">
-            <Button variant="outline" size="sm" leftIcon={<ArrowLeft className="w-4 h-4" />}>
-              Back to School Indents
-            </Button>
+          <Link
+            href="/admin/orders"
+            className={buttonVariants({
+              variant: 'outline',
+              size: 'sm',
+              className: 'gap-1.5',
+            })}
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to School Indents</span>
           </Link>
         </div>
       </div>
@@ -237,23 +243,29 @@ export default function AdminOrderDetailPage({
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
-          <Link href={`/orders/${order.id}`} target="_blank">
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<ExternalLink className="w-3.5 h-3.5 text-slate-500" />}
-            >
-              Customer Order View
-            </Button>
+          <Link
+            href={`/orders/${order.id}`}
+            target="_blank"
+            className={buttonVariants({
+              variant: 'outline',
+              size: 'sm',
+              className: 'gap-1.5',
+            })}
+          >
+            <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
+            <span>Customer Order View</span>
           </Link>
-          <Link href={`/orders/${order.id}/track`} target="_blank">
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<Truck className="w-3.5 h-3.5 text-slate-500" />}
-            >
-              Live Tracking View
-            </Button>
+          <Link
+            href={`/orders/${order.id}/track`}
+            target="_blank"
+            className={buttonVariants({
+              variant: 'outline',
+              size: 'sm',
+              className: 'gap-1.5',
+            })}
+          >
+            <Truck className="w-3.5 h-3.5 text-slate-500" />
+            <span>Live Tracking View</span>
           </Link>
           <Button
             variant="outline"

@@ -240,11 +240,11 @@ export const AdminSidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = 
           <div className="flex items-center justify-between p-2 rounded-lg bg-slate-800/60 border border-slate-700/50">
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="w-8 h-8 rounded-full bg-emerald-800 text-emerald-100 flex items-center justify-center font-bold text-xs shrink-0 border border-emerald-600/40">
-                {user?.name ? user.name.charAt(0).toUpperCase() : 'A'}
+                {user?.name ? user.name.charAt(0).toUpperCase() : (user?.email ? user.email.charAt(0).toUpperCase() : 'U')}
               </div>
               <div className="min-w-0">
                 <p className="text-xs font-semibold text-white truncate">
-                  {user?.name || 'Administrator'}
+                  {user?.name || user?.email?.split('@')[0] || 'User'}
                 </p>
                 <p className="text-[10px] text-emerald-400 capitalize truncate font-medium">
                   {role.replace('_', ' ')}

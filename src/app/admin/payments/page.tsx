@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { useOrders } from '@/context/OrderContext';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 import { StatusBadge } from '@/components/admin/StatusBadge';
 import { StatCard } from '@/components/ui/StatCard';
 import { PaymentStatus } from '@/types';
@@ -67,10 +67,16 @@ export default function AdminPaymentsPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Link href="/admin/payments/transactions">
-            <Button variant="outline" size="sm" leftIcon={<CreditCard className="w-4 h-4" />}>
-              Transaction Logs
-            </Button>
+          <Link
+            href="/admin/payments/transactions"
+            className={buttonVariants({
+              variant: 'outline',
+              size: 'sm',
+              className: 'gap-1.5',
+            })}
+          >
+            <CreditCard className="w-4 h-4" />
+            <span>Transaction Logs</span>
           </Link>
           <Button variant="primary" size="sm" leftIcon={<FileSpreadsheet className="w-4 h-4" />}>
             Export Financial Report
@@ -180,10 +186,14 @@ export default function AdminPaymentsPage() {
                       <StatusBadge status={o.paymentStatus} type="payment" />
                     </td>
                     <td className="py-3.5 px-4 text-right">
-                      <Link href={`/admin/orders/${o.id}`}>
-                        <Button variant="outline" size="sm">
-                          View Order
-                        </Button>
+                      <Link
+                        href={`/admin/orders/${o.id}`}
+                        className={buttonVariants({
+                          variant: 'outline',
+                          size: 'sm',
+                        })}
+                      >
+                        View Order
                       </Link>
                     </td>
                   </tr>

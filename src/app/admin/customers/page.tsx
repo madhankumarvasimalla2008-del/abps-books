@@ -22,7 +22,7 @@ import {
   X,
 } from 'lucide-react';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 import { useCustomer, CreateCustomerInput } from '@/context/CustomerContext';
 import { useOrders } from '@/context/OrderContext';
 import { MOCK_BRANCHES } from '@/data/mockData';
@@ -403,10 +403,16 @@ export default function AdminCustomersPage() {
                             <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
                           )}
                         </button>
-                        <Link href={`/admin/customers/${c.id}`}>
-                          <Button variant="outline" size="sm" rightIcon={<ArrowRight className="w-3.5 h-3.5" />}>
-                            Details
-                          </Button>
+                        <Link
+                          href={`/admin/customers/${c.id}`}
+                          className={buttonVariants({
+                            variant: 'outline',
+                            size: 'sm',
+                            className: 'gap-1.5',
+                          })}
+                        >
+                          <span>Details</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
                         </Link>
                       </div>
                     </td>

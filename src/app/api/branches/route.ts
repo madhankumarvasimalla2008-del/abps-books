@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { branchesService } from '@/server/services/branches.service';
 import { branchFilterSchema, createBranchSchema } from '@/server/validation/branches';
-import { extractAuthContext, requireRole } from '@/server/auth/guard';
+import { extractAuthContext, requireAuth, requireRole } from '@/server/auth/guard';
 import { handleApiError, paginatedResponse, successResponse } from '@/server/utils/api-response';
 
 export async function GET(req: NextRequest) {
@@ -26,10 +26,8 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const ctx = await extractAuthContext(req);
-    if (ctx) {
-      requireRole(ctx, ['admin']);
-    }
+    const ctx = requireAuth(await extractAuthContext(req));
+    requireRole(ctx, ['admin']);
 
     const body = await req.json();
     const validatedData = createBranchSchema.parse(body);

@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ShoppingCart, BookOpen, ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { buttonVariants } from '@/components/ui/Button';
 
 export const CheckoutEmptyState: React.FC = () => {
   return (
@@ -22,25 +22,27 @@ export const CheckoutEmptyState: React.FC = () => {
       </div>
 
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-        <Link href="/books" className="w-full sm:w-auto">
-          <Button
-            variant="primary"
-            size="md"
-            className="w-full sm:w-auto text-xs font-semibold shadow-xs"
-            leftIcon={<BookOpen className="w-4 h-4" />}
-          >
-            Browse Books Catalog
-          </Button>
+        <Link
+          href="/books"
+          className={buttonVariants({
+            variant: 'primary',
+            size: 'md',
+            className: 'w-full sm:w-auto text-xs font-semibold shadow-xs gap-2',
+          })}
+        >
+          <BookOpen className="w-4 h-4" />
+          <span>Browse Books Catalog</span>
         </Link>
-        <Link href="/cart" className="w-full sm:w-auto">
-          <Button
-            variant="outline"
-            size="md"
-            className="w-full sm:w-auto text-xs font-semibold"
-            leftIcon={<ArrowLeft className="w-3.5 h-3.5" />}
-          >
-            Go to Cart
-          </Button>
+        <Link
+          href="/cart"
+          className={buttonVariants({
+            variant: 'outline',
+            size: 'md',
+            className: 'w-full sm:w-auto text-xs font-semibold gap-1.5',
+          })}
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Go to Cart</span>
         </Link>
       </div>
     </div>

@@ -13,7 +13,7 @@ export const createCategorySchema = z.object({
 export const updateCategorySchema = createCategorySchema.partial();
 
 export const categoryFilterSchema = baseFilterSchema.extend({
-  isActive: z.enum(['true', 'false']).transform((v) => v === 'true').optional(),
+  isActive: z.union([z.boolean(), z.enum(['true', 'false']).transform((v) => v === 'true')]).optional(),
 });
 
 export type CreateCategoryInput = z.infer<typeof createCategorySchema>;

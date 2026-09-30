@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { BookOpen, Home, ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { buttonVariants } from '@/components/ui/Button';
 
 export default function NotFound() {
   return (
@@ -19,15 +19,18 @@ export default function NotFound() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link href="/">
-            <Button variant="primary" size="md" leftIcon={<Home className="w-4 h-4" />}>
-              Back to Store Home
-            </Button>
+          <Link
+            href="/"
+            className={buttonVariants({ variant: 'primary', size: 'md' })}
+          >
+            <Home className="w-4 h-4 mr-2" />
+            Back to Store Home
           </Link>
-          <Link href="/books">
-            <Button variant="outline" size="md">
-              Browse Books Catalog
-            </Button>
+          <Link
+            href="/books"
+            className={buttonVariants({ variant: 'outline', size: 'md' })}
+          >
+            Browse Books Catalog
           </Link>
         </div>
       </div>

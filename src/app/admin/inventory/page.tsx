@@ -24,7 +24,7 @@ import { useProducts } from '@/context/ProductContext';
 import { useInventory } from '@/context/InventoryContext';
 import { StatusBadge } from '@/components/admin/StatusBadge';
 import { StatCard } from '@/components/ui/StatCard';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 import { AdjustStockModal } from '@/components/admin/inventory/AdjustStockModal';
 
 export default function AdminInventoryPage() {
@@ -178,15 +178,27 @@ export default function AdminInventoryPage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <Link href="/admin/inventory/movements">
-            <Button variant="outline" size="sm" leftIcon={<History className="w-4 h-4" />}>
-              Stock Movements
-            </Button>
+          <Link
+            href="/admin/inventory/movements"
+            className={buttonVariants({
+              variant: 'outline',
+              size: 'sm',
+              className: 'gap-1.5',
+            })}
+          >
+            <History className="w-4 h-4" />
+            <span>Stock Movements</span>
           </Link>
-          <Link href="/admin/inventory/bulk">
-            <Button variant="primary" size="sm" leftIcon={<Layers className="w-4 h-4" />}>
-              Bulk Stock Adjust
-            </Button>
+          <Link
+            href="/admin/inventory/bulk"
+            className={buttonVariants({
+              variant: 'primary',
+              size: 'sm',
+              className: 'gap-1.5',
+            })}
+          >
+            <Layers className="w-4 h-4" />
+            <span>Bulk Stock Adjust</span>
           </Link>
         </div>
       </div>

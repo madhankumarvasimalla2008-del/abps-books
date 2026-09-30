@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { useBranches, CreateBranchInput } from '@/context/BranchContext';
 import { Branch } from '@/types';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 
 type SortOption = 'name-asc' | 'name-desc' | 'code-asc' | 'city-asc';
 
@@ -453,14 +453,16 @@ export default function AdminBranchesPage() {
 
                       {/* Actions */}
                       <td className="py-3.5 px-4 text-right">
-                        <Link href={`/admin/branches/${branch.id}`}>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
-                          >
-                            Manage
-                          </Button>
+                        <Link
+                          href={`/admin/branches/${branch.id}`}
+                          className={buttonVariants({
+                            variant: 'outline',
+                            size: 'sm',
+                            className: 'gap-1.5',
+                          })}
+                        >
+                          <span>Manage</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
                         </Link>
                       </td>
                     </tr>

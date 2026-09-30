@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ShoppingCart, Check, ArrowRight, ArrowLeft, ShieldCheck } from 'lucide-react';
 import { Product } from '@/types';
 import { useCart } from '@/context/CartContext';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 import { QuantitySelector } from './QuantitySelector';
 
 export interface ProductPurchaseCardProps {
@@ -118,25 +118,27 @@ export const ProductPurchaseCard: React.FC<ProductPurchaseCardProps> = ({ produc
         )}
 
         <div className="flex flex-col sm:flex-row gap-2">
-          <Link href="/cart" className="flex-1">
-            <Button
-              variant="outline"
-              size="md"
-              className="w-full text-xs font-semibold"
-              rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
-            >
-              View Cart {cart.totalItems > 0 ? `(${cart.totalItems} ${cart.totalItems === 1 ? 'item' : 'items'})` : ''}
-            </Button>
+          <Link
+            href="/cart"
+            className={buttonVariants({
+              variant: 'outline',
+              size: 'md',
+              className: 'flex-1 w-full text-xs font-semibold gap-1.5',
+            })}
+          >
+            <span>View Cart {cart.totalItems > 0 ? `(${cart.totalItems} ${cart.totalItems === 1 ? 'item' : 'items'})` : ''}</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </Link>
-          <Link href="/books" className="flex-1">
-            <Button
-              variant="outline"
-              size="md"
-              className="w-full text-xs"
-              leftIcon={<ArrowLeft className="w-3.5 h-3.5" />}
-            >
-              Continue Catalog
-            </Button>
+          <Link
+            href="/books"
+            className={buttonVariants({
+              variant: 'outline',
+              size: 'md',
+              className: 'flex-1 w-full text-xs gap-1.5',
+            })}
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Continue Catalog</span>
           </Link>
         </div>
       </div>

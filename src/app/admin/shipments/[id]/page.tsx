@@ -25,7 +25,7 @@ import { useOrders } from '@/context/OrderContext';
 import { ShipmentStatus } from '@/types';
 import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import { StatusBadge } from '@/components/admin/StatusBadge';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { Badge } from '@/components/ui/Badge';
 
@@ -90,10 +90,16 @@ export default function AdminShipmentDetailPage({
           <p className="text-xs text-slate-500">
             No shipment record exists matching the ID or tracking number &quot;{shipmentId}&quot;. It may have been reset or removed.
           </p>
-          <Link href="/admin/shipments">
-            <Button variant="primary" size="sm" leftIcon={<ArrowLeft className="w-4 h-4" />}>
-              Back to Shipments Directory
-            </Button>
+          <Link
+            href="/admin/shipments"
+            className={buttonVariants({
+              variant: 'primary',
+              size: 'sm',
+              className: 'gap-1.5',
+            })}
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to Shipments Directory</span>
           </Link>
         </div>
       </div>
@@ -165,15 +171,18 @@ export default function AdminShipmentDetailPage({
         ]}
         actions={
           <div className="flex items-center gap-2.5 flex-wrap">
-            <Link href={`/tracking?trackingNumber=${shipment.trackingNumber}`} target="_blank">
-              <Button
-                variant="outline"
-                size="sm"
-                leftIcon={<ExternalLink className="w-3.5 h-3.5" />}
-                title="View customer-facing tracking page"
-              >
-                Customer Tracking
-              </Button>
+            <Link
+              href={`/tracking?trackingNumber=${shipment.trackingNumber}`}
+              target="_blank"
+              className={buttonVariants({
+                variant: 'outline',
+                size: 'sm',
+                className: 'gap-1.5',
+              })}
+              title="View customer-facing tracking page"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              <span>Customer Tracking</span>
             </Link>
             <Button
               variant="outline"

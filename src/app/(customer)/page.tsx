@@ -25,7 +25,7 @@ import {
   X,
 } from 'lucide-react';
 import { ProductCard } from '@/components/customer/ProductCard';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { useAuth } from '@/context/AuthContext';
 import { useProducts } from '@/context/ProductContext';
@@ -302,15 +302,17 @@ export default function CustomerHomePage() {
               </div>
             </div>
             <div className="flex items-center gap-2 shrink-0">
-              <Link href="/profile/addresses">
-                <Button variant="outline" size="sm" className="text-xs bg-white text-slate-700">
-                  Delivery Details
-                </Button>
+              <Link
+                href="/profile/addresses"
+                className={buttonVariants({ variant: 'outline', size: 'sm', className: 'text-xs bg-white text-slate-700' })}
+              >
+                Delivery Details
               </Link>
-              <Link href="/orders">
-                <Button variant="outline" size="sm" className="text-xs bg-white text-slate-700">
-                  Branch Orders
-                </Button>
+              <Link
+                href="/orders"
+                className={buttonVariants({ variant: 'outline', size: 'sm', className: 'text-xs bg-white text-slate-700' })}
+              >
+                Branch Orders
               </Link>
             </div>
           </div>
@@ -501,15 +503,16 @@ export default function CustomerHomePage() {
               Standard curriculum textbooks and required learning resources
             </p>
           </div>
-          <Link href="/books">
-            <Button
-              variant="outline"
-              size="sm"
-              rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
-              className="text-xs"
-            >
-              View Full Catalog ({products.length}+)
-            </Button>
+          <Link
+            href="/books"
+            className={buttonVariants({
+              variant: 'outline',
+              size: 'sm',
+              className: 'text-xs inline-flex items-center gap-1.5',
+            })}
+          >
+            <span>View Full Catalog ({products.length}+)</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 

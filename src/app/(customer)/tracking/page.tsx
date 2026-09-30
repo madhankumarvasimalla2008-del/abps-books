@@ -11,7 +11,7 @@ import { TrackingStatusCard } from '@/components/customer/tracking/TrackingStatu
 import { TrackingTimeline } from '@/components/customer/tracking/TrackingTimeline';
 import { TrackingDeliveryInfo } from '@/components/customer/tracking/TrackingDeliveryInfo';
 import { TrackingNotFound } from '@/components/customer/tracking/TrackingNotFound';
-import { Button } from '@/components/ui/Button';
+import { buttonVariants } from '@/components/ui/Button';
 
 function TrackingPageContent() {
   const searchParams = useSearchParams();
@@ -79,15 +79,15 @@ function TrackingPageContent() {
                   <strong className="font-mono text-slate-800">{matchedOrder.id}</strong>.
                 </p>
                 <div className="pt-2 border-t border-slate-200/60">
-                  <Link href={`/orders/${matchedOrder.id}`}>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="w-full text-xs font-semibold"
-                    >
-                      View Order Details
-                    </Button>
+                  <Link
+                    href={`/orders/${matchedOrder.id}`}
+                    className={buttonVariants({
+                      variant: 'outline',
+                      size: 'sm',
+                      className: 'w-full text-xs font-semibold',
+                    })}
+                  >
+                    View Order Details
                   </Link>
                 </div>
               </div>
@@ -123,10 +123,16 @@ function TrackingPageContent() {
             <span className="text-slate-500">
               Looking for your past orders?
             </span>
-            <Link href="/orders">
-              <Button variant="ghost" size="sm" rightIcon={<ArrowRight className="w-3.5 h-3.5" />}>
-                View Order History
-              </Button>
+            <Link
+              href="/orders"
+              className={buttonVariants({
+                variant: 'ghost',
+                size: 'sm',
+                className: 'gap-1.5',
+              })}
+            >
+              <span>View Order History</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
         </div>

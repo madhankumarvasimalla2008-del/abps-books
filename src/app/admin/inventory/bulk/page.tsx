@@ -20,7 +20,7 @@ import {
 import { useProducts } from '@/context/ProductContext';
 import { useInventory, AdjustStockInput } from '@/context/InventoryContext';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 
 interface BulkRowState {
   productId: string;
@@ -236,10 +236,16 @@ export default function BulkStockAdjustPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Link href="/admin/inventory">
-            <Button variant="outline" size="sm" leftIcon={<ArrowLeft className="w-4 h-4" />}>
-              Back to Inventory
-            </Button>
+          <Link
+            href="/admin/inventory"
+            className={buttonVariants({
+              variant: 'outline',
+              size: 'sm',
+              className: 'gap-1.5',
+            })}
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to Inventory</span>
           </Link>
           <Button
             variant="outline"

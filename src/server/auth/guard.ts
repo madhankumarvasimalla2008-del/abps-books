@@ -1,4 +1,5 @@
 import { AuthContext, UserRole } from './types';
+export type { AuthContext, UserRole };
 import { UnauthorizedError, ForbiddenError } from '../errors';
 import { resolveAuthContextFromRequest } from './session';
 

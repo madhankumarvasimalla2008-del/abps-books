@@ -22,7 +22,7 @@ import {
   Package,
 } from 'lucide-react';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 import { StatusBadge } from '@/components/admin/StatusBadge';
 import { useCustomer } from '@/context/CustomerContext';
 import { useOrders } from '@/context/OrderContext';
@@ -147,10 +147,14 @@ export default function CustomerDetailPage({ params }: { params: Promise<{ id: s
           <p className="text-xs text-slate-500 mb-6">
             The customer identifier <code className="font-mono text-slate-700 bg-slate-100 px-1 py-0.5 rounded">{customerId}</code> does not exist in the administrative database.
           </p>
-          <Link href="/admin/customers">
-            <Button variant="primary" size="sm">
-              Return to Customers Directory
-            </Button>
+          <Link
+            href="/admin/customers"
+            className={buttonVariants({
+              variant: 'primary',
+              size: 'sm',
+            })}
+          >
+            Return to Customers Directory
           </Link>
         </div>
       </div>
@@ -454,10 +458,16 @@ export default function CustomerDetailPage({ params }: { params: Promise<{ id: s
                       <StatusBadge status={o.status} type="order" />
                     </td>
                     <td className="py-3.5 px-4 text-right">
-                      <Link href={`/admin/orders/${o.id}`}>
-                        <Button variant="outline" size="sm" rightIcon={<ArrowRight className="w-3 h-3" />}>
-                          View Order
-                        </Button>
+                      <Link
+                        href={`/admin/orders/${o.id}`}
+                        className={buttonVariants({
+                          variant: 'outline',
+                          size: 'sm',
+                          className: 'gap-1',
+                        })}
+                      >
+                        <span>View Order</span>
+                        <ArrowRight className="w-3 h-3" />
                       </Link>
                     </td>
                   </tr>

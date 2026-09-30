@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { MOCK_ORDERS } from '@/data/mockData';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 
 export default function AdminInvoicesPage() {
   const [search, setSearch] = useState('');
@@ -119,10 +119,17 @@ export default function AdminInvoicesPage() {
                   </td>
                   <td className="py-3.5 px-4 text-right">
                     <div className="flex items-center justify-end gap-1.5">
-                      <Link href={`/orders/${inv.orderId}`} target="_blank">
-                        <Button variant="outline" size="sm" leftIcon={<Printer className="w-3.5 h-3.5" />}>
-                          Print
-                        </Button>
+                      <Link
+                        href={`/orders/${inv.orderId}`}
+                        target="_blank"
+                        className={buttonVariants({
+                          variant: 'outline',
+                          size: 'sm',
+                          className: 'gap-1.5',
+                        })}
+                      >
+                        <Printer className="w-3.5 h-3.5" />
+                        <span>Print</span>
                       </Link>
                     </div>
                   </td>

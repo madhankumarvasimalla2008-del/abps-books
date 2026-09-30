@@ -21,7 +21,7 @@ import {
 import { useInventory } from '@/context/InventoryContext';
 import { InventoryMovement } from '@/types';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 import { StatCard } from '@/components/ui/StatCard';
 
 export default function InventoryMovementsPage() {
@@ -147,15 +147,27 @@ export default function InventoryMovementsPage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <Link href="/admin/inventory">
-            <Button variant="outline" size="sm" leftIcon={<ArrowLeft className="w-4 h-4" />}>
-              Inventory Overview
-            </Button>
+          <Link
+            href="/admin/inventory"
+            className={buttonVariants({
+              variant: 'outline',
+              size: 'sm',
+              className: 'gap-1.5',
+            })}
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Inventory Overview</span>
           </Link>
-          <Link href="/admin/inventory/bulk">
-            <Button variant="outline" size="sm" leftIcon={<Layers className="w-4 h-4" />}>
-              Bulk Adjust Stock
-            </Button>
+          <Link
+            href="/admin/inventory/bulk"
+            className={buttonVariants({
+              variant: 'outline',
+              size: 'sm',
+              className: 'gap-1.5',
+            })}
+          >
+            <Layers className="w-4 h-4" />
+            <span>Bulk Adjust Stock</span>
           </Link>
           <Button
             variant="primary"

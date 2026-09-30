@@ -37,6 +37,7 @@ export const CustomerHeader: React.FC = () => {
   const customerName = profile?.name || user?.name || 'Customer';
   const customerEmail = profile?.email || user?.email || '';
   const customerBranch = profile?.branchName || user?.branchName || '';
+  const isStaff = ['admin', 'branch_admin', 'warehouse', 'sales'].includes(user?.role || '');
 
   // Close user menu on outside click
   useEffect(() => {
@@ -109,6 +110,18 @@ export const CustomerHeader: React.FC = () => {
             </span>
           </div>
           <div className="hidden md:flex items-center gap-4 text-slate-300 shrink-0 text-xs">
+            {isStaff && (
+              <>
+                <Link
+                  href="/admin"
+                  className="hover:text-emerald-300 font-semibold text-emerald-400 transition-colors flex items-center gap-1 focus:outline-none focus-visible:underline"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
+                  <span>Admin Dashboard</span>
+                </Link>
+                <span className="text-slate-600" aria-hidden="true">|</span>
+              </>
+            )}
             {user?.branchName ? (
               <span className="flex items-center gap-1.5 text-emerald-300 font-medium">
                 <Building2 className="w-3.5 h-3.5" aria-hidden="true" />
@@ -254,6 +267,17 @@ export const CustomerHeader: React.FC = () => {
                     </div>
 
                     <div className="py-1">
+                      {isStaff && (
+                        <Link
+                          href="/admin"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 hover:text-emerald-900 focus:bg-emerald-100 focus:outline-none border-b border-slate-100 mb-1"
+                          role="menuitem"
+                        >
+                          <ShieldCheck className="w-4 h-4 text-emerald-600" aria-hidden="true" />
+                          <span>Admin Operations</span>
+                        </Link>
+                      )}
                       <Link
                         href="/profile"
                         onClick={() => setUserMenuOpen(false)}

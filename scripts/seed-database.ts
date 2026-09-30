@@ -2,48 +2,65 @@
  * ============================================================================
  * ABPS Book Distribution Platform — Development Database Seed Script
  * ============================================================================
- * NOTICE: This script contains ONLY synthetic, fictional demo fixtures
- * designed specifically for local and staging development environments.
- * It does not contain any real user passwords, credentials, or PII.
+ * ⚠️ WARNING: LOCAL DEVELOPMENT FIXTURES ONLY.
+ * DO NOT RUN THIS SCRIPT AGAINST STAGING OR PRODUCTION ENVIRONMENTS.
+ *
+ * This script contains synthetic, fictional demo fixtures (branches, demo
+ * staff/customer identities, catalog items, inventory, POs, orders, and UPI
+ * transaction mocks). For staging environments, use: scripts/seed-staging.ts
  * ============================================================================
  */
 
 import * as dotenv from 'dotenv';
-dotenv.config({ path: '.env.local' });
+import * as path from 'path';
+import * as fs from 'fs';
+
+// Load environment variables BEFORE importing database modules
+const envLocalPath = path.resolve(process.cwd(), '.env.local');
+if (fs.existsSync(envLocalPath)) {
+  dotenv.config({ path: envLocalPath });
+}
 dotenv.config();
 
-import { db, client } from '../src/db';
-import {
-  roles,
-  authUsers,
-  userRoles,
-  customerProfiles,
-  staffProfiles,
-  branches,
-  customerAddresses,
-  categories,
-  products,
-  inventory,
-  inventoryMovements,
-  suppliers,
-  purchaseOrders,
-  purchaseOrderItems,
-  purchaseOrderReceipts,
-  orders,
-  orderItems,
-  orderShippingAddresses,
-  orderStatusHistory,
-  payments,
-  paymentAttempts,
-  transactions,
-  refunds,
-  shipments,
-  shipmentMilestones,
-  notifications,
-} from '../src/db/schema';
+if (!process.env.DATABASE_URL) {
+  console.error('❌ Error: DATABASE_URL environment variable is not defined.');
+  console.error('   Please provide DATABASE_URL in .env.local or execution environment.');
+  process.exit(1);
+}
 
 async function seed() {
-  console.log('🌱 Starting database seeding with synthetic test data...\n');
+  const { db, client } = await import('../src/db');
+  const {
+    roles,
+    authUsers,
+    userRoles,
+    customerProfiles,
+    staffProfiles,
+    branches,
+    customerAddresses,
+    categories,
+    products,
+    inventory,
+    inventoryMovements,
+    suppliers,
+    purchaseOrders,
+    purchaseOrderItems,
+    purchaseOrderReceipts,
+    orders,
+    orderItems,
+    orderShippingAddresses,
+    orderStatusHistory,
+    payments,
+    paymentAttempts,
+    transactions,
+    refunds,
+    shipments,
+    shipmentMilestones,
+    notifications,
+  } = await import('../src/db/schema');
+
+  try {
+    console.log('🌱 Starting database seeding with synthetic test data...\n');
 
   // 1. Roles
   console.log('1️⃣ Seeding Roles...');
@@ -760,13 +777,12 @@ async function seed() {
   console.log(`   ✓ Seeded user notifications`);
 
   console.log('\n✨ Database seeding completed successfully! 🎉');
+  } catch (err) {
+    console.error('❌ Seeding failed with error:', err);
+    process.exitCode = 1;
+  } finally {
+    await client.end();
+  }
 }
 
-seed()
-  .catch((err) => {
-    console.error('❌ Seeding failed with error:', err);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await client.end();
-  });
+seed();

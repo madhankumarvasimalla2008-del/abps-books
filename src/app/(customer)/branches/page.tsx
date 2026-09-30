@@ -16,7 +16,7 @@ import {
 import { MOCK_BRANCHES } from '@/data/mockData';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 
 export default function BranchesDirectoryPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -134,15 +134,16 @@ export default function BranchesDirectoryPage() {
                 </div>
               </div>
 
-              <Link href={`/branches/${branch.id}`} className="block">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full text-xs justify-between"
-                  rightIcon={<ChevronRight className="w-4 h-4" />}
-                >
-                  View Branch Hub
-                </Button>
+              <Link
+                href={`/branches/${branch.id}`}
+                className={buttonVariants({
+                  variant: 'outline',
+                  size: 'sm',
+                  className: 'w-full text-xs justify-between block flex items-center',
+                })}
+              >
+                <span>View Branch Hub</span>
+                <ChevronRight className="w-4 h-4" />
               </Link>
             </div>
           </div>

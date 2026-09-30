@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { useSuppliers, CreateSupplierInput } from '@/context/SupplierContext';
 import { Supplier } from '@/types';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 
 type SortOption = 'name-asc' | 'name-desc' | 'code-asc' | 'city-asc';
@@ -470,15 +470,16 @@ export default function AdminSuppliersPage() {
                     </td>
 
                     <td className="py-3.5 px-4 text-right">
-                      <Link href={`/admin/suppliers/${supplier.id}`}>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="text-xs"
-                          rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
-                        >
-                          Details
-                        </Button>
+                      <Link
+                        href={`/admin/suppliers/${supplier.id}`}
+                        className={buttonVariants({
+                          variant: 'outline',
+                          size: 'sm',
+                          className: 'text-xs gap-1.5',
+                        })}
+                      >
+                        <span>Details</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
                       </Link>
                     </td>
                   </tr>

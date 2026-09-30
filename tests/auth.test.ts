@@ -1,3 +1,4 @@
+import './setup';
 import { describe, it, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { requireAuth, requireRole, requireBranchAccess, extractAuthContext } from '../src/server/auth/guard';

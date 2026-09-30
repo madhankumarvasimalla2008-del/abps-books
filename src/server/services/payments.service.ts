@@ -6,7 +6,7 @@ import {
   RecordPaymentResultInput,
   RequestRefundInput,
 } from '../validation/payments';
-import { NotFoundError, BusinessRuleError, ConflictError } from '../errors';
+import { NotFoundError, BusinessRuleError, ConflictError, ForbiddenError } from '../errors';
 import { AuthContext } from '../auth/types';
 import { PaymentProviderRegistry } from './payment-provider.interface';
 
@@ -34,6 +34,10 @@ export class PaymentsService {
 
     if (order.paymentStatus === 'Paid') {
       throw new BusinessRuleError('This order has already been fully paid');
+    }
+
+    if (ctx && ctx.role === 'customer' && order.userId !== ctx.userId) {
+      throw new ForbiddenError('You do not have permission to pay for this order');
     }
 
     if (input.idempotencyKey) {

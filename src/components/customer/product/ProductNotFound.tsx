@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { BookX, ArrowLeft, Search } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { buttonVariants } from '@/components/ui/Button';
 
 export interface ProductNotFoundProps {
   productId?: string;
@@ -26,15 +26,27 @@ export const ProductNotFound: React.FC<ProductNotFoundProps> = ({ productId }) =
       </div>
 
       <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
-        <Link href="/books">
-          <Button variant="primary" size="md" leftIcon={<ArrowLeft className="w-4 h-4" />}>
-            Back to Books Catalog
-          </Button>
+        <Link
+          href="/books"
+          className={buttonVariants({
+            variant: 'primary',
+            size: 'md',
+            className: 'gap-2',
+          })}
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to Books Catalog</span>
         </Link>
-        <Link href="/books">
-          <Button variant="outline" size="md" leftIcon={<Search className="w-4 h-4" />}>
-            Search Other Books
-          </Button>
+        <Link
+          href="/books"
+          className={buttonVariants({
+            variant: 'outline',
+            size: 'md',
+            className: 'gap-2',
+          })}
+        >
+          <Search className="w-4 h-4" />
+          <span>Search Other Books</span>
         </Link>
       </div>
     </div>

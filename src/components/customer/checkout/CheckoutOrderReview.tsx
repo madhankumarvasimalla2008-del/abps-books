@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { BookOpen, Edit3, CheckCircle2 } from 'lucide-react';
 import { Cart } from '@/types';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { buttonVariants } from '@/components/ui/Button';
 
 export interface CheckoutOrderReviewProps {
   cart: Cart;
@@ -23,15 +23,16 @@ export const CheckoutOrderReview: React.FC<CheckoutOrderReviewProps> = ({ cart }
             Order Review ({cart.items.length} {cart.items.length === 1 ? 'Title' : 'Titles'})
           </h2>
         </div>
-        <Link href="/cart">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-xs text-emerald-800 hover:text-emerald-900 font-semibold"
-            leftIcon={<Edit3 className="w-3.5 h-3.5" />}
-          >
-            Edit Cart
-          </Button>
+        <Link
+          href="/cart"
+          className={buttonVariants({
+            variant: 'ghost',
+            size: 'sm',
+            className: 'text-xs text-emerald-800 hover:text-emerald-900 font-semibold gap-1.5',
+          })}
+        >
+          <Edit3 className="w-3.5 h-3.5" />
+          <span>Edit Cart</span>
         </Link>
       </div>
 

@@ -31,14 +31,19 @@ export const AdminAccountMenu: React.FC = () => {
     };
   }, [isOpen]);
 
+  const displayName = user?.name || user?.email?.split('@')[0] || 'User';
+  const displayEmail = user?.email || '';
   const initials = user?.name
     ? user.name
         .split(' ')
+        .filter(Boolean)
         .map((n) => n[0])
         .join('')
         .slice(0, 2)
         .toUpperCase()
-    : 'AD';
+    : displayEmail
+      ? displayEmail.slice(0, 2).toUpperCase()
+      : 'U';
 
   return (
     <div className="relative" ref={menuRef}>
@@ -55,7 +60,7 @@ export const AdminAccountMenu: React.FC = () => {
         </div>
         <div className="hidden md:block text-left min-w-0">
           <p className="text-xs font-semibold text-slate-800 leading-tight truncate">
-            {user?.name || 'Administrator'}
+            {displayName}
           </p>
           <p className="text-[10px] text-slate-500 capitalize leading-tight">
             {role.replace('_', ' ')}
@@ -75,8 +80,8 @@ export const AdminAccountMenu: React.FC = () => {
         >
           {/* User Info Header */}
           <div className="px-3.5 py-2.5 border-b border-slate-100 bg-slate-50/50">
-            <p className="font-semibold text-slate-900 truncate">{user?.name || 'Administrator'}</p>
-            <p className="text-[11px] text-slate-500 truncate">{user?.email || 'admin@abps.edu'}</p>
+            <p className="font-semibold text-slate-900 truncate">{displayName}</p>
+            {displayEmail && <p className="text-[11px] text-slate-500 truncate">{displayEmail}</p>}
             <div className="mt-1.5 inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/60">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
               Role: {role.replace('_', ' ')}

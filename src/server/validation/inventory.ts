@@ -23,7 +23,7 @@ export const adjustInventorySchema = z.object({
 export const inventoryFilterSchema = baseFilterSchema.extend({
   branchId: z.string().uuid().optional(),
   productId: z.string().uuid().optional(),
-  lowStockOnly: z.enum(['true', 'false']).transform((v) => v === 'true').optional(),
+  lowStockOnly: z.union([z.boolean(), z.enum(['true', 'false']).transform((v) => v === 'true')]).optional(),
 });
 
 export const movementFilterSchema = baseFilterSchema.extend({

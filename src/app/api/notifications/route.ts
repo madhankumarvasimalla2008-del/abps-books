@@ -1,12 +1,12 @@
 import { NextRequest } from 'next/server';
 import { notificationsService } from '@/server/services/notifications.service';
 import { createNotificationSchema, notificationFilterSchema } from '@/server/validation/notifications';
-import { extractAuthContext } from '@/server/auth/guard';
+import { extractAuthContext, requireAuth } from '@/server/auth/guard';
 import { handleApiError, paginatedResponse, successResponse } from '@/server/utils/api-response';
 
 export async function GET(req: NextRequest) {
   try {
-    const ctx = await extractAuthContext(req);
+    const ctx = requireAuth(await extractAuthContext(req));
     const { searchParams } = new URL(req.url);
     const rawParams = {
       userId: searchParams.get('userId') || undefined,
@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
     };
 
     const filters = notificationFilterSchema.parse(rawParams);
-    const result = await notificationsService.listNotifications(filters, ctx || undefined);
+    const result = await notificationsService.listNotifications(filters, ctx);
     return paginatedResponse(result);
   } catch (error) {
     return handleApiError(error);
@@ -29,16 +29,16 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const ctx = await extractAuthContext(req);
+    const ctx = requireAuth(await extractAuthContext(req));
     const body = await req.json();
 
     const inputData = {
       ...body,
-      userId: body.userId || ctx?.userId,
+      userId: ctx.role === 'customer' ? ctx.userId : (body.userId || ctx.userId),
     };
 
     const validatedData = createNotificationSchema.parse(inputData);
-    const notification = await notificationsService.createNotification(validatedData, ctx || undefined);
+    const notification = await notificationsService.createNotification(validatedData, ctx);
 
     return successResponse(notification, 201);
   } catch (error) {

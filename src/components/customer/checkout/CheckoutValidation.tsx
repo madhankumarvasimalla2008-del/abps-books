@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { AlertCircle, ShoppingCart } from 'lucide-react';
 import { Cart } from '@/types';
-import { Button } from '@/components/ui/Button';
+import { buttonVariants } from '@/components/ui/Button';
 
 export interface CheckoutValidationProps {
   cart: Cart;
@@ -59,15 +59,16 @@ export const CheckoutValidation: React.FC<CheckoutValidationProps> = ({ cart }) 
       </div>
 
       <div className="pl-8 pt-1">
-        <Link href="/cart">
-          <Button
-            variant="secondary"
-            size="sm"
-            className="text-xs font-semibold bg-white hover:bg-slate-50 border-red-200 text-red-800"
-            leftIcon={<ShoppingCart className="w-3.5 h-3.5" />}
-          >
-            Return to Cart to Modify Quantities
-          </Button>
+        <Link
+          href="/cart"
+          className={buttonVariants({
+            variant: 'secondary',
+            size: 'sm',
+            className: 'text-xs font-semibold bg-white hover:bg-slate-50 border-red-200 text-red-800 gap-1.5',
+          })}
+        >
+          <ShoppingCart className="w-3.5 h-3.5" />
+          <span>Return to Cart to Modify Quantities</span>
         </Link>
       </div>
     </div>

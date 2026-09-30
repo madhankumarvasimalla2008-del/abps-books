@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ShoppingCart, BookOpen, Layers, Sparkles, ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { buttonVariants } from '@/components/ui/Button';
 
 export const CartEmptyState: React.FC = () => {
   const quickGrades = [
@@ -40,15 +40,16 @@ export const CartEmptyState: React.FC = () => {
 
       {/* Main Action */}
       <div>
-        <Link href="/books">
-          <Button
-            variant="primary"
-            size="lg"
-            className="text-sm font-semibold shadow-xs"
-            leftIcon={<BookOpen className="w-4 h-4" />}
-          >
-            Browse Books Catalog
-          </Button>
+        <Link
+          href="/books"
+          className={buttonVariants({
+            variant: 'primary',
+            size: 'lg',
+            className: 'text-sm font-semibold shadow-xs gap-2',
+          })}
+        >
+          <BookOpen className="w-4 h-4" />
+          <span>Browse Books Catalog</span>
         </Link>
       </div>
 

@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Clock, ArrowLeft, BookOpen, FileText } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { buttonVariants } from '@/components/ui/Button';
 
 export interface TrackingEmptyStateProps {
   orderId?: string;
@@ -27,41 +27,41 @@ export const TrackingEmptyState: React.FC<TrackingEmptyStateProps> = ({ orderId 
 
       <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
         {orderId && (
-          <Link href={`/orders/${orderId}`}>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              leftIcon={<FileText className="w-3.5 h-3.5" />}
-              className="text-xs font-semibold"
-            >
-              View Order
-            </Button>
+          <Link
+            href={`/orders/${orderId}`}
+            className={buttonVariants({
+              variant: 'outline',
+              size: 'sm',
+              className: 'text-xs font-semibold gap-1.5',
+            })}
+          >
+            <FileText className="w-3.5 h-3.5" />
+            <span>View Order</span>
           </Link>
         )}
 
-        <Link href="/orders">
-          <Button
-            type="button"
-            variant="secondary"
-            size="sm"
-            leftIcon={<ArrowLeft className="w-3.5 h-3.5" />}
-            className="text-xs font-semibold"
-          >
-            Back to Orders
-          </Button>
+        <Link
+          href="/orders"
+          className={buttonVariants({
+            variant: 'secondary',
+            size: 'sm',
+            className: 'text-xs font-semibold gap-1.5',
+          })}
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Back to Orders</span>
         </Link>
 
-        <Link href="/books">
-          <Button
-            type="button"
-            variant="primary"
-            size="sm"
-            leftIcon={<BookOpen className="w-3.5 h-3.5" />}
-            className="text-xs font-semibold shadow-2xs"
-          >
-            Continue Shopping
-          </Button>
+        <Link
+          href="/books"
+          className={buttonVariants({
+            variant: 'primary',
+            size: 'sm',
+            className: 'text-xs font-semibold shadow-2xs gap-1.5',
+          })}
+        >
+          <BookOpen className="w-3.5 h-3.5" />
+          <span>Continue Shopping</span>
         </Link>
       </div>
     </div>

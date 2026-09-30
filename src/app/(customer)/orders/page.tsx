@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { useOrders } from '@/context/OrderContext';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 import { OrderCard } from '@/components/customer/orders/OrderCard';
 import { OrderEmptyState } from '@/components/customer/orders/OrderEmptyState';
 
@@ -110,15 +110,16 @@ export default function CustomerOrdersPage() {
           </p>
         </div>
 
-        <Link href="/books">
-          <Button
-            variant="primary"
-            size="md"
-            rightIcon={<ArrowRight className="w-4 h-4" />}
-            className="w-full sm:w-auto text-xs sm:text-sm font-semibold shadow-2xs"
-          >
-            Browse Books
-          </Button>
+        <Link
+          href="/books"
+          className={buttonVariants({
+            variant: 'primary',
+            size: 'md',
+            className: 'w-full sm:w-auto text-xs sm:text-sm font-semibold shadow-2xs inline-flex items-center gap-2',
+          })}
+        >
+          <span>Browse Books</span>
+          <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
 

@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { PackageOpen, BookOpen, ShoppingBag, ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 
 export interface OrderEmptyStateProps {
   isFiltered?: boolean;
@@ -54,14 +54,16 @@ export const OrderEmptyState: React.FC<OrderEmptyStateProps> = ({
         </p>
       </div>
       <div className="pt-2">
-        <Link href="/books">
-          <Button
-            variant="primary"
-            size="md"
-            rightIcon={<ArrowRight className="w-4 h-4" />}
-          >
-            Explore Textbook Catalog
-          </Button>
+        <Link
+          href="/books"
+          className={buttonVariants({
+            variant: 'primary',
+            size: 'md',
+            className: 'gap-2',
+          })}
+        >
+          <span>Explore Textbook Catalog</span>
+          <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
     </div>

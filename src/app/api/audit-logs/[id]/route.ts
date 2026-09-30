@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { auditService } from '@/server/services/audit.service';
-import { extractAuthContext } from '@/server/auth/guard';
+import { extractAuthContext, requireAuth, requireRole } from '@/server/auth/guard';
 import { handleApiError, successResponse } from '@/server/utils/api-response';
 
 interface RouteContext {
@@ -10,8 +10,10 @@ interface RouteContext {
 export async function GET(req: NextRequest, { params }: RouteContext) {
   try {
     const { id } = await params;
-    const ctx = await extractAuthContext(req);
-    const logEntry = await auditService.getLogById(id, ctx || undefined);
+    const ctx = requireAuth(await extractAuthContext(req));
+    requireRole(ctx, ['admin', 'branch_admin', 'warehouse', 'sales']);
+
+    const logEntry = await auditService.getLogById(id, ctx);
 
     return successResponse(logEntry);
   } catch (error) {

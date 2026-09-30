@@ -13,7 +13,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 
 interface RolePermission {
   module: string;
@@ -126,10 +126,16 @@ export default function AdminRolesPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Link href="/admin/settings">
-            <Button variant="outline" size="sm" leftIcon={<ArrowLeft className="w-4 h-4" />}>
-              Back to Settings
-            </Button>
+          <Link
+            href="/admin/settings"
+            className={buttonVariants({
+              variant: 'outline',
+              size: 'sm',
+              className: 'gap-1.5',
+            })}
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to Settings</span>
           </Link>
           <Button variant="primary" size="sm" onClick={handleSave} leftIcon={<Save className="w-4 h-4" />}>
             Save Matrix

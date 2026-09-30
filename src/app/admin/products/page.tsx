@@ -17,7 +17,7 @@ import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import { AdminEmptyState } from '@/components/admin/AdminEmptyState';
 import { ProductFilters, ProductFilterState } from '@/components/admin/products/ProductFilters';
 import { ProductTable } from '@/components/admin/products/ProductTable';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 
 export default function AdminProductsPage() {
   const { products, toggleProductStatus, deleteProduct, resetToDefaults } = useProducts();
@@ -152,24 +152,28 @@ export default function AdminProductsPage() {
         }
         actions={
           <div className="flex items-center gap-2">
-            <Link href="/admin/inventory">
-              <Button
-                variant="outline"
-                size="sm"
-                leftIcon={<Boxes className="w-4 h-4" />}
-                title="Manage warehouse counts & stock adjustments"
-              >
-                Warehouse Inventory
-              </Button>
+            <Link
+              href="/admin/inventory"
+              className={buttonVariants({
+                variant: 'outline',
+                size: 'sm',
+                className: 'gap-1.5',
+              })}
+              title="Manage warehouse counts & stock adjustments"
+            >
+              <Boxes className="w-4 h-4" />
+              <span>Warehouse Inventory</span>
             </Link>
-            <Link href="/admin/products/new">
-              <Button
-                variant="primary"
-                size="sm"
-                leftIcon={<Plus className="w-4 h-4" />}
-              >
-                Add New Textbook
-              </Button>
+            <Link
+              href="/admin/products/new"
+              className={buttonVariants({
+                variant: 'primary',
+                size: 'sm',
+                className: 'gap-1.5',
+              })}
+            >
+              <Plus className="w-4 h-4" />
+              <span>Add New Textbook</span>
             </Link>
           </div>
         }

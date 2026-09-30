@@ -1,15 +1,13 @@
 import { NextRequest } from 'next/server';
 import { inventoryService } from '@/server/services/inventory.service';
 import { movementFilterSchema } from '@/server/validation/inventory';
-import { extractAuthContext, requireRole } from '@/server/auth/guard';
+import { extractAuthContext, requireAuth, requireRole } from '@/server/auth/guard';
 import { handleApiError, paginatedResponse } from '@/server/utils/api-response';
 
 export async function GET(req: NextRequest) {
   try {
-    const ctx = await extractAuthContext(req);
-    if (ctx) {
-      requireRole(ctx, ['admin', 'branch_admin', 'warehouse']);
-    }
+    const ctx = requireAuth(await extractAuthContext(req));
+    requireRole(ctx, ['admin', 'branch_admin', 'warehouse']);
 
     const { searchParams } = new URL(req.url);
     const rawParams = {

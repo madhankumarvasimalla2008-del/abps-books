@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { ordersService } from '@/server/services/orders.service';
-import { extractAuthContext } from '@/server/auth/guard';
+import { extractAuthContext, requireAuth } from '@/server/auth/guard';
 import { handleApiError, successResponse } from '@/server/utils/api-response';
 
 interface RouteContext {
@@ -10,8 +10,8 @@ interface RouteContext {
 export async function GET(req: NextRequest, { params }: RouteContext) {
   try {
     const { id } = await params;
-    const ctx = await extractAuthContext(req);
-    const order = await ordersService.getOrderById(id, ctx || undefined);
+    const ctx = requireAuth(await extractAuthContext(req));
+    const order = await ordersService.getOrderById(id, ctx);
 
     return successResponse(order);
   } catch (error) {

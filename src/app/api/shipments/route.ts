@@ -1,12 +1,14 @@
 import { NextRequest } from 'next/server';
 import { shipmentsService } from '@/server/services/shipments.service';
 import { createShipmentSchema, shipmentFilterSchema } from '@/server/validation/shipments';
-import { extractAuthContext, requireRole } from '@/server/auth/guard';
+import { extractAuthContext, requireAuth, requireRole } from '@/server/auth/guard';
 import { handleApiError, paginatedResponse, successResponse } from '@/server/utils/api-response';
 
 export async function GET(req: NextRequest) {
   try {
-    const ctx = await extractAuthContext(req);
+    const ctx = requireAuth(await extractAuthContext(req));
+    requireRole(ctx, ['admin', 'branch_admin', 'warehouse', 'sales']);
+
     const { searchParams } = new URL(req.url);
     const rawParams = {
       orderId: searchParams.get('orderId') || undefined,
@@ -21,7 +23,7 @@ export async function GET(req: NextRequest) {
     };
 
     const filters = shipmentFilterSchema.parse(rawParams);
-    const result = await shipmentsService.listShipments(filters, ctx || undefined);
+    const result = await shipmentsService.listShipments(filters, ctx);
     return paginatedResponse(result);
   } catch (error) {
     return handleApiError(error);
@@ -30,10 +32,8 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const ctx = await extractAuthContext(req);
-    if (ctx) {
-      requireRole(ctx, ['admin', 'branch_admin', 'warehouse']);
-    }
+    const ctx = requireAuth(await extractAuthContext(req));
+    requireRole(ctx, ['admin', 'branch_admin', 'warehouse']);
 
     const body = await req.json();
     const validatedData = createShipmentSchema.parse(body);

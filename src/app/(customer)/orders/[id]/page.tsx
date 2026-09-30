@@ -20,7 +20,7 @@ import { OrderCustomerInfo } from '@/components/customer/orders/OrderCustomerInf
 import { OrderPaymentInfo } from '@/components/customer/orders/OrderPaymentInfo';
 import { OrderStatusTimeline } from '@/components/customer/orders/OrderStatusTimeline';
 import { OrderNotFound } from '@/components/customer/orders/OrderNotFound';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 
 export default function CustomerOrderDetailPage({
   params,
@@ -138,16 +138,16 @@ export default function CustomerOrderDetailPage({
             Buy Again
           </Button>
 
-          <Link href={`/orders/${activeOrder.id}/track`}>
-            <Button
-              type="button"
-              variant="primary"
-              size="sm"
-              leftIcon={<Truck className="w-3.5 h-3.5" />}
-              className="text-xs font-semibold shadow-2xs"
-            >
-              View Tracking
-            </Button>
+          <Link
+            href={`/orders/${activeOrder.id}/track`}
+            className={buttonVariants({
+              variant: 'primary',
+              size: 'sm',
+              className: 'text-xs font-semibold shadow-2xs inline-flex items-center gap-1.5',
+            })}
+          >
+            <Truck className="w-3.5 h-3.5" />
+            <span>View Tracking</span>
           </Link>
         </div>
       </div>

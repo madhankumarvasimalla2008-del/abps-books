@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { CheckCircle2, Clock, Truck, ChevronRight } from 'lucide-react';
 import { Order, OrderTrackingStep } from '@/types';
-import { Button } from '@/components/ui/Button';
+import { buttonVariants } from '@/components/ui/Button';
 
 export interface OrderStatusTimelineProps {
   order: Order;
@@ -125,15 +125,16 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
 
       {showFullLink && (
         <div className="pt-2 border-t border-slate-100">
-          <Link href={`/orders/${order.id}/track`} className="block">
-            <Button
-              variant="outline"
-              size="sm"
-              className="w-full text-xs font-semibold"
-              rightIcon={<ChevronRight className="w-3.5 h-3.5" />}
-            >
-              View Tracking Information
-            </Button>
+          <Link
+            href={`/orders/${order.id}/track`}
+            className={buttonVariants({
+              variant: 'outline',
+              size: 'sm',
+              className: 'w-full text-xs font-semibold gap-1.5',
+            })}
+          >
+            <span>View Tracking Information</span>
+            <ChevronRight className="w-3.5 h-3.5" />
           </Link>
         </div>
       )}

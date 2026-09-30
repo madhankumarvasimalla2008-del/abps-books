@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { customersService } from '@/server/services/customers.service';
 import { updateCustomerAddressSchema } from '@/server/validation/customers';
-import { extractAuthContext } from '@/server/auth/guard';
+import { extractAuthContext, requireAuth } from '@/server/auth/guard';
 import { handleApiError, successResponse } from '@/server/utils/api-response';
 
 interface RouteContext {
@@ -11,8 +11,8 @@ interface RouteContext {
 export async function GET(req: NextRequest, { params }: RouteContext) {
   try {
     const { id, addressId } = await params;
-    const ctx = await extractAuthContext(req);
-    const address = await customersService.getAddressById(id, addressId, ctx || undefined);
+    const ctx = requireAuth(await extractAuthContext(req));
+    const address = await customersService.getAddressById(id, addressId, ctx);
 
     return successResponse(address);
   } catch (error) {
@@ -23,10 +23,10 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
 export async function PUT(req: NextRequest, { params }: RouteContext) {
   try {
     const { id, addressId } = await params;
-    const ctx = await extractAuthContext(req);
+    const ctx = requireAuth(await extractAuthContext(req));
     const body = await req.json();
     const validatedData = updateCustomerAddressSchema.parse(body);
-    const updated = await customersService.updateAddress(id, addressId, validatedData, ctx || undefined);
+    const updated = await customersService.updateAddress(id, addressId, validatedData, ctx);
 
     return successResponse(updated);
   } catch (error) {
@@ -37,10 +37,10 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
 export async function PATCH(req: NextRequest, { params }: RouteContext) {
   try {
     const { id, addressId } = await params;
-    const ctx = await extractAuthContext(req);
+    const ctx = requireAuth(await extractAuthContext(req));
     const body = await req.json();
     const validatedData = updateCustomerAddressSchema.parse(body);
-    const updated = await customersService.updateAddress(id, addressId, validatedData, ctx || undefined);
+    const updated = await customersService.updateAddress(id, addressId, validatedData, ctx);
 
     return successResponse(updated);
   } catch (error) {
@@ -51,8 +51,8 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
 export async function DELETE(req: NextRequest, { params }: RouteContext) {
   try {
     const { id, addressId } = await params;
-    const ctx = await extractAuthContext(req);
-    await customersService.deleteAddress(id, addressId, ctx || undefined);
+    const ctx = requireAuth(await extractAuthContext(req));
+    await customersService.deleteAddress(id, addressId, ctx);
 
     return successResponse({ success: true, deletedId: addressId });
   } catch (error) {

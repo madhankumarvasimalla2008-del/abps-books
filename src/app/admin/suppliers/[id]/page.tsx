@@ -23,7 +23,7 @@ import {
 import { useSuppliers, UpdateSupplierInput } from '@/context/SupplierContext';
 import { useProducts } from '@/context/ProductContext';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 import { Product } from '@/types';
 
 export default function AdminSupplierDetailPage({
@@ -92,10 +92,16 @@ export default function AdminSupplierDetailPage({
           <p className="text-xs text-slate-500 max-w-md mx-auto mt-1 mb-6">
             The supplier record with ID <code className="font-mono text-emerald-700 font-semibold">{resolvedParams.id}</code> does not exist in the administrative directory or may have been reset.
           </p>
-          <Link href="/admin/suppliers">
-            <Button variant="primary" size="sm" leftIcon={<ArrowLeft className="w-4 h-4" />}>
-              Back to Suppliers Directory
-            </Button>
+          <Link
+            href="/admin/suppliers"
+            className={buttonVariants({
+              variant: 'primary',
+              size: 'sm',
+              className: 'gap-1.5',
+            })}
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to Suppliers Directory</span>
           </Link>
         </div>
       </div>
@@ -328,10 +334,16 @@ export default function AdminSupplierDetailPage({
             </p>
           </div>
 
-          <Link href="/admin/products">
-            <Button variant="outline" size="sm" rightIcon={<ArrowRight className="w-3.5 h-3.5" />}>
-              View All Products
-            </Button>
+          <Link
+            href="/admin/products"
+            className={buttonVariants({
+              variant: 'outline',
+              size: 'sm',
+              className: 'gap-1.5',
+            })}
+          >
+            <span>View All Products</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 

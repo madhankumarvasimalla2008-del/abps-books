@@ -15,7 +15,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 
 export default function AdminSystemPage() {
   const [clearingCache, setClearingCache] = useState(false);
@@ -61,10 +61,16 @@ export default function AdminSystemPage() {
           </p>
         </div>
 
-        <Link href="/admin/settings">
-          <Button variant="outline" size="sm" leftIcon={<ArrowLeft className="w-4 h-4" />}>
-            Back to Settings
-          </Button>
+        <Link
+          href="/admin/settings"
+          className={buttonVariants({
+            variant: 'outline',
+            size: 'sm',
+            className: 'gap-1.5',
+          })}
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to Settings</span>
         </Link>
       </div>
 

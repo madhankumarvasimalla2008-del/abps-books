@@ -15,7 +15,7 @@ import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import { AdminEmptyState } from '@/components/admin/AdminEmptyState';
 import { ProductForm } from '@/components/admin/products/ProductForm';
 import { useProducts, UpdateProductInput } from '@/context/ProductContext';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 
 export default function EditProductPage({
   params,
@@ -45,10 +45,16 @@ export default function EditProductPage({
           title="Catalog Title Not Found"
           description={`No textbook record was found matching ID "${resolvedParams.id}". It may have been removed or archived.`}
           action={
-            <Link href="/admin/products">
-              <Button variant="primary" size="sm" leftIcon={<ArrowLeft className="w-4 h-4" />}>
-                Back to Catalog Master
-              </Button>
+            <Link
+              href="/admin/products"
+              className={buttonVariants({
+                variant: 'primary',
+                size: 'sm',
+                className: 'gap-1.5',
+              })}
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Back to Catalog Master</span>
             </Link>
           }
         />
@@ -126,25 +132,31 @@ export default function EditProductPage({
         }
         actions={
           <div className="flex items-center gap-2">
-            <Link href={`/books/${resolvedParams.id}`} target="_blank" rel="noreferrer">
-              <Button
-                variant="outline"
-                size="sm"
-                leftIcon={<ExternalLink className="w-3.5 h-3.5" />}
-                title="View title in Customer Portal"
-              >
-                View in Store
-              </Button>
+            <Link
+              href={`/books/${resolvedParams.id}`}
+              target="_blank"
+              rel="noreferrer"
+              className={buttonVariants({
+                variant: 'outline',
+                size: 'sm',
+                className: 'gap-1.5',
+              })}
+              title="View title in Customer Portal"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              <span>View in Store</span>
             </Link>
-            <Link href="/admin/inventory">
-              <Button
-                variant="outline"
-                size="sm"
-                leftIcon={<Boxes className="w-3.5 h-3.5" />}
-                title="Manage warehouse counts & stock adjustments"
-              >
-                Inventory Module
-              </Button>
+            <Link
+              href="/admin/inventory"
+              className={buttonVariants({
+                variant: 'outline',
+                size: 'sm',
+                className: 'gap-1.5',
+              })}
+              title="Manage warehouse counts & stock adjustments"
+            >
+              <Boxes className="w-3.5 h-3.5" />
+              <span>Inventory Module</span>
             </Link>
           </div>
         }
