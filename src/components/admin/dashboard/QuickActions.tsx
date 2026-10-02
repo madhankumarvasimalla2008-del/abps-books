@@ -4,17 +4,26 @@ import { PlusCircle, ShoppingBag, Boxes, Users, ArrowUpRight } from 'lucide-reac
 
 const ACTIONS = [
   {
-    label: 'Add Product',
+    label: 'Add Book',
     description: 'Catalog new book title',
     icon: PlusCircle,
-    href: '/admin/products',
+    href: '/admin/products/new',
     color: 'text-emerald-700',
     bgColor: 'bg-emerald-50',
     borderColor: 'border-emerald-200/80',
   },
   {
-    label: 'View Orders',
-    description: 'Fulfill customer orders',
+    label: 'Bulk Adjust',
+    description: 'Multi-item stock updates',
+    icon: Boxes,
+    href: '/admin/inventory/bulk',
+    color: 'text-purple-700',
+    bgColor: 'bg-purple-50',
+    borderColor: 'border-purple-200/80',
+  },
+  {
+    label: 'New Order',
+    description: 'Fulfill & process orders',
     icon: ShoppingBag,
     href: '/admin/orders',
     color: 'text-blue-700',
@@ -22,16 +31,7 @@ const ACTIONS = [
     borderColor: 'border-blue-200/80',
   },
   {
-    label: 'View Inventory',
-    description: 'Stock & batch adjustments',
-    icon: Boxes,
-    href: '/admin/inventory',
-    color: 'text-purple-700',
-    bgColor: 'bg-purple-50',
-    borderColor: 'border-purple-200/80',
-  },
-  {
-    label: 'View Customers',
+    label: 'Customer Accounts',
     description: 'Customer accounts & branches',
     icon: Users,
     href: '/admin/customers',

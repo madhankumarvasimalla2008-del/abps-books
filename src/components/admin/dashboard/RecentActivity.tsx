@@ -71,7 +71,7 @@ export const RecentActivity: React.FC<RecentActivityProps> = ({ notifications })
                         {item.title}
                       </p>
                       <span className="text-[10px] text-slate-400 whitespace-nowrap">
-                        {new Date(item.timestamp).toLocaleTimeString([], {
+                        {new Date(item.timestamp || (item as any).createdAt || Date.now()).toLocaleTimeString([], {
                           hour: '2-digit',
                           minute: '2-digit',
                         })}
@@ -80,10 +80,10 @@ export const RecentActivity: React.FC<RecentActivityProps> = ({ notifications })
                     <p className="text-xs text-slate-600 mt-0.5 line-clamp-2">
                       {item.message}
                     </p>
-                    {item.linkUrl && (
+                    {(item.linkUrl || (item as any).actionUrl) && (
                       <div className="mt-2">
                         <Link
-                          href={item.linkUrl}
+                          href={item.linkUrl || (item as any).actionUrl}
                           className="text-[11px] font-semibold text-emerald-700 hover:text-emerald-800 inline-flex items-center gap-1"
                         >
                           <span>Review Notice</span>

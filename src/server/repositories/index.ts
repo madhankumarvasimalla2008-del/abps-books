@@ -8,3 +8,4 @@ export * from './suppliers.repository';
 export * from './purchase-orders.repository';
 export * from './shipments.repository';
 export * from './payments.repository';
+export * from './dashboard.repository';

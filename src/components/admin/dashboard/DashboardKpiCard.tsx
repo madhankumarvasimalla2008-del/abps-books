@@ -8,6 +8,7 @@ export interface DashboardKpiCardProps {
   icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' | 'false' }>;
   href?: string;
   badge?: string;
+  isLoading?: boolean;
 }
 
 export const DashboardKpiCard: React.FC<DashboardKpiCardProps> = ({
@@ -17,6 +18,7 @@ export const DashboardKpiCard: React.FC<DashboardKpiCardProps> = ({
   icon: Icon,
   href,
   badge,
+  isLoading,
 }) => {
   const content = (
     <div className="bg-white rounded-xl border border-slate-200/90 p-4 sm:p-5 shadow-2xs hover:border-slate-300 transition-colors h-full flex flex-col justify-between">
@@ -26,7 +28,11 @@ export const DashboardKpiCard: React.FC<DashboardKpiCardProps> = ({
             {label}
           </span>
           <div className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
-            {value}
+            {isLoading ? (
+              <span className="inline-block h-8 w-24 bg-slate-200 animate-pulse rounded" />
+            ) : (
+              value
+            )}
           </div>
         </div>
         <div className="w-10 h-10 rounded-xl bg-slate-100 text-emerald-800 border border-slate-200/60 flex items-center justify-center shrink-0">

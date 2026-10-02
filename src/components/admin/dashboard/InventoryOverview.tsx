@@ -3,33 +3,52 @@ import Link from 'next/link';
 import { ArrowRight, BookOpen, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
 import { Product } from '@/types';
 
-export interface InventoryOverviewProps {
-  products: Product[];
+export interface InventoryStats {
+  total: number;
+  inStock: number;
+  lowStock: number;
+  outOfStock: number;
 }
 
-export const InventoryOverview: React.FC<InventoryOverviewProps> = ({ products }) => {
+export interface InventoryOverviewProps {
+  stats?: InventoryStats;
+  products?: Product[];
+}
+
+export const InventoryOverview: React.FC<InventoryOverviewProps> = ({ stats: propStats, products }) => {
   const stats = React.useMemo(() => {
+    if (propStats) {
+      return propStats;
+    }
     let inStock = 0;
     let lowStock = 0;
     let outOfStock = 0;
 
-    products.forEach((p) => {
-      if (p.status === 'out_of_stock' || p.stockQuantity === 0) {
-        outOfStock++;
-      } else if (p.status === 'low_stock' || p.stockQuantity <= p.lowStockThreshold) {
-        lowStock++;
-      } else {
-        inStock++;
-      }
-    });
+    if (products && products.length > 0) {
+      products.forEach((p) => {
+        if (p.status === 'out_of_stock' || p.stockQuantity === 0) {
+          outOfStock++;
+        } else if (p.status === 'low_stock' || p.stockQuantity <= p.lowStockThreshold) {
+          lowStock++;
+        } else {
+          inStock++;
+        }
+      });
+      return {
+        total: products.length,
+        inStock,
+        lowStock,
+        outOfStock,
+      };
+    }
 
     return {
-      total: products.length,
-      inStock,
-      lowStock,
-      outOfStock,
+      total: 0,
+      inStock: 0,
+      lowStock: 0,
+      outOfStock: 0,
     };
-  }, [products]);
+  }, [propStats, products]);
 
   return (
     <div className="bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-4">

@@ -4,7 +4,9 @@ import { ArrowRight, Clock, CheckCircle2, RefreshCw, Truck, PackageCheck, XCircl
 import { Order, OrderStatus } from '@/types';
 
 export interface OrderStatusOverviewProps {
-  orders: Order[];
+  orders?: Order[];
+  statusCounts?: Record<string, number>;
+  totalOrdersCount?: number;
 }
 
 const STATUS_CONFIG: {
@@ -65,9 +67,16 @@ const STATUS_CONFIG: {
   },
 ];
 
-export const OrderStatusOverview: React.FC<OrderStatusOverviewProps> = ({ orders }) => {
-  const countsByStatus = React.useMemo(() => {
-    const counts: Record<string, number> = {
+export const OrderStatusOverview: React.FC<OrderStatusOverviewProps> = ({
+  orders,
+  statusCounts,
+  totalOrdersCount,
+}) => {
+  const counts = React.useMemo(() => {
+    if (statusCounts) {
+      return statusCounts;
+    }
+    const derived: Record<string, number> = {
       Pending: 0,
       Confirmed: 0,
       Processing: 0,
@@ -75,13 +84,22 @@ export const OrderStatusOverview: React.FC<OrderStatusOverviewProps> = ({ orders
       Delivered: 0,
       Cancelled: 0,
     };
-    orders.forEach((o) => {
-      if (counts[o.status] !== undefined) {
-        counts[o.status]++;
-      }
-    });
-    return counts;
-  }, [orders]);
+    if (orders && orders.length > 0) {
+      orders.forEach((o) => {
+        if (derived[o.status] !== undefined) {
+          derived[o.status]++;
+        }
+      });
+    }
+    return derived;
+  }, [orders, statusCounts]);
+
+  const totalCount =
+    totalOrdersCount !== undefined
+      ? totalOrdersCount
+      : orders
+        ? orders.length
+        : Object.values(counts).reduce((a, b) => a + b, 0);
 
   return (
     <div className="bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-4">
@@ -89,7 +107,7 @@ export const OrderStatusOverview: React.FC<OrderStatusOverviewProps> = ({ orders
         <div>
           <h2 className="text-base font-bold text-slate-900">Order Status Overview</h2>
           <p className="text-xs text-slate-500 mt-0.5">
-            Distribution of {orders.length} {orders.length === 1 ? 'order' : 'orders'} across fulfillment stages
+            Distribution of {totalCount} {totalCount === 1 ? 'order' : 'orders'} across fulfillment stages
           </p>
         </div>
         <Link
@@ -103,7 +121,7 @@ export const OrderStatusOverview: React.FC<OrderStatusOverviewProps> = ({ orders
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {STATUS_CONFIG.map(({ status, label, icon: Icon, color, bgColor, borderColor }) => {
-          const count = countsByStatus[status] || 0;
+          const count = counts[status] || 0;
           return (
             <Link
               key={status}

@@ -11,3 +11,4 @@ export * from './payments.service';
 export * from './payment-provider.interface';
 export * from './notifications.service';
 export * from './audit.service';
+export * from './dashboard.service';

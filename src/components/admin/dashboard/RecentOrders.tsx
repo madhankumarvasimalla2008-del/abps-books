@@ -1,15 +1,30 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowRight, Eye, Package } from 'lucide-react';
-import { Order } from '@/types';
 import { StatusBadge } from '@/components/admin/StatusBadge';
 
-export interface RecentOrdersProps {
-  orders: Order[];
+export interface RecentOrderItem {
+  id: string;
+  orderNumber: string;
+  createdAt: string;
+  customerName?: string | null;
+  customerEmail?: string | null;
+  branchName?: string | null;
+  branchCode?: string | null;
+  totalCopies?: number;
+  totalAmount: number;
+  status: any;
+  items?: Array<{ quantity: number }>;
 }
 
-export const RecentOrders: React.FC<RecentOrdersProps> = ({ orders }) => {
+export interface RecentOrdersProps {
+  orders: RecentOrderItem[];
+  totalOrdersCount?: number;
+}
+
+export const RecentOrders: React.FC<RecentOrdersProps> = ({ orders, totalOrdersCount }) => {
   const recentOrders = orders.slice(0, 5);
+  const totalCount = totalOrdersCount !== undefined ? totalOrdersCount : orders.length;
 
   return (
     <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs overflow-hidden flex flex-col h-full">
@@ -17,7 +32,7 @@ export const RecentOrders: React.FC<RecentOrdersProps> = ({ orders }) => {
         <div>
           <h2 className="text-base font-bold text-slate-900">Recent Orders</h2>
           <p className="text-xs text-slate-500 mt-0.5">
-            Latest {recentOrders.length} of {orders.length} customer book orders
+            Latest {recentOrders.length} of {totalCount} customer book orders
           </p>
         </div>
         <Link
@@ -51,14 +66,21 @@ export const RecentOrders: React.FC<RecentOrdersProps> = ({ orders }) => {
             </thead>
             <tbody className="divide-y divide-slate-100 font-medium">
               {recentOrders.map((order) => {
-                const totalCopies = order.items.reduce((sum, item) => sum + item.quantity, 0);
+                const totalCopies =
+                  order.totalCopies !== undefined
+                    ? order.totalCopies
+                    : Array.isArray(order.items)
+                      ? order.items.reduce((sum, item) => sum + (item.quantity || 0), 0)
+                      : 0;
+
                 const orderDate = new Date(order.createdAt).toLocaleDateString('en-IN', {
                   day: 'numeric',
                   month: 'short',
                   year: 'numeric',
                 });
                 const customerDisplay = order.customerName?.trim() || 'Customer';
-                const accountDisplay = order.branchName?.trim() || (order.branchCode ? `Branch ${order.branchCode}` : null);
+                const accountDisplay =
+                  order.branchName?.trim() || (order.branchCode ? `Branch ${order.branchCode}` : null);
 
                 return (
                   <tr key={order.id} className="hover:bg-slate-50/80 transition-colors">
@@ -89,7 +111,7 @@ export const RecentOrders: React.FC<RecentOrdersProps> = ({ orders }) => {
                     </td>
                     <td className="py-3 px-4 text-right whitespace-nowrap">
                       <Link
-                        href={`/admin/orders`}
+                        href="/admin/orders"
                         className="inline-flex items-center gap-1 text-slate-600 hover:text-emerald-700 font-medium p-1 hover:bg-emerald-50 rounded transition-colors"
                         title="View order in orders module"
                         aria-label={`View order ${order.orderNumber}`}
