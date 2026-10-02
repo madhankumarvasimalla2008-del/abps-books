@@ -15,6 +15,13 @@
       "when": 1789935063445,
       "tag": "0001_mean_captain_flint",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790936676628,
+      "tag": "0002_mushy_songbird",
+      "breakpoints": true
     }
   ]
 }

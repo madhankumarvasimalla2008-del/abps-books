@@ -62,7 +62,7 @@ export class PaymentsService {
       upiApp: input.upiApp,
       payerVpa: input.payerVpa,
       payerPhone: input.payerPhone,
-      customerEmail: order.customerEmail,
+      customerEmail: order.customerEmail || undefined,
       customerName: order.customerName,
       idempotencyKey: input.idempotencyKey,
     });

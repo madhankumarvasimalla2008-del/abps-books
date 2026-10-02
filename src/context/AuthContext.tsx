@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { User, Role } from '@/types';
 import { supabaseBrowser } from '@/lib/supabase/client';
 import { getSiteOrigin } from '@/lib/site-url';
+import { normalizeIndianPhone } from '@/lib/phone';
 
 interface AuthContextType {
   user: User | null;
@@ -11,12 +12,20 @@ interface AuthContextType {
   isLoading: boolean;
   loginAs: (role: Role) => void;
   signIn: (email: string, password: string) => Promise<{ error: string | null; role?: Role }>;
-  signUp: (email: string, password: string, fullName?: string, phone?: string) => Promise<{ error: string | null }>;
+  signUp: (
+    email: string,
+    password: string,
+    fullName?: string,
+    phone?: string
+  ) => Promise<{ error: string | null; needsEmailConfirmation?: boolean }>;
   signOut: () => Promise<void>;
   logout: () => void;
   resetPassword: (email: string) => Promise<{ error: string | null }>;
   updatePassword: (password: string) => Promise<{ error: string | null }>;
   refreshSession: () => Promise<void>;
+  signInWithGoogle: (redirectTo?: string) => Promise<{ error: string | null }>;
+  sendPhoneOtp: (phone: string) => Promise<{ error: string | null }>;
+  verifyPhoneOtp: (phone: string, otp: string) => Promise<{ error: string | null; role?: Role }>;
 }
 
 export const DEMO_USERS: Record<Role, User> = {
@@ -89,9 +98,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const authUser = json.data.user;
           setUser({
             id: authUser.userId,
-            name: authUser.fullName || authUser.email.split('@')[0],
-            email: authUser.email,
-            phone: '',
+            name: authUser.fullName || (authUser.email ? authUser.email.split('@')[0] : null) || authUser.phone || 'ABPS User',
+            email: authUser.email || '',
+            phone: authUser.phone || '',
             role: authUser.role as Role,
             branchId: authUser.branchId || undefined,
             createdAt: new Date().toISOString(),
@@ -200,15 +209,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     password: string,
     fullName?: string,
     phone?: string
-  ): Promise<{ error: string | null }> => {
+  ): Promise<{ error: string | null; needsEmailConfirmation?: boolean }> => {
     if (!supabaseBrowser) {
       return { error: 'Supabase client is not initialized' };
     }
     try {
-      const { error } = await supabaseBrowser.auth.signUp({
+      const siteOrigin = getSiteOrigin();
+      const redirectTo = `${siteOrigin}/auth/callback?next=/`;
+      const { data, error } = await supabaseBrowser.auth.signUp({
         email,
         password,
         options: {
+          emailRedirectTo: redirectTo,
           data: {
             full_name: fullName,
             phone,
@@ -218,9 +230,99 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) {
         return { error: error.message };
       }
-      return { error: null };
+      if (data.session) {
+        await syncServerSession();
+        return { error: null, needsEmailConfirmation: false };
+      }
+      return { error: null, needsEmailConfirmation: true };
     } catch (err: any) {
       return { error: err?.message || 'Failed to sign up' };
+    }
+  };
+
+  const signInWithGoogle = async (redirectTo?: string): Promise<{ error: string | null }> => {
+    if (!supabaseBrowser) {
+      return { error: 'Supabase client is not initialized' };
+    }
+    try {
+      const siteOrigin = getSiteOrigin();
+      let destination = '/';
+      if (
+        redirectTo &&
+        redirectTo.startsWith('/') &&
+        !redirectTo.startsWith('//') &&
+        !redirectTo.startsWith('/\\')
+      ) {
+        destination = redirectTo;
+      }
+      const callbackUrl = `${siteOrigin}/auth/callback?next=${encodeURIComponent(destination)}`;
+      const { error } = await supabaseBrowser.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: callbackUrl,
+        },
+      });
+      if (error) {
+        return { error: error.message };
+      }
+      return { error: null };
+    } catch (err: any) {
+      return { error: err?.message || 'Failed to initialize Google sign-in' };
+    }
+  };
+
+  const sendPhoneOtp = async (phone: string): Promise<{ error: string | null }> => {
+    if (!supabaseBrowser) {
+      return { error: 'Supabase client is not initialized' };
+    }
+    const norm = normalizeIndianPhone(phone);
+    if (!norm.valid || !norm.phone) {
+      return { error: norm.error || 'Please enter a valid Indian mobile number.' };
+    }
+    try {
+      const { error } = await supabaseBrowser.auth.signInWithOtp({
+        phone: norm.phone,
+      });
+      if (error) {
+        return { error: error.message };
+      }
+      return { error: null };
+    } catch (err: any) {
+      return { error: err?.message || 'Failed to send verification code' };
+    }
+  };
+
+  const verifyPhoneOtp = async (
+    phone: string,
+    otp: string
+  ): Promise<{ error: string | null; role?: Role }> => {
+    if (!supabaseBrowser) {
+      return { error: 'Supabase client is not initialized' };
+    }
+    const norm = normalizeIndianPhone(phone);
+    if (!norm.valid || !norm.phone) {
+      return { error: norm.error || 'Please enter a valid Indian mobile number.' };
+    }
+    const cleanOtp = otp ? otp.trim() : '';
+    if (!cleanOtp || !/^\d{6}$/.test(cleanOtp)) {
+      return { error: 'Please enter a valid 6-digit verification code.' };
+    }
+    try {
+      const { data, error } = await supabaseBrowser.auth.verifyOtp({
+        phone: norm.phone,
+        token: cleanOtp,
+        type: 'sms',
+      });
+      if (error) {
+        return { error: error.message };
+      }
+      if (data.session || data.user) {
+        const authUser = await syncServerSession();
+        return { error: null, role: (authUser?.role as Role) || 'customer' };
+      }
+      return { error: null, role: 'customer' };
+    } catch (err: any) {
+      return { error: err?.message || 'Failed to verify OTP' };
     }
   };
 
@@ -293,6 +395,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         resetPassword,
         updatePassword,
         refreshSession,
+        signInWithGoogle,
+        sendPhoneOtp,
+        verifyPhoneOtp,
       }}
     >
       {children}

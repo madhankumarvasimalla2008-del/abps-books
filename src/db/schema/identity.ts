@@ -1,14 +1,18 @@
-import { pgTable, uuid, varchar, text, boolean, timestamp, primaryKey, index, uniqueIndex } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar, text, boolean, timestamp, primaryKey, uniqueIndex, check } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
 import { branches } from './business';
 
 /**
  * auth_users: Business-side user identity reference.
  * Note: Authentication credentials (passwords, tokens) are managed by the auth provider
  * (e.g. Supabase Auth) and are strictly NOT stored in this business table.
+ * Supports email authentication, phone authentication, or both.
+ * Enforces partial uniqueness for active emails and active phone numbers,
+ * and requires at least one valid identity handle.
  */
 export const authUsers = pgTable('auth_users', {
   id: uuid('id').defaultRandom().primaryKey(),
-  email: varchar('email', { length: 255 }).notNull().unique(),
+  email: varchar('email', { length: 255 }),
   phone: varchar('phone', { length: 20 }),
   fullName: varchar('full_name', { length: 150 }).notNull(),
   avatarUrl: varchar('avatar_url', { length: 512 }),
@@ -19,7 +23,13 @@ export const authUsers = pgTable('auth_users', {
   updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
   deletedAt: timestamp('deleted_at', { withTimezone: true, mode: 'string' }),
 }, (table) => [
-  index('idx_auth_users_phone').on(table.phone),
+  uniqueIndex('uq_auth_users_active_email')
+    .on(table.email)
+    .where(sql`"email" IS NOT NULL AND "deleted_at" IS NULL`),
+  uniqueIndex('uq_auth_users_active_phone')
+    .on(table.phone)
+    .where(sql`"phone" IS NOT NULL AND "deleted_at" IS NULL`),
+  check('chk_auth_users_identity_handle', sql`"email" IS NOT NULL OR "phone" IS NOT NULL`),
 ]);
 
 export const roles = pgTable('roles', {

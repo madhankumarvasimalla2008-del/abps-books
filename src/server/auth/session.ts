@@ -1,10 +1,11 @@
-import { eq, and, isNull } from 'drizzle-orm';
+import { eq, and, isNull, ne } from 'drizzle-orm';
 import { db } from '@/db';
 import { authUsers, userRoles, roles, customerProfiles, staffProfiles } from '@/db/schema';
 import { AuthContext, UserRole } from './types';
 import { ForbiddenError, UnauthorizedError } from '../errors';
-import { createSupabaseClientFromRequest, createSupabaseAdminClient } from '@/lib/supabase/server';
+import { createSupabaseClientFromRequest } from '@/lib/supabase/server';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
+import { normalizeIndianPhone } from '@/lib/phone';
 
 const ROLE_HIERARCHY: Record<UserRole, number> = {
   admin: 100,
@@ -17,18 +18,28 @@ const ROLE_HIERARCHY: Record<UserRole, number> = {
 /**
  * Resolves or auto-provisions a business identity record in auth_users from a Supabase Auth user.
  * Strictly guarantees 1:1 mapping between Supabase user.id and auth_users.id.
+ * Supports email-only, phone-only, or multi-factor identities without synthetic data invention.
  * Enforces account status gating (rejects inactive users).
  * Resolves authoritative roles from the database rather than trusting client claims.
  */
 export async function resolveOrCreateAuthUser(supabaseUser: SupabaseUser): Promise<AuthContext> {
   const userId = supabaseUser.id;
-  const email = supabaseUser.email?.toLowerCase();
+  const rawEmail = supabaseUser.email ? supabaseUser.email.toLowerCase().trim() : null;
+  const rawPhone = (supabaseUser.user_metadata?.phone as string) || supabaseUser.phone || null;
 
-  if (!userId || !email) {
-    throw new UnauthorizedError('Invalid Supabase user identity: Missing ID or email');
+  // Normalize phone if present
+  let phone: string | null = null;
+  if (rawPhone) {
+    const norm = normalizeIndianPhone(rawPhone);
+    phone = norm.valid && norm.phone ? norm.phone : rawPhone.trim();
   }
 
-  // 1. Check if user already exists in PostgreSQL auth_users
+  // Reject identity if both email and phone are absent
+  if (!userId || (!rawEmail && !phone)) {
+    throw new UnauthorizedError('Invalid Supabase user identity: Missing both email and phone number');
+  }
+
+  // 1. Check if user already exists in PostgreSQL auth_users by Supabase user.id
   const [existingUser] = await db
     .select({
       id: authUsers.id,
@@ -37,6 +48,8 @@ export async function resolveOrCreateAuthUser(supabaseUser: SupabaseUser): Promi
       phone: authUsers.phone,
       isActive: authUsers.isActive,
       deletedAt: authUsers.deletedAt,
+      emailVerifiedAt: authUsers.emailVerifiedAt,
+      phoneVerifiedAt: authUsers.phoneVerifiedAt,
     })
     .from(authUsers)
     .where(and(eq(authUsers.id, userId), isNull(authUsers.deletedAt)))
@@ -46,6 +59,49 @@ export async function resolveOrCreateAuthUser(supabaseUser: SupabaseUser): Promi
     // Account Status Gating: Inactive accounts are denied access
     if (!existingUser.isActive) {
       throw new ForbiddenError('Account is deactivated. Please contact your ABPS administrator.');
+    }
+
+    // Account Continuity & Handle Updates (without automatic merging)
+    const needsPhoneUpdate = Boolean(phone && phone !== existingUser.phone);
+    const needsEmailUpdate = Boolean(rawEmail && rawEmail !== existingUser.email);
+    const needsPhoneVerify = Boolean(supabaseUser.phone_confirmed_at && !existingUser.phoneVerifiedAt);
+    const needsEmailVerify = Boolean(supabaseUser.email_confirmed_at && !existingUser.emailVerifiedAt);
+
+    if (needsPhoneUpdate || needsEmailUpdate || needsPhoneVerify || needsEmailVerify) {
+      if (needsPhoneUpdate && phone) {
+        // Enforce phone uniqueness across distinct active accounts
+        const [phoneConflict] = await db
+          .select({ id: authUsers.id })
+          .from(authUsers)
+          .where(and(eq(authUsers.phone, phone), ne(authUsers.id, userId), isNull(authUsers.deletedAt)))
+          .limit(1);
+        if (phoneConflict) {
+          throw new ForbiddenError('This phone number is already associated with another active ABPS account.');
+        }
+      }
+
+      if (needsEmailUpdate && rawEmail) {
+        // Enforce email uniqueness across distinct active accounts
+        const [emailConflict] = await db
+          .select({ id: authUsers.id })
+          .from(authUsers)
+          .where(and(eq(authUsers.email, rawEmail), ne(authUsers.id, userId), isNull(authUsers.deletedAt)))
+          .limit(1);
+        if (emailConflict) {
+          throw new ForbiddenError('This email address is already associated with another active ABPS account.');
+        }
+      }
+
+      await db
+        .update(authUsers)
+        .set({
+          email: rawEmail || existingUser.email,
+          phone: phone || existingUser.phone,
+          phoneVerifiedAt: supabaseUser.phone_confirmed_at || existingUser.phoneVerifiedAt,
+          emailVerifiedAt: supabaseUser.email_confirmed_at || existingUser.emailVerifiedAt,
+          updatedAt: new Date().toISOString(),
+        })
+        .where(eq(authUsers.id, userId));
     }
 
     // 2. Fetch authoritative roles from user_roles + roles
@@ -99,7 +155,8 @@ export async function resolveOrCreateAuthUser(supabaseUser: SupabaseUser): Promi
 
     return {
       userId: existingUser.id,
-      email: existingUser.email,
+      email: rawEmail || existingUser.email || null,
+      phone: phone || existingUser.phone || null,
       fullName: existingUser.fullName,
       role: effectiveRole,
       branchId,
@@ -107,28 +164,50 @@ export async function resolveOrCreateAuthUser(supabaseUser: SupabaseUser): Promi
     };
   }
 
-  // 3. User does not exist in auth_users -> Safe Auto-Provisioning
+  // 3. User does not exist in auth_users -> Pre-provisioning conflict validation
+  if (phone) {
+    const [existingPhone] = await db
+      .select({ id: authUsers.id })
+      .from(authUsers)
+      .where(and(eq(authUsers.phone, phone), isNull(authUsers.deletedAt)))
+      .limit(1);
+    if (existingPhone) {
+      throw new ForbiddenError('This phone number is already registered with an existing account. Please sign in with your existing account.');
+    }
+  }
+
+  if (rawEmail) {
+    const [existingEmail] = await db
+      .select({ id: authUsers.id })
+      .from(authUsers)
+      .where(and(eq(authUsers.email, rawEmail), isNull(authUsers.deletedAt)))
+      .limit(1);
+    if (existingEmail) {
+      throw new ForbiddenError('This email address is already registered with an existing account. Please sign in with your existing account.');
+    }
+  }
+
+  // 4. Safe Auto-Provisioning (Public users are strictly assigned customer role)
   const fullName =
     (supabaseUser.user_metadata?.full_name as string) ||
     (supabaseUser.user_metadata?.name as string) ||
-    (email.split('@')[0] ? email.split('@')[0] : 'ABPS User');
-
-  const phone = (supabaseUser.user_metadata?.phone as string) || supabaseUser.phone || null;
+    (rawEmail ? rawEmail.split('@')[0] : (phone ? `User ${phone}` : 'ABPS User'));
 
   return await db.transaction(async (tx) => {
     const [newUser] = await tx
       .insert(authUsers)
       .values({
         id: userId,
-        email,
+        email: rawEmail,
         fullName,
         phone,
         isActive: true,
-        emailVerifiedAt: supabaseUser.email_confirmed_at || new Date().toISOString(),
+        emailVerifiedAt: supabaseUser.email_confirmed_at || (rawEmail ? new Date().toISOString() : null),
+        phoneVerifiedAt: supabaseUser.phone_confirmed_at || (phone ? new Date().toISOString() : null),
       })
       .returning();
 
-    // Default role: customer
+    // Default role: customer strictly
     await tx.insert(userRoles).values({
       userId: newUser.id,
       roleId: 'customer',
@@ -141,7 +220,8 @@ export async function resolveOrCreateAuthUser(supabaseUser: SupabaseUser): Promi
 
     return {
       userId: newUser.id,
-      email: newUser.email,
+      email: newUser.email || null,
+      phone: newUser.phone || null,
       fullName: newUser.fullName,
       role: 'customer' as UserRole,
       branchId: null,

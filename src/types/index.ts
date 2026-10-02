@@ -5,8 +5,8 @@ export type Role = 'customer' | 'branch_admin' | 'admin' | 'warehouse' | 'sales'
 export interface User {
   id: string;
   name: string;
-  email: string;
-  phone: string;
+  email?: string | null;
+  phone?: string | null;
   role: Role;
   branchId?: string;
   branchName?: string;

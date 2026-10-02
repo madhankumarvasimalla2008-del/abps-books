@@ -2,7 +2,8 @@ export type UserRole = 'admin' | 'branch_admin' | 'warehouse' | 'sales' | 'custo
 
 export interface AuthContext {
   userId: string;
-  email: string;
+  email?: string | null;
+  phone?: string | null;
   fullName?: string;
   role: UserRole;
   branchId?: string | null;

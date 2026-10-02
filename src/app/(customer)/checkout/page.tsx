@@ -97,7 +97,7 @@ export default function CheckoutPage() {
     if (user) {
       setContactData((prev) => ({
         fullName: prev.fullName || user.name,
-        email: prev.email || user.email,
+        email: prev.email || user.email || '',
         phone: prev.phone || user.phone?.replace(/\D/g, '') || '',
       }));
     }
