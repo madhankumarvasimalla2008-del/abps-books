@@ -19,6 +19,7 @@ import {
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/context/AuthContext';
+import { normalizeIndianPhone, sanitizeIndianMobileInput } from '@/lib/phone';
 
 function SignupForm() {
   const router = useRouter();
@@ -68,6 +69,17 @@ function SignupForm() {
       return;
     }
 
+    // Phone validation if entered (phone is optional)
+    let cleanPhone: string | undefined = undefined;
+    if (phone.trim()) {
+      const norm = normalizeIndianPhone(phone);
+      if (!norm.valid || !norm.phone) {
+        setErrorMessage(norm.error || 'Please enter a valid 10-digit Indian mobile number.');
+        return;
+      }
+      cleanPhone = norm.phone;
+    }
+
     if (password.length < 8) {
       setErrorMessage('Password must be at least 8 characters long.');
       return;
@@ -82,7 +94,6 @@ function SignupForm() {
 
     const cleanEmail = email.trim().toLowerCase();
     const cleanName = fullName.trim();
-    const cleanPhone = phone.trim() || undefined;
 
     // Use existing authoritative customer self-registration
     const result = await signUp(cleanEmail, password, cleanName, cleanPhone);
@@ -181,6 +192,7 @@ function SignupForm() {
           label="Full Name"
           type="text"
           required
+          disabled={isLoading || isGoogleLoading}
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
           leftIcon={<User className="w-4 h-4" />}
@@ -191,34 +203,70 @@ function SignupForm() {
           label="Email address"
           type="email"
           required
+          disabled={isLoading || isGoogleLoading}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           leftIcon={<Mail className="w-4 h-4" />}
           placeholder="name@example.com"
         />
 
-        <Input
-          label="Phone Number"
-          type="tel"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          leftIcon={<Phone className="w-4 h-4" />}
-          placeholder="+91 98765 43210 (optional)"
-          helperText="For order updates and delivery notifications"
-        />
+        <div>
+          <label
+            htmlFor="signup-phone"
+            className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5"
+          >
+            Phone Number <span className="text-slate-400 font-normal lowercase">(optional)</span>
+          </label>
+          <div className="relative flex rounded-lg shadow-xs">
+            <div
+              className="inline-flex items-center gap-1.5 px-3 rounded-l-lg border border-r-0 border-slate-300 bg-slate-50 text-slate-700 text-sm font-semibold select-none shrink-0"
+              aria-hidden="true"
+            >
+              <Phone className="w-4 h-4 text-slate-400" />
+              <span>+91</span>
+            </div>
+            <input
+              id="signup-phone"
+              name="phone"
+              type="tel"
+              inputMode="numeric"
+              pattern="[0-9]{10}"
+              maxLength={10}
+              value={phone}
+              onChange={(e) => {
+                const sanitized = sanitizeIndianMobileInput(e.target.value);
+                setPhone(sanitized);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === '+' || e.key === 'e' || e.key === 'E') {
+                  e.preventDefault();
+                }
+              }}
+              placeholder="98765 43210"
+              aria-label="10-digit Indian mobile number"
+              disabled={isLoading || isGoogleLoading}
+              className="block w-full min-w-0 flex-1 rounded-none rounded-r-lg border border-slate-300 bg-white px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent hover:border-slate-400 font-mono tracking-wider disabled:bg-slate-100 disabled:text-slate-400"
+            />
+          </div>
+          <p className="mt-1.5 text-xs text-slate-500">
+            For order updates and delivery notifications
+          </p>
+        </div>
 
         <Input
           label="Password"
           type={showPassword ? 'text' : 'password'}
           required
+          disabled={isLoading || isGoogleLoading}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           leftIcon={<Lock className="w-4 h-4" />}
           rightElement={
             <button
               type="button"
+              disabled={isLoading || isGoogleLoading}
               onClick={() => setShowPassword(!showPassword)}
-              className="text-slate-400 hover:text-slate-600 focus:outline-none focus:text-slate-600 p-1 cursor-pointer"
+              className="text-slate-400 hover:text-slate-600 focus:outline-none focus:text-slate-600 p-1 cursor-pointer disabled:opacity-50"
               aria-label={showPassword ? 'Hide password' : 'Show password'}
               title={showPassword ? 'Hide password' : 'Show password'}
             >
@@ -232,14 +280,16 @@ function SignupForm() {
           label="Confirm Password"
           type={showConfirmPassword ? 'text' : 'password'}
           required
+          disabled={isLoading || isGoogleLoading}
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           leftIcon={<Lock className="w-4 h-4" />}
           rightElement={
             <button
               type="button"
+              disabled={isLoading || isGoogleLoading}
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="text-slate-400 hover:text-slate-600 focus:outline-none focus:text-slate-600 p-1 cursor-pointer"
+              className="text-slate-400 hover:text-slate-600 focus:outline-none focus:text-slate-600 p-1 cursor-pointer disabled:opacity-50"
               aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
               title={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
             >
@@ -255,6 +305,7 @@ function SignupForm() {
             variant="primary"
             size="lg"
             isLoading={isLoading}
+            disabled={isLoading || isGoogleLoading}
             className="w-full text-sm"
             rightIcon={<ArrowRight className="w-4 h-4" />}
           >

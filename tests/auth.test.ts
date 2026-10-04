@@ -11,6 +11,7 @@ import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { getSafeRedirectUrl } from '../src/app/(auth)/login/page';
 import { normalizeIndianPhone, formatPhoneDisplay, sanitizeIndianMobileInput } from '../src/lib/phone';
 
+
 describe('Phase 5.4: Supabase Authentication & Secure Session Integration', () => {
   // --------------------------------------------------------------------------
   // 1. Password Absence Guarantee in PostgreSQL Schema
@@ -432,6 +433,8 @@ describe('Phase 5.4: Supabase Authentication & Secure Session Integration', () =
       assert.strictEqual(getSafeRedirectUrl(undefined, 'admin'), '/admin');
     });
   });
+
+
   // --------------------------------------------------------------------------
   // 8. Phone Number Authentication, OTP Flows & Production Identity Model Invariants
   // --------------------------------------------------------------------------
@@ -547,6 +550,78 @@ describe('Phase 5.4: Supabase Authentication & Secure Session Integration', () =
           assert.strictEqual(sanitizeIndianMobileInput('98765abcde'), '98765');
           assert.strictEqual(sanitizeIndianMobileInput('987-654-3210'), '9876543210');
           assert.strictEqual(sanitizeIndianMobileInput('!@#$%^&*()'), '');
+        });
+
+        describe('Customer Signup Fixed +91 Phone Input UX & Validation Invariants', () => {
+          it('normalizes 10-digit customer signup phone input from 9876543210 to +919876543210', () => {
+            const rawInput = '9876543210';
+            const sanitized = sanitizeIndianMobileInput(rawInput);
+            assert.strictEqual(sanitized, '9876543210');
+
+            const norm = normalizeIndianPhone(sanitized);
+            assert.strictEqual(norm.valid, true);
+            assert.strictEqual(norm.phone, '+919876543210');
+          });
+
+          it('enforces 10-digit validation and TRAI prefix compliance (must start with 6, 7, 8, or 9)', () => {
+            for (const validDigit of ['6', '7', '8', '9']) {
+              const num = `${validDigit}123456789`;
+              const norm = normalizeIndianPhone(sanitizeIndianMobileInput(num));
+              assert.strictEqual(norm.valid, true);
+              assert.strictEqual(norm.phone, `+91${num}`);
+            }
+
+            for (const invalidDigit of ['1', '2', '3', '4', '5']) {
+              const num = `${invalidDigit}123456789`;
+              const norm = normalizeIndianPhone(sanitizeIndianMobileInput(num));
+              assert.strictEqual(norm.valid, false);
+              assert.match(norm.error!, /start with 6, 7, 8, or 9/i);
+            }
+          });
+
+          it('rejects invalid phone lengths (both short and long)', () => {
+            // Short length (< 10 digits)
+            for (const short of ['9', '98', '9876', '987654321']) {
+              const norm = normalizeIndianPhone(sanitizeIndianMobileInput(short));
+              assert.strictEqual(norm.valid, false);
+              assert.match(norm.error!, /too short|10-digit/i);
+            }
+
+            // Exceeding length: sanitized caps strictly at 10 digits
+            const longInput = '987654321012345';
+            const sanitized = sanitizeIndianMobileInput(longInput);
+            assert.strictEqual(sanitized.length, 10);
+            assert.strictEqual(sanitized, '9876543210');
+          });
+
+          it('prevents duplicate country codes such as +91+919876543210 or pasted +91', () => {
+            // When user pastes a number with +91 or redundant country codes
+            const testPastingCases = [
+              ['+919876543210', '9876543210', '+919876543210'],
+              ['+91 98765 43210', '9876543210', '+919876543210'],
+              ['+91+919876543210', '9876543210', '+919876543210'],
+              ['919876543210', '9876543210', '+919876543210'],
+            ];
+
+            for (const [pasted, expectedSanitized, expectedNormalized] of testPastingCases) {
+              const sanitized = sanitizeIndianMobileInput(pasted);
+              assert.strictEqual(sanitized, expectedSanitized, `Pasted '${pasted}' must sanitize to '${expectedSanitized}'`);
+              const norm = normalizeIndianPhone(sanitized);
+              assert.strictEqual(norm.valid, true);
+              assert.strictEqual(norm.phone, expectedNormalized, `Must normalize to '${expectedNormalized}' without duplicate +91`);
+              assert.ok(!norm.phone!.startsWith('+91+91'), 'Must never contain duplicate +91+91');
+            }
+          });
+
+          it('preserves optional phone behavior when input is left blank or empty', () => {
+            // Empty string or whitespace means user opted out of phone
+            const emptyInputs = ['', '   '];
+            for (const input of emptyInputs) {
+              const trimmed = input.trim();
+              const cleanPhone = trimmed ? normalizeIndianPhone(trimmed).phone : undefined;
+              assert.strictEqual(cleanPhone, undefined, 'Clean phone must be undefined when phone is empty');
+            }
+          });
         });
       });
     });
