@@ -43,7 +43,7 @@ export const OrderSummaryCard: React.FC<OrderSummaryCardProps> = ({ order }) => 
         </div>
 
         {discountVal > 0 && (
-          <div className="flex justify-between text-emerald-800 bg-emerald-50/80 p-2 rounded-lg border border-emerald-200/60 font-medium">
+          <div className="flex justify-between text-[#023859] bg-[#EBF7FA] p-2 rounded-lg border border-[#D4EBF0] font-medium">
             <span>Bulk Discount:</span>
             <span className="font-bold">-₹{discountVal.toLocaleString('en-IN')}</span>
           </div>
@@ -65,15 +65,15 @@ export const OrderSummaryCard: React.FC<OrderSummaryCardProps> = ({ order }) => 
       {/* Trust & Guarantee badges */}
       <div className="space-y-2 pt-3 border-t border-slate-100 text-[11px] text-slate-500">
         <div className="flex items-center gap-2">
-          <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+          <ShieldCheck className="w-4 h-4 text-[#023859] shrink-0" />
           <span>Curriculum-aligned editions</span>
         </div>
         <div className="flex items-center gap-2">
-          <FileCheck2 className="w-4 h-4 text-emerald-600 shrink-0" />
+          <FileCheck2 className="w-4 h-4 text-[#023859] shrink-0" />
           <span>Order record verified</span>
         </div>
         <div className="flex items-center gap-2">
-          <Truck className="w-4 h-4 text-emerald-600 shrink-0" />
+          <Truck className="w-4 h-4 text-[#023859] shrink-0" />
           <span>Standard order processing</span>
         </div>
       </div>

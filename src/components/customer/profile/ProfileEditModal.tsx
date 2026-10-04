@@ -115,7 +115,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+            className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#023859]"
             aria-label="Close dialog"
           >
             <X className="w-5 h-5" />
@@ -126,10 +126,10 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {isSaved && (
             <div
-              className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-xl flex items-center gap-2"
+              className="p-3 bg-[#EBF7FA] border border-[#D4EBF0] text-[#023859] text-xs rounded-xl flex items-center gap-2"
               role="status"
             >
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-[#54ACBF] shrink-0" />
               <span>Profile information updated successfully.</span>
             </div>
           )}
@@ -149,7 +149,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
                 className={`w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
                   errors.name
                     ? 'border-red-300 focus:ring-red-500'
-                    : 'border-slate-300 focus:ring-emerald-600 focus:border-transparent'
+                    : 'border-slate-300 focus:ring-[#023859] focus:border-transparent'
                 }`}
                 placeholder="e.g. Priya Desai"
                 aria-invalid={errors.name ? 'true' : 'false'}
@@ -180,7 +180,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
                 className={`w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
                   errors.email
                     ? 'border-red-300 focus:ring-red-500'
-                    : 'border-slate-300 focus:ring-emerald-600 focus:border-transparent'
+                    : 'border-slate-300 focus:ring-[#023859] focus:border-transparent'
                 }`}
                 placeholder="e.g. priya.desai@abps.edu"
                 aria-invalid={errors.email ? 'true' : 'false'}
@@ -212,7 +212,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
                 className={`w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
                   errors.phone
                     ? 'border-red-300 focus:ring-red-500'
-                    : 'border-slate-300 focus:ring-emerald-600 focus:border-transparent'
+                    : 'border-slate-300 focus:ring-[#023859] focus:border-transparent'
                 }`}
                 placeholder="e.g. 9876543210"
                 aria-invalid={errors.phone ? 'true' : 'false'}

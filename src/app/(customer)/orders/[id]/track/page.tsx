@@ -77,7 +77,7 @@ export default function OrderTrackingDetailPage({
       <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider bg-emerald-50 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-bold text-[#023859] uppercase tracking-wider bg-[#EBF7FA] px-2 py-0.5 rounded-full">
               Order Tracking
             </span>
             <h1 className="text-xl sm:text-2xl font-bold text-slate-900 font-mono tracking-tight">
@@ -141,7 +141,7 @@ export default function OrderTrackingDetailPage({
           {/* Need Help / Support Note */}
           <div className="p-5 bg-slate-50 rounded-2xl border border-slate-200/80 text-xs text-slate-600 space-y-2">
             <div className="flex items-center gap-1.5 font-bold text-slate-800">
-              <HelpCircle className="w-4 h-4 text-emerald-800 shrink-0" aria-hidden="true" />
+              <HelpCircle className="w-4 h-4 text-[#023859] shrink-0" aria-hidden="true" />
               <span>Need Assistance?</span>
             </div>
             <p className="text-[11px] leading-relaxed text-slate-500">

@@ -54,7 +54,7 @@ export const TrackingStatusCard: React.FC<TrackingStatusCardProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="text-[11px] font-bold text-emerald-800 uppercase tracking-wider bg-emerald-50 px-2 py-0.5 rounded-full">
+            <span className="text-[11px] font-bold text-[#023859] uppercase tracking-wider bg-[#EBF7FA] px-2 py-0.5 rounded-full">
               Fulfillment Status
             </span>
             <span className="font-mono font-bold text-slate-900 text-sm sm:text-base">
@@ -115,7 +115,7 @@ export const TrackingStatusCard: React.FC<TrackingStatusCardProps> = ({
           </span>
           {carrierName ? (
             <span className="font-semibold text-slate-900 text-xs sm:text-sm flex items-center gap-1.5">
-              <Truck className="w-3.5 h-3.5 text-emerald-700 shrink-0" aria-hidden="true" />
+              <Truck className="w-3.5 h-3.5 text-[#023859] shrink-0" aria-hidden="true" />
               <span className="truncate">{carrierName}</span>
             </span>
           ) : (
@@ -140,7 +140,7 @@ export const TrackingStatusCard: React.FC<TrackingStatusCardProps> = ({
       {/* Estimated Delivery Note (only if present in mock data) */}
       {order.estimatedDelivery && (
         <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/70 text-xs text-slate-600 flex items-start gap-2">
-          <Info className="w-4 h-4 text-emerald-800 shrink-0 mt-0.5" aria-hidden="true" />
+          <Info className="w-4 h-4 text-[#023859] shrink-0 mt-0.5" aria-hidden="true" />
           <div>
             <span className="font-semibold text-slate-800">Estimated Delivery: </span>
             <span>{order.estimatedDelivery}</span>

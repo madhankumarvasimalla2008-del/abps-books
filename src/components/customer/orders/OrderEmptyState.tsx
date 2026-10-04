@@ -44,7 +44,7 @@ export const OrderEmptyState: React.FC<OrderEmptyStateProps> = ({
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200/90 p-8 sm:p-12 text-center space-y-4 max-w-lg mx-auto shadow-2xs">
-      <div className="w-16 h-16 bg-emerald-50 text-emerald-800 rounded-2xl flex items-center justify-center mx-auto">
+      <div className="w-16 h-16 bg-[#EBF7FA] text-[#023859] rounded-2xl flex items-center justify-center mx-auto">
         <ShoppingBag className="w-8 h-8" />
       </div>
       <div className="space-y-1.5">

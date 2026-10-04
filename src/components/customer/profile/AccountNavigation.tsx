@@ -56,16 +56,16 @@ export const AccountNavigation: React.FC = () => {
           <Link
             key={item.href}
             href={item.href}
-            className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 ${
+            className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#023859] ${
               isActive
-                ? 'bg-emerald-50 text-emerald-800 font-bold shadow-2xs'
+                ? 'bg-[#EBF7FA] text-[#023859] font-bold shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
             aria-current={isActive ? 'page' : undefined}
           >
             <Icon
               className={`w-4 h-4 shrink-0 ${
-                isActive ? 'text-emerald-700' : 'text-slate-400'
+                isActive ? 'text-[#023859]' : 'text-[#537D99]'
               }`}
               aria-hidden="true"
             />

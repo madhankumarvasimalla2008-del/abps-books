@@ -42,7 +42,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({ cart, hasErrors = fals
         </div>
 
         {cart.discountTotal > 0 && (
-          <div className="flex justify-between text-emerald-800 bg-emerald-50/80 p-2 rounded-lg border border-emerald-200/60 font-medium">
+          <div className="flex justify-between text-[#023859] bg-[#EBF7FA] p-2 rounded-lg border border-[#D4EBF0] font-medium">
             <span>Bulk Volume Rebate:</span>
             <span className="font-bold">-₹{cart.discountTotal}</span>
           </div>
@@ -98,15 +98,15 @@ export const CartSummary: React.FC<CartSummaryProps> = ({ cart, hasErrors = fals
       {/* Trust & Policy Highlights */}
       <div className="space-y-2 pt-3 border-t border-slate-100 text-[11px] text-slate-500">
         <div className="flex items-center gap-2">
-          <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-          <span>Curriculum prescribed editions guaranteed</span>
+          <ShieldCheck className="w-4 h-4 text-[#023859] shrink-0" />
+          <span>Curriculum prescribed editions</span>
         </div>
         <div className="flex items-center gap-2">
-          <FileText className="w-4 h-4 text-emerald-600 shrink-0" />
+          <FileText className="w-4 h-4 text-[#023859] shrink-0" />
           <span>Order summary &amp; confirmation generated on checkout</span>
         </div>
         <div className="flex items-center gap-2">
-          <Truck className="w-4 h-4 text-emerald-600 shrink-0" />
+          <Truck className="w-4 h-4 text-[#023859] shrink-0" />
           <span>Shipment tracking available after dispatch</span>
         </div>
       </div>

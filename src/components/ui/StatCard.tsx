@@ -26,24 +26,24 @@ export const StatCard: React.FC<StatCardProps> = ({
   return (
     <Card className={`p-5 ${className}`}>
       <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">{title}</span>
-        <div className="p-2.5 bg-slate-50 text-slate-700 rounded-lg border border-slate-200/60 shrink-0">
+        <span className="text-xs font-semibold uppercase tracking-wider text-[#537D99]">{title}</span>
+        <div className="p-2.5 bg-[#F7FCFD] text-[#011C40] rounded-lg border border-[#D4EBF0] shrink-0">
           {icon}
         </div>
       </div>
       <div className="mt-3 flex items-baseline gap-2">
-        <span className="text-2xl font-bold tracking-tight text-slate-900">{value}</span>
+        <span className="text-2xl font-bold tracking-tight text-[#011C40]">{value}</span>
         {changeText && (
           <span
             className={`text-xs font-semibold px-2 py-0.5 rounded-md ${
-              positive ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60' : 'bg-red-50 text-red-700 border border-red-200/60'
+              positive ? 'bg-[#EBF7FA] text-[#023859] border border-[#D4EBF0]' : 'bg-red-50 text-red-700 border border-red-200/60'
             }`}
           >
             {changeText}
           </span>
         )}
       </div>
-      {description && <p className="mt-1.5 text-xs text-slate-500 leading-normal">{description}</p>}
+      {description && <p className="mt-1.5 text-xs text-[#537D99] leading-normal">{description}</p>}
     </Card>
   );
 };

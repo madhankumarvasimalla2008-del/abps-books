@@ -24,7 +24,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
       aria-live="polite"
     >
       <div
-        className={`animate-spin rounded-full border-slate-200 border-t-emerald-700 ${sizeClasses[size]}`}
+        className={`animate-spin rounded-full border-slate-200 border-t-[#023859] ${sizeClasses[size]}`}
         aria-hidden="true"
       />
       {message && <p className="mt-3 text-sm font-medium text-slate-500">{message}</p>}

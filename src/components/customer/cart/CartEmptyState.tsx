@@ -71,7 +71,7 @@ export const CartEmptyState: React.FC = () => {
                 <Link
                   key={g.label}
                   href={g.href}
-                  className="text-xs px-3 py-1.5 rounded-xl border border-slate-200 bg-slate-50/70 text-slate-700 hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-300 font-medium transition-colors"
+                  className="text-xs px-3 py-1.5 rounded-xl border border-[#D4EBF0] bg-[#F7FCFD] text-[#011C40] hover:bg-[#EBF7FA] hover:text-[#023859] hover:border-[#54ACBF] font-medium transition-colors"
                 >
                   {g.label}
                 </Link>
@@ -88,7 +88,7 @@ export const CartEmptyState: React.FC = () => {
                 <Link
                   key={s.label}
                   href={s.href}
-                  className="text-xs px-3 py-1.5 rounded-xl border border-slate-200 bg-slate-50/70 text-slate-700 hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-300 font-medium transition-colors"
+                  className="text-xs px-3 py-1.5 rounded-xl border border-[#D4EBF0] bg-[#F7FCFD] text-[#011C40] hover:bg-[#EBF7FA] hover:text-[#023859] hover:border-[#54ACBF] font-medium transition-colors"
                 >
                   {s.label}
                 </Link>

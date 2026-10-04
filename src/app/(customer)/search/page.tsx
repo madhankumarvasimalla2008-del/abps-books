@@ -68,7 +68,7 @@ export default function SearchPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="e.g. Mathematics Class 10, NCERT, 978-81-7450..."
-              className="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white text-slate-900"
+              className="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-[#D4EBF0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#023859] focus:bg-white text-[#011C40] placeholder:text-[#537D99]"
             />
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           </div>
@@ -100,7 +100,7 @@ export default function SearchPage() {
                 setQuery('');
                 router.push('/search');
               }}
-              className="ml-auto text-emerald-700 hover:underline flex items-center gap-1"
+              className="ml-auto text-[#023859] hover:text-[#54ACBF] hover:underline flex items-center gap-1"
             >
               <RotateCcw className="w-3 h-3" /> Clear Query
             </button>

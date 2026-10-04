@@ -97,7 +97,7 @@ export default function CustomerOrderDetailPage({
       <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider bg-emerald-50 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-bold text-[#023859] uppercase tracking-wider bg-[#EBF7FA] px-2 py-0.5 rounded-full">
               Order Details
             </span>
             <h1 className="text-xl sm:text-2xl font-bold text-slate-900 font-mono tracking-tight">
@@ -154,8 +154,8 @@ export default function CustomerOrderDetailPage({
 
       {/* Reorder Feedback Notification */}
       {reorderFeedback && (
-        <div className="p-3 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-2xl text-xs flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-700" />
+        <div className="p-3 bg-[#EBF7FA] text-[#023859] border border-[#D4EBF0] rounded-2xl text-xs flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 shrink-0 text-[#54ACBF]" />
           <span>{reorderFeedback} Redirecting to your cart...</span>
         </div>
       )}

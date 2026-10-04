@@ -8,7 +8,7 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 export const Card: React.FC<CardProps> = ({ children, className = '', ...props }) => {
   return (
     <div
-      className={`bg-white rounded-xl border border-slate-200/90 shadow-xs overflow-hidden ${className}`}
+      className={`bg-white rounded-xl border border-[#D4EBF0] shadow-[0_2px_10px_-2px_rgba(1,28,64,0.04)] overflow-hidden transition-all duration-200 ${className}`}
       {...props}
     >
       {children}
@@ -18,7 +18,7 @@ export const Card: React.FC<CardProps> = ({ children, className = '', ...props }
 
 export const CardHeader: React.FC<CardProps> = ({ children, className = '', ...props }) => {
   return (
-    <div className={`p-5 border-b border-slate-100 ${className}`} {...props}>
+    <div className={`p-5 sm:p-6 border-b border-[#E8F4F7] bg-white ${className}`} {...props}>
       {children}
     </div>
   );
@@ -30,7 +30,7 @@ export const CardTitle: React.FC<React.HTMLAttributes<HTMLHeadingElement>> = ({
   ...props
 }) => {
   return (
-    <h3 className={`text-base font-semibold text-slate-900 tracking-tight ${className}`} {...props}>
+    <h3 className={`text-base sm:text-lg font-serif font-semibold text-[#011C40] tracking-tight ${className}`} {...props}>
       {children}
     </h3>
   );
@@ -42,7 +42,7 @@ export const CardDescription: React.FC<React.HTMLAttributes<HTMLParagraphElement
   ...props
 }) => {
   return (
-    <p className={`text-xs text-slate-500 mt-1 leading-normal ${className}`} {...props}>
+    <p className={`text-xs text-[#26658C] mt-1 leading-normal ${className}`} {...props}>
       {children}
     </p>
   );
@@ -50,7 +50,7 @@ export const CardDescription: React.FC<React.HTMLAttributes<HTMLParagraphElement
 
 export const CardContent: React.FC<CardProps> = ({ children, className = '', ...props }) => {
   return (
-    <div className={`p-5 ${className}`} {...props}>
+    <div className={`p-5 sm:p-6 ${className}`} {...props}>
       {children}
     </div>
   );
@@ -58,7 +58,7 @@ export const CardContent: React.FC<CardProps> = ({ children, className = '', ...
 
 export const CardFooter: React.FC<CardProps> = ({ children, className = '', ...props }) => {
   return (
-    <div className={`p-4 bg-slate-50/80 border-t border-slate-100 ${className}`} {...props}>
+    <div className={`p-4 sm:p-5 bg-[#F7FCFD] border-t border-[#E8F4F7] ${className}`} {...props}>
       {children}
     </div>
   );

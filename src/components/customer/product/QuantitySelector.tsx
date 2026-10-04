@@ -47,7 +47,7 @@ export const QuantitySelector: React.FC<QuantitySelectorProps> = ({
   return (
     <div className={`space-y-2.5 ${className}`}>
       <div className="flex items-center justify-between">
-        <label htmlFor={id} className="text-xs font-bold text-slate-700">
+        <label htmlFor={id} className="text-xs font-bold text-[#011C40]">
           Order Quantity:
         </label>
         {showPresets && !disabled && (
@@ -57,10 +57,10 @@ export const QuantitySelector: React.FC<QuantitySelectorProps> = ({
                 key={preset}
                 type="button"
                 onClick={() => onQuantityChange(preset)}
-                className={`text-[11px] px-2 py-0.5 rounded font-medium border transition-colors ${
+                className={`text-[11px] px-2 py-0.5 rounded font-medium border transition-colors cursor-pointer ${
                   quantity === preset
-                    ? 'bg-emerald-700 text-white border-emerald-700 shadow-2xs'
-                    : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                    ? 'bg-[#023859] text-white border-[#023859] shadow-2xs'
+                    : 'bg-white text-[#011C40] border-[#D4EBF0] hover:bg-[#F7FCFD] hover:border-[#54ACBF]'
                 }`}
                 aria-label={`Set quantity to ${preset}`}
               >
@@ -73,12 +73,12 @@ export const QuantitySelector: React.FC<QuantitySelectorProps> = ({
 
       <div className="flex items-center gap-3">
         {/* Stepper with direct text input */}
-        <div className="flex items-center border border-slate-200 rounded-xl bg-slate-50 overflow-hidden shadow-2xs">
+        <div className="flex items-center border border-[#D4EBF0] rounded-xl bg-[#F7FCFD] overflow-hidden shadow-2xs">
           <button
             type="button"
             onClick={() => handleStep(-1)}
             disabled={disabled || quantity <= min}
-            className="px-3 py-2 text-slate-500 hover:text-slate-900 hover:bg-slate-200/70 disabled:opacity-30 disabled:hover:bg-transparent transition-colors focus:outline-none focus:ring-1 focus:ring-emerald-600"
+            className="px-3 py-2 text-[#26658C] hover:text-[#011C40] hover:bg-[#EBF7FA] disabled:opacity-30 disabled:hover:bg-transparent transition-colors focus:outline-none focus:ring-1 focus:ring-[#023859] cursor-pointer"
             aria-label="Decrease quantity"
           >
             <Minus className="w-3.5 h-3.5" />
@@ -91,14 +91,14 @@ export const QuantitySelector: React.FC<QuantitySelectorProps> = ({
             disabled={disabled}
             value={quantity}
             onChange={handleInputChange}
-            className="w-16 text-center text-sm font-bold text-slate-900 bg-white py-2 focus:outline-none focus:ring-1 focus:ring-emerald-600 border-x border-slate-200 disabled:bg-slate-100 disabled:text-slate-400"
+            className="w-16 text-center text-sm font-bold text-[#011C40] bg-white py-2 focus:outline-none focus:ring-1 focus:ring-[#023859] border-x border-[#D4EBF0] disabled:bg-[#F7FCFD] disabled:text-[#537D99]"
             aria-label="Enter specific quantity"
           />
           <button
             type="button"
             onClick={() => handleStep(1)}
             disabled={disabled || quantity >= max}
-            className="px-3 py-2 text-slate-500 hover:text-slate-900 hover:bg-slate-200/70 disabled:opacity-30 disabled:hover:bg-transparent transition-colors focus:outline-none focus:ring-1 focus:ring-emerald-600"
+            className="px-3 py-2 text-[#26658C] hover:text-[#011C40] hover:bg-[#EBF7FA] disabled:opacity-30 disabled:hover:bg-transparent transition-colors focus:outline-none focus:ring-1 focus:ring-[#023859] cursor-pointer"
             aria-label="Increase quantity"
           >
             <Plus className="w-3.5 h-3.5" />
@@ -106,7 +106,7 @@ export const QuantitySelector: React.FC<QuantitySelectorProps> = ({
         </div>
 
         {quantity > 1 && (
-          <span className="text-xs text-slate-500 font-medium">
+          <span className="text-xs text-[#537D99] font-medium">
             ({quantity} units selected)
           </span>
         )}

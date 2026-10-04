@@ -57,12 +57,12 @@ export const CartItem: React.FC<CartItemProps> = ({
           {/* Book cover visual block */}
           <Link
             href={`/books/${product.id}`}
-            className="w-14 h-20 sm:w-16 sm:h-22 bg-gradient-to-b from-slate-900 to-slate-800 text-white rounded-xl flex flex-col items-center justify-between p-2 shrink-0 text-center shadow-2xs group relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-emerald-600"
+            className="w-14 h-20 sm:w-16 sm:h-22 bg-gradient-to-b from-[#011C40] to-[#023859] text-white rounded-xl flex flex-col items-center justify-between p-2 shrink-0 text-center shadow-2xs group relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#023859]"
             aria-label={`View details for ${product.title}`}
           >
-            <div className="w-full flex justify-between items-center text-[9px] text-emerald-300">
+            <div className="w-full flex justify-between items-center text-[9px] text-[#A7EBF2]">
               <span className="font-bold truncate">{product.subject.slice(0, 3).toUpperCase()}</span>
-              <BookOpen className="w-3 h-3 text-emerald-300 shrink-0" />
+              <BookOpen className="w-3 h-3 text-[#A7EBF2] shrink-0" />
             </div>
             <span className="text-[10px] font-bold text-white leading-tight line-clamp-2 px-0.5">
               {product.title}
@@ -98,7 +98,7 @@ export const CartItem: React.FC<CartItemProps> = ({
 
             <Link
               href={`/books/${product.id}`}
-              className="font-bold text-sm sm:text-base text-slate-900 hover:text-emerald-800 transition-colors block truncate group"
+              className="font-bold text-sm sm:text-base text-slate-900 hover:text-[#023859] transition-colors block truncate group"
             >
               <span className="group-hover:underline">{product.title}</span>
             </Link>
@@ -113,7 +113,7 @@ export const CartItem: React.FC<CartItemProps> = ({
             </div>
 
             {isBulkApplied && (
-              <div className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/80">
+              <div className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#023859] bg-[#EBF7FA] px-2 py-0.5 rounded-md border border-[#D4EBF0]">
                 <span>{product.bulkDiscountPercent}% Bulk Discount Applied</span>
                 <span className="text-slate-500 font-normal">({product.bulkThreshold}+ units)</span>
               </div>
@@ -137,7 +137,7 @@ export const CartItem: React.FC<CartItemProps> = ({
                 type="button"
                 onClick={() => handleStep(-1)}
                 disabled={isOutOfStock || quantity <= 1}
-                className="px-2.5 py-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-200/70 disabled:opacity-30 disabled:hover:bg-transparent transition-colors focus:outline-none focus:ring-1 focus:ring-emerald-600"
+                className="px-2.5 py-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-200/70 disabled:opacity-30 disabled:hover:bg-transparent transition-colors focus:outline-none focus:ring-1 focus:ring-[#023859]"
                 aria-label={`Decrease quantity of ${product.title}`}
               >
                 <Minus className="w-3.5 h-3.5" />
@@ -150,7 +150,7 @@ export const CartItem: React.FC<CartItemProps> = ({
                 disabled={isOutOfStock}
                 value={quantity}
                 onChange={handleInputChange}
-                className="w-14 text-center text-xs font-bold text-slate-900 bg-white py-1.5 focus:outline-none focus:ring-1 focus:ring-emerald-600 border-x border-slate-200 disabled:bg-slate-100 disabled:text-slate-400"
+                className="w-14 text-center text-xs font-bold text-slate-900 bg-white py-1.5 focus:outline-none focus:ring-1 focus:ring-[#023859] border-x border-slate-200 disabled:bg-slate-100 disabled:text-slate-400"
                 aria-label={`Quantity of ${product.title}`}
               />
 
@@ -158,7 +158,7 @@ export const CartItem: React.FC<CartItemProps> = ({
                 type="button"
                 onClick={() => handleStep(1)}
                 disabled={isOutOfStock || quantity >= maxStock}
-                className="px-2.5 py-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-200/70 disabled:opacity-30 disabled:hover:bg-transparent transition-colors focus:outline-none focus:ring-1 focus:ring-emerald-600"
+                className="px-2.5 py-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-200/70 disabled:opacity-30 disabled:hover:bg-transparent transition-colors focus:outline-none focus:ring-1 focus:ring-[#023859]"
                 aria-label={`Increase quantity of ${product.title}`}
               >
                 <Plus className="w-3.5 h-3.5" />

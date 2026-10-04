@@ -288,12 +288,12 @@ function BooksCatalogContent() {
               Educational Books &amp; Study Material
             </h1>
             <p className="text-xs sm:text-sm text-slate-500 mt-1">
-              Browse prescribed NCERT curricula, reference textbooks, workbooks, and academic bundles.
+              Browse prescribed textbooks, reference books, workbooks, and academic materials.
             </p>
           </div>
 
           {/* Quick Stats Pill */}
-          <div className="text-xs bg-emerald-50 text-emerald-800 font-medium px-3.5 py-1.5 rounded-xl border border-emerald-200/60 self-start md:self-auto shrink-0">
+          <div className="text-xs bg-[#EBF7FA] text-[#023859] font-medium px-3.5 py-1.5 rounded-xl border border-[#D4EBF0] self-start md:self-auto shrink-0">
             Total Catalog: <strong className="font-bold">{products.length} titles</strong>
           </div>
         </div>
@@ -311,10 +311,10 @@ function BooksCatalogContent() {
             className="lg:hidden shrink-0 text-xs flex items-center gap-1.5"
             aria-label="Open filter sidebar"
           >
-            <SlidersHorizontal className="w-4 h-4 text-emerald-800" />
+            <SlidersHorizontal className="w-4 h-4 text-[#023859]" />
             <span>Filters</span>
             {activeFilterCount > 0 && (
-              <span className="w-5 h-5 rounded-full bg-emerald-700 text-white text-[10px] flex items-center justify-center font-bold">
+              <span className="w-5 h-5 rounded-full bg-[#023859] text-white text-[10px] flex items-center justify-center font-bold">
                 {activeFilterCount}
               </span>
             )}
@@ -341,7 +341,7 @@ function BooksCatalogContent() {
             )}
 
             {filters.grade && (
-              <span className="inline-flex items-center gap-1 text-xs bg-emerald-50 text-emerald-900 px-2.5 py-1 rounded-lg border border-emerald-200/60">
+              <span className="inline-flex items-center gap-1 text-xs bg-[#EBF7FA] text-[#023859] px-2.5 py-1 rounded-lg border border-[#D4EBF0]">
                 Class: {filters.grade}
                 <button
                   type="button"
@@ -355,7 +355,7 @@ function BooksCatalogContent() {
             )}
 
             {filters.subject && (
-              <span className="inline-flex items-center gap-1 text-xs bg-emerald-50 text-emerald-900 px-2.5 py-1 rounded-lg border border-emerald-200/60">
+              <span className="inline-flex items-center gap-1 text-xs bg-[#EBF7FA] text-[#023859] px-2.5 py-1 rounded-lg border border-[#D4EBF0]">
                 Subject: {filters.subject}
                 <button
                   type="button"
@@ -369,7 +369,7 @@ function BooksCatalogContent() {
             )}
 
             {filters.category && (
-              <span className="inline-flex items-center gap-1 text-xs bg-emerald-50 text-emerald-900 px-2.5 py-1 rounded-lg border border-emerald-200/60">
+              <span className="inline-flex items-center gap-1 text-xs bg-[#EBF7FA] text-[#023859] px-2.5 py-1 rounded-lg border border-[#D4EBF0]">
                 Category: {filters.category}
                 <button
                   type="button"
@@ -383,7 +383,7 @@ function BooksCatalogContent() {
             )}
 
             {filters.publisher && (
-              <span className="inline-flex items-center gap-1 text-xs bg-emerald-50 text-emerald-900 px-2.5 py-1 rounded-lg border border-emerald-200/60">
+              <span className="inline-flex items-center gap-1 text-xs bg-[#EBF7FA] text-[#023859] px-2.5 py-1 rounded-lg border border-[#D4EBF0]">
                 Publisher: {filters.publisher}
                 <button
                   type="button"
@@ -397,7 +397,7 @@ function BooksCatalogContent() {
             )}
 
             {filters.availability && (
-              <span className="inline-flex items-center gap-1 text-xs bg-emerald-50 text-emerald-900 px-2.5 py-1 rounded-lg border border-emerald-200/60">
+              <span className="inline-flex items-center gap-1 text-xs bg-[#EBF7FA] text-[#023859] px-2.5 py-1 rounded-lg border border-[#D4EBF0]">
                 Availability: {filters.availability === 'in_stock' ? 'In Stock Only' : 'Low Stock'}
                 <button
                   type="button"
@@ -411,7 +411,7 @@ function BooksCatalogContent() {
             )}
 
             {(filters.minPrice !== undefined || filters.maxPrice !== undefined) && (
-              <span className="inline-flex items-center gap-1 text-xs bg-emerald-50 text-emerald-900 px-2.5 py-1 rounded-lg border border-emerald-200/60">
+              <span className="inline-flex items-center gap-1 text-xs bg-[#EBF7FA] text-[#023859] px-2.5 py-1 rounded-lg border border-[#D4EBF0]">
                 Price: ₹{filters.minPrice || 0} - ₹{filters.maxPrice || 'Any'}
                 <button
                   type="button"

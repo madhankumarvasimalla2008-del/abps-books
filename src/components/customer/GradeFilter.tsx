@@ -39,8 +39,8 @@ export const GradeFilter: React.FC<GradeFilterProps> = ({ selectedGrade = 'All G
             onClick={() => onSelect(grade === 'All Grades' ? '' : grade)}
             className={`whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
               isSelected
-                ? 'bg-emerald-700 text-white shadow-xs'
-                : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+                ? 'bg-[#023859] text-white shadow-xs'
+                : 'bg-white border border-[#D4EBF0] text-[#011C40] hover:bg-[#F7FCFD] hover:border-[#54ACBF]'
             }`}
           >
             {grade}
@@ -51,8 +51,8 @@ export const GradeFilter: React.FC<GradeFilterProps> = ({ selectedGrade = 'All G
             href={grade === 'All Grades' ? '/books' : `/books?grade=${encodeURIComponent(grade)}`}
             className={`whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
               isSelected
-                ? 'bg-emerald-700 text-white shadow-xs'
-                : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+                ? 'bg-[#023859] text-white shadow-xs'
+                : 'bg-white border border-[#D4EBF0] text-[#011C40] hover:bg-[#F7FCFD] hover:border-[#54ACBF]'
             }`}
           >
             {grade}

@@ -37,12 +37,12 @@ function ConfirmationContent() {
     <div className="max-w-4xl mx-auto space-y-6 py-4 sm:py-6">
       {/* Top success card */}
       <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/90 shadow-2xs text-center space-y-4">
-        <div className="w-16 h-16 bg-emerald-50 text-emerald-700 rounded-2xl flex items-center justify-center mx-auto ring-8 ring-emerald-50/60">
+        <div className="w-16 h-16 bg-[#EBF7FA] text-[#023859] rounded-2xl flex items-center justify-center mx-auto ring-8 ring-[#EBF7FA]/60">
           <CheckCircle2 className="w-9 h-9" />
         </div>
 
         <div className="space-y-1.5">
-          <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider bg-emerald-50 px-2.5 py-1 rounded-full">
+          <span className="text-xs font-bold text-[#023859] uppercase tracking-wider bg-[#EBF7FA] px-2.5 py-1 rounded-full">
             Order Confirmed
           </span>
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 pt-1">
@@ -131,7 +131,7 @@ function ConfirmationContent() {
       {/* Order Status Information */}
       <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-2xs space-y-4 text-xs">
         <h2 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-          <PackageCheck className="w-4 h-4 text-emerald-800" />
+          <PackageCheck className="w-4 h-4 text-[#023859]" />
           <span>Order Fulfillment Overview</span>
         </h2>
 

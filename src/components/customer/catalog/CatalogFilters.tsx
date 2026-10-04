@@ -70,7 +70,7 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
         <button
           type="button"
           onClick={() => toggleSection('grade')}
-          className="flex items-center justify-between w-full text-left font-bold text-xs text-slate-900 uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-emerald-600 rounded"
+          className="flex items-center justify-between w-full text-left font-bold text-xs text-slate-900 uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-[#023859] rounded"
           aria-expanded={expandedSections.grade}
         >
           <span>Class / Grade</span>
@@ -88,12 +88,12 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
               onClick={() => handleFieldChange('grade', undefined)}
               className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
                 !filters.grade
-                  ? 'bg-emerald-50 text-emerald-900 font-semibold'
+                  ? 'bg-[#EBF7FA] text-[#023859] font-semibold'
                   : 'text-slate-600 hover:bg-slate-50'
               }`}
             >
               <span>All Grades</span>
-              {!filters.grade && <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />}
+              {!filters.grade && <span className="w-1.5 h-1.5 rounded-full bg-[#54ACBF]" />}
             </button>
             {availableGrades.map((g) => {
               const isSelected = filters.grade === g;
@@ -104,12 +104,12 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
                   onClick={() => handleFieldChange('grade', isSelected ? undefined : g)}
                   className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
                     isSelected
-                      ? 'bg-emerald-50 text-emerald-900 font-semibold'
+                      ? 'bg-[#EBF7FA] text-[#023859] font-semibold'
                       : 'text-slate-600 hover:bg-slate-50'
                   }`}
                 >
                   <span>{g}</span>
-                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />}
+                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-[#54ACBF]" />}
                 </button>
               );
             })}
@@ -122,7 +122,7 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
         <button
           type="button"
           onClick={() => toggleSection('subject')}
-          className="flex items-center justify-between w-full text-left font-bold text-xs text-slate-900 uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-emerald-600 rounded"
+          className="flex items-center justify-between w-full text-left font-bold text-xs text-slate-900 uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-[#023859] rounded"
           aria-expanded={expandedSections.subject}
         >
           <span>Subject</span>
@@ -140,12 +140,12 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
               onClick={() => handleFieldChange('subject', undefined)}
               className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
                 !filters.subject
-                  ? 'bg-emerald-50 text-emerald-900 font-semibold'
+                  ? 'bg-[#EBF7FA] text-[#023859] font-semibold'
                   : 'text-slate-600 hover:bg-slate-50'
               }`}
             >
               <span>All Subjects</span>
-              {!filters.subject && <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />}
+              {!filters.subject && <span className="w-1.5 h-1.5 rounded-full bg-[#54ACBF]" />}
             </button>
             {availableSubjects.map((s) => {
               const isSelected = filters.subject === s;
@@ -156,12 +156,12 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
                   onClick={() => handleFieldChange('subject', isSelected ? undefined : s)}
                   className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
                     isSelected
-                      ? 'bg-emerald-50 text-emerald-900 font-semibold'
+                      ? 'bg-[#EBF7FA] text-[#023859] font-semibold'
                       : 'text-slate-600 hover:bg-slate-50'
                   }`}
                 >
                   <span>{s}</span>
-                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />}
+                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-[#54ACBF]" />}
                 </button>
               );
             })}
@@ -174,7 +174,7 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
         <button
           type="button"
           onClick={() => toggleSection('category')}
-          className="flex items-center justify-between w-full text-left font-bold text-xs text-slate-900 uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-emerald-600 rounded"
+          className="flex items-center justify-between w-full text-left font-bold text-xs text-slate-900 uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-[#023859] rounded"
           aria-expanded={expandedSections.category}
         >
           <span>Category</span>
@@ -192,12 +192,12 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
               onClick={() => handleFieldChange('category', undefined)}
               className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
                 !filters.category
-                  ? 'bg-emerald-50 text-emerald-900 font-semibold'
+                  ? 'bg-[#EBF7FA] text-[#023859] font-semibold'
                   : 'text-slate-600 hover:bg-slate-50'
               }`}
             >
               <span>All Categories</span>
-              {!filters.category && <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />}
+              {!filters.category && <span className="w-1.5 h-1.5 rounded-full bg-[#54ACBF]" />}
             </button>
             {availableCategories.map((c) => {
               const isSelected = filters.category?.toLowerCase() === c.toLowerCase();
@@ -208,12 +208,12 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
                   onClick={() => handleFieldChange('category', isSelected ? undefined : c)}
                   className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
                     isSelected
-                      ? 'bg-emerald-50 text-emerald-900 font-semibold'
+                      ? 'bg-[#EBF7FA] text-[#023859] font-semibold'
                       : 'text-slate-600 hover:bg-slate-50'
                   }`}
                 >
                   <span>{c}</span>
-                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />}
+                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-[#54ACBF]" />}
                 </button>
               );
             })}
@@ -226,7 +226,7 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
         <button
           type="button"
           onClick={() => toggleSection('publisher')}
-          className="flex items-center justify-between w-full text-left font-bold text-xs text-slate-900 uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-emerald-600 rounded"
+          className="flex items-center justify-between w-full text-left font-bold text-xs text-slate-900 uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-[#023859] rounded"
           aria-expanded={expandedSections.publisher}
         >
           <span>Publisher</span>
@@ -244,12 +244,12 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
               onClick={() => handleFieldChange('publisher', undefined)}
               className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
                 !filters.publisher
-                  ? 'bg-emerald-50 text-emerald-900 font-semibold'
+                  ? 'bg-[#EBF7FA] text-[#023859] font-semibold'
                   : 'text-slate-600 hover:bg-slate-50'
               }`}
             >
               <span>All Publishers</span>
-              {!filters.publisher && <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />}
+              {!filters.publisher && <span className="w-1.5 h-1.5 rounded-full bg-[#54ACBF]" />}
             </button>
             {availablePublishers.map((p) => {
               const isSelected = filters.publisher?.toLowerCase() === p.toLowerCase();
@@ -260,12 +260,12 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
                   onClick={() => handleFieldChange('publisher', isSelected ? undefined : p)}
                   className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
                     isSelected
-                      ? 'bg-emerald-50 text-emerald-900 font-semibold'
+                      ? 'bg-[#EBF7FA] text-[#023859] font-semibold'
                       : 'text-slate-600 hover:bg-slate-50'
                   }`}
                 >
                   <span>{p}</span>
-                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />}
+                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-[#54ACBF]" />}
                 </button>
               );
             })}
@@ -278,7 +278,7 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
         <button
           type="button"
           onClick={() => toggleSection('availability')}
-          className="flex items-center justify-between w-full text-left font-bold text-xs text-slate-900 uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-emerald-600 rounded"
+          className="flex items-center justify-between w-full text-left font-bold text-xs text-slate-900 uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-[#023859] rounded"
           aria-expanded={expandedSections.availability}
         >
           <span>Availability</span>
@@ -311,12 +311,12 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
                   }
                   className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
                     isSelected
-                      ? 'bg-emerald-50 text-emerald-900 font-semibold'
+                      ? 'bg-[#EBF7FA] text-[#023859] font-semibold'
                       : 'text-slate-600 hover:bg-slate-50'
                   }`}
                 >
                   <span>{option.label}</span>
-                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />}
+                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-[#54ACBF]" />}
                 </button>
               );
             })}
@@ -329,7 +329,7 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
         <button
           type="button"
           onClick={() => toggleSection('price')}
-          className="flex items-center justify-between w-full text-left font-bold text-xs text-slate-900 uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-emerald-600 rounded"
+          className="flex items-center justify-between w-full text-left font-bold text-xs text-slate-900 uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-[#023859] rounded"
           aria-expanded={expandedSections.price}
         >
           <span>Price Range</span>
@@ -363,7 +363,7 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
                         e.target.value ? parseInt(e.target.value, 10) : undefined
                       )
                     }
-                    className="w-full pl-6 pr-2 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-600"
+                    className="w-full pl-6 pr-2 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#023859]"
                   />
                 </div>
               </div>
@@ -388,7 +388,7 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
                         e.target.value ? parseInt(e.target.value, 10) : undefined
                       )
                     }
-                    className="w-full pl-6 pr-2 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-600"
+                    className="w-full pl-6 pr-2 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#023859]"
                   />
                 </div>
               </div>
@@ -430,7 +430,7 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
         <div className="bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs sticky top-24 space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-emerald-800" />
+              <Filter className="w-4 h-4 text-[#023859]" />
               <h2 className="font-bold text-sm text-slate-900">Filters</h2>
               {activeFilterCount > 0 && (
                 <Badge variant="default" size="sm">
@@ -469,7 +469,7 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
           <div className="fixed inset-y-0 right-0 max-w-xs w-full bg-white shadow-xl flex flex-col z-10 animate-in slide-in-from-right duration-200">
             <div className="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50">
               <div className="flex items-center gap-2">
-                <Filter className="w-4 h-4 text-emerald-800" />
+                <Filter className="w-4 h-4 text-[#023859]" />
                 <h2 className="font-bold text-sm text-slate-900">Filter Books</h2>
                 {activeFilterCount > 0 && (
                   <Badge variant="default" size="sm">

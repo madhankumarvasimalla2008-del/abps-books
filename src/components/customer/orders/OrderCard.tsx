@@ -50,7 +50,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
       {/* Header Section */}
       <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/50">
         <div className="flex items-start sm:items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-white border border-slate-200/90 flex items-center justify-center text-emerald-800 shadow-2xs shrink-0 mt-0.5 sm:mt-0">
+          <div className="w-10 h-10 rounded-xl bg-white border border-slate-200/90 flex items-center justify-center text-[#023859] shadow-2xs shrink-0 mt-0.5 sm:mt-0">
             <Package className="w-5 h-5" />
           </div>
           <div>
@@ -93,7 +93,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
               className="flex items-center justify-between text-xs py-1 border-b border-slate-50 last:border-0"
             >
               <div className="flex items-center gap-2 min-w-0 pr-3">
-                <BookOpen className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                <BookOpen className="w-3.5 h-3.5 text-[#023859] shrink-0" />
                 <span className="font-medium text-slate-800 truncate">
                   {item.productTitle || item.title}
                 </span>
@@ -119,8 +119,8 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 
         {/* Reorder Feedback Notification */}
         {reorderFeedback && (
-          <div className="p-2.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-xl text-xs flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-700" />
+          <div className="p-2.5 bg-[#EBF7FA] text-[#023859] border border-[#D4EBF0] rounded-xl text-xs flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 shrink-0 text-[#54ACBF]" />
             <span>{reorderFeedback} Opening cart...</span>
           </div>
         )}
@@ -129,8 +129,8 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
         <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="text-xs text-slate-500 flex items-center gap-2">
             {order.trackingNumber ? (
-              <span className="flex items-center gap-1 text-emerald-900 font-mono text-[11px] bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-150">
-                <Truck className="w-3.5 h-3.5 text-emerald-700" /> Tracking: {order.trackingNumber}
+              <span className="flex items-center gap-1 text-[#023859] font-mono text-[11px] bg-[#EBF7FA] px-2 py-0.5 rounded-md border border-[#D4EBF0]">
+                <Truck className="w-3.5 h-3.5 text-[#023859]" /> Tracking: {order.trackingNumber}
               </span>
             ) : (
               <span className="text-slate-400 text-[11px]">

@@ -1,10 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Building2, MapPin, Phone, User as UserIcon, FileText, CheckCircle2 } from 'lucide-react';
-import { MOCK_BRANCHES } from '@/data/mockData';
+import { MapPin, Building2, User as UserIcon, Phone, CheckCircle2 } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
-import { Select } from '@/components/ui/Select';
+import { MOCK_BRANCHES } from '@/data/mockData';
 
 export interface AddressData {
   useBranchAddress: boolean;
@@ -42,7 +41,7 @@ export const CheckoutAddressForm: React.FC<CheckoutAddressFormProps> = ({
   onBranchSelect,
 }) => {
   const branchOptions = [
-    { value: '', label: '-- Select Branch to Prefill (Optional) --' },
+    { value: '', label: 'Select Institutional Branch (Optional Autofill)' },
     ...MOCK_BRANCHES.map((b) => ({
       value: b.id,
       label: `${b.name} (${b.city}, ${b.state})`,
@@ -52,27 +51,27 @@ export const CheckoutAddressForm: React.FC<CheckoutAddressFormProps> = ({
   const activeBranch = MOCK_BRANCHES.find((b) => b.id === data.selectedBranchId);
 
   return (
-    <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-2xs space-y-5">
-      <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+    <div className="bg-white p-5 sm:p-6 rounded-2xl border border-[#D4EBF0] shadow-2xs space-y-5">
+      <div className="flex items-center justify-between border-b border-[#D4EBF0]/60 pb-3">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold text-xs">
+          <div className="w-7 h-7 rounded-lg bg-[#EBF7FA] text-[#023859] flex items-center justify-center font-bold text-xs">
             2
           </div>
-          <h2 className="text-sm sm:text-base font-bold text-slate-900">
+          <h2 className="text-sm sm:text-base font-bold text-[#011C40]">
             Delivery Address
           </h2>
         </div>
-        <span className="text-[11px] text-slate-400 font-medium hidden sm:inline">
+        <span className="text-[11px] text-[#537D99] font-medium hidden sm:inline">
           Delivery details and shipping address
         </span>
       </div>
 
       {/* Preset Branch Selector Convenience */}
       <div className="space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 bg-slate-50/90 rounded-xl border border-slate-200/70">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 bg-[#F7FCFD] rounded-xl border border-[#D4EBF0]">
           <div className="flex items-center gap-2">
-            <Building2 className="w-4 h-4 text-emerald-800 shrink-0" />
-            <span className="text-xs font-semibold text-slate-800">
+            <Building2 className="w-4 h-4 text-[#023859] shrink-0" />
+            <span className="text-xs font-semibold text-[#011C40]">
               Prefill address from branch:
             </span>
           </div>
@@ -80,7 +79,7 @@ export const CheckoutAddressForm: React.FC<CheckoutAddressFormProps> = ({
             <select
               value={data.selectedBranchId}
               onChange={(e) => onBranchSelect(e.target.value)}
-              className="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 font-medium text-slate-800"
+              className="w-full px-3 py-1.5 text-xs bg-white border border-[#D4EBF0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#023859] font-medium text-[#011C40]"
               aria-label="Select branch to prefill address"
             >
               {branchOptions.map((opt) => (
@@ -93,11 +92,11 @@ export const CheckoutAddressForm: React.FC<CheckoutAddressFormProps> = ({
         </div>
 
         {activeBranch && (
-          <div className="p-3 bg-emerald-50/50 rounded-xl border border-emerald-200/70 text-xs flex items-start gap-2.5 text-slate-700">
-            <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
+          <div className="p-3 bg-[#EBF7FA]/60 rounded-xl border border-[#D4EBF0] text-xs flex items-start gap-2.5 text-[#011C40]">
+            <CheckCircle2 className="w-4 h-4 text-[#023859] shrink-0 mt-0.5" />
             <div className="space-y-0.5">
-              <span className="font-bold text-emerald-950 block">{activeBranch.name}</span>
-              <p className="text-slate-600 text-[11px]">
+              <span className="font-bold text-[#011C40] block">{activeBranch.name}</span>
+              <p className="text-[#26658C] text-[11px]">
                 {activeBranch.address}
               </p>
             </div>
@@ -205,7 +204,7 @@ export const CheckoutAddressForm: React.FC<CheckoutAddressFormProps> = ({
 
         {/* Delivery Notes */}
         <div className="sm:col-span-2">
-          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-[#011C40] mb-1.5">
             Delivery Notes (Optional)
           </label>
           <textarea
@@ -213,7 +212,7 @@ export const CheckoutAddressForm: React.FC<CheckoutAddressFormProps> = ({
             value={data.deliveryNotes}
             onChange={(e) => onChange('deliveryNotes', e.target.value)}
             placeholder="e.g. Deliver between 9 AM to 4 PM on working days (Optional)"
-            className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-xs sm:text-sm text-slate-900 placeholder-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-600 hover:border-slate-400"
+            className="w-full rounded-lg border border-[#D4EBF0] bg-white px-3.5 py-2 text-xs sm:text-sm text-[#011C40] placeholder-[#537D99] transition-colors focus:outline-none focus:ring-2 focus:ring-[#023859] hover:border-[#54ACBF]"
           />
         </div>
       </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 
 export interface ButtonStyleProps {
-  variant?: 'primary' | 'secondary' | 'outline' | 'danger' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'outline' | 'danger' | 'ghost' | 'accent';
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
@@ -12,19 +12,21 @@ export function buttonVariants({
   className = '',
 }: ButtonStyleProps = {}): string {
   const baseStyles =
-    'inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer';
+    'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer';
 
   const variants = {
     primary:
-      'bg-emerald-700 text-white hover:bg-emerald-800 active:bg-emerald-900 focus-visible:ring-emerald-600 shadow-xs',
+      'bg-[#023859] text-white hover:bg-[#011C40] active:bg-[#00132C] focus-visible:ring-[#023859] shadow-xs',
+    accent:
+      'bg-[#54ACBF] text-[#011C40] font-semibold hover:bg-[#3D96A8] hover:text-white active:bg-[#2A7E8F] focus-visible:ring-[#54ACBF] shadow-xs',
     secondary:
-      'bg-slate-800 text-white hover:bg-slate-900 active:bg-slate-950 focus-visible:ring-slate-700 shadow-xs',
+      'bg-[#26658C] text-white hover:bg-[#1D4F6E] active:bg-[#163D54] focus-visible:ring-[#26658C] shadow-xs',
     outline:
-      'border border-slate-300 text-slate-700 bg-white hover:bg-slate-50 hover:border-slate-400 active:bg-slate-100 focus-visible:ring-slate-400 shadow-xs',
+      'border border-[#D4EBF0] text-[#011C40] bg-white hover:bg-[#F7FCFD] hover:border-[#54ACBF] active:bg-[#EFF8FA] focus-visible:ring-[#023859] shadow-xs',
     danger:
       'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 focus-visible:ring-red-500 shadow-xs',
     ghost:
-      'text-slate-700 hover:text-slate-900 hover:bg-slate-100 active:bg-slate-200 focus-visible:ring-slate-400',
+      'text-[#011C40] hover:text-[#023859] hover:bg-[#023859]/5 active:bg-[#023859]/10 focus-visible:ring-[#023859]',
   };
 
   const sizes = {
@@ -37,7 +39,7 @@ export function buttonVariants({
 }
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'danger' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'outline' | 'danger' | 'ghost' | 'accent';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
   leftIcon?: React.ReactNode;

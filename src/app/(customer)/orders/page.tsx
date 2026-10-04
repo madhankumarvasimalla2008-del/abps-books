@@ -99,7 +99,7 @@ export default function CustomerOrdersPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider bg-emerald-50 px-2.5 py-1 rounded-full">
+          <span className="text-xs font-bold text-[#023859] uppercase tracking-wider bg-[#EBF7FA] px-2.5 py-1 rounded-full">
             My Orders
           </span>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mt-1.5">
@@ -139,7 +139,7 @@ export default function CustomerOrdersPage() {
           <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block">
             Total Copies
           </span>
-          <span className="text-xl sm:text-2xl font-extrabold text-emerald-800 block font-mono">
+          <span className="text-xl sm:text-2xl font-extrabold text-[#023859] block font-mono">
             {metrics.totalCopies.toLocaleString('en-IN')}
           </span>
           <span className="text-[11px] text-slate-400">Curriculum units</span>
@@ -203,7 +203,7 @@ export default function CustomerOrdersPage() {
               placeholder="Search by Order #, branch, or title..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200/90 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:bg-white transition-all placeholder:text-slate-400"
+              className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200/90 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#023859] focus:bg-white transition-all placeholder:text-slate-400"
             />
             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
             {searchQuery && (

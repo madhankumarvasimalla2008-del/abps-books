@@ -149,7 +149,7 @@ export const AddressModal: React.FC<AddressModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+            className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#023859]"
             aria-label="Close dialog"
           >
             <X className="w-5 h-5" />
@@ -169,7 +169,7 @@ export const AddressModal: React.FC<AddressModalProps> = ({
               value={label}
               onChange={(e) => setLabel(e.target.value)}
               placeholder="e.g. Main Delivery Address, Academic Block A"
-              className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition-colors"
+              className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#023859] focus:bg-white transition-colors"
             />
           </div>
 
@@ -189,7 +189,7 @@ export const AddressModal: React.FC<AddressModalProps> = ({
                 className={`w-full px-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
                   errors.recipientName
                     ? 'border-red-300 focus:ring-red-500'
-                    : 'border-slate-300 focus:ring-emerald-600'
+                    : 'border-slate-300 focus:ring-[#023859]'
                 }`}
                 aria-invalid={errors.recipientName ? 'true' : 'false'}
                 aria-describedby={errors.recipientName ? 'recipient-name-error' : undefined}
@@ -217,7 +217,7 @@ export const AddressModal: React.FC<AddressModalProps> = ({
                 className={`w-full px-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
                   errors.phone
                     ? 'border-red-300 focus:ring-red-500'
-                    : 'border-slate-300 focus:ring-emerald-600'
+                    : 'border-slate-300 focus:ring-[#023859]'
                 }`}
                 aria-invalid={errors.phone ? 'true' : 'false'}
                 aria-describedby={errors.phone ? 'recipient-phone-error' : undefined}
@@ -246,7 +246,7 @@ export const AddressModal: React.FC<AddressModalProps> = ({
               className={`w-full px-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
                 errors.addressLine1
                   ? 'border-red-300 focus:ring-red-500'
-                  : 'border-slate-300 focus:ring-emerald-600'
+                  : 'border-slate-300 focus:ring-[#023859]'
               }`}
               aria-invalid={errors.addressLine1 ? 'true' : 'false'}
               aria-describedby={errors.addressLine1 ? 'address-line1-error' : undefined}
@@ -271,7 +271,7 @@ export const AddressModal: React.FC<AddressModalProps> = ({
               value={addressLine2}
               onChange={(e) => setAddressLine2(e.target.value)}
               placeholder="Gate number, landmark, block"
-              className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition-colors"
+              className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#023859] focus:bg-white transition-colors"
             />
           </div>
 
@@ -290,7 +290,7 @@ export const AddressModal: React.FC<AddressModalProps> = ({
                 className={`w-full px-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
                   errors.city
                     ? 'border-red-300 focus:ring-red-500'
-                    : 'border-slate-300 focus:ring-emerald-600'
+                    : 'border-slate-300 focus:ring-[#023859]'
                 }`}
                 aria-invalid={errors.city ? 'true' : 'false'}
                 aria-describedby={errors.city ? 'address-city-error' : undefined}
@@ -316,7 +316,7 @@ export const AddressModal: React.FC<AddressModalProps> = ({
                 className={`w-full px-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
                   errors.state
                     ? 'border-red-300 focus:ring-red-500'
-                    : 'border-slate-300 focus:ring-emerald-600'
+                    : 'border-slate-300 focus:ring-[#023859]'
                 }`}
                 aria-invalid={errors.state ? 'true' : 'false'}
                 aria-describedby={errors.state ? 'address-state-error' : undefined}
@@ -343,7 +343,7 @@ export const AddressModal: React.FC<AddressModalProps> = ({
                 className={`w-full px-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
                   errors.pincode
                     ? 'border-red-300 focus:ring-red-500'
-                    : 'border-slate-300 focus:ring-emerald-600'
+                    : 'border-slate-300 focus:ring-[#023859]'
                 }`}
                 aria-invalid={errors.pincode ? 'true' : 'false'}
                 aria-describedby={errors.pincode ? 'address-pincode-error' : undefined}
@@ -365,7 +365,7 @@ export const AddressModal: React.FC<AddressModalProps> = ({
                 checked={isDefault || isFirstAddress}
                 disabled={isFirstAddress || (!!addressToEdit && addressToEdit.isDefault)}
                 onChange={(e) => setIsDefault(e.target.checked)}
-                className="w-4 h-4 rounded text-emerald-700 focus:ring-emerald-600 border-slate-300"
+                className="w-4 h-4 rounded text-[#023859] focus:ring-[#023859] border-slate-300"
               />
               <span className="font-medium">
                 Set as default delivery address

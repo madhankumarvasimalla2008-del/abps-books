@@ -17,7 +17,7 @@ export const TrackingDeliveryInfo: React.FC<TrackingDeliveryInfoProps> = ({ orde
   return (
     <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs space-y-4 text-xs">
       <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-        <MapPin className="w-4 h-4 text-emerald-800 shrink-0" aria-hidden="true" />
+        <MapPin className="w-4 h-4 text-[#023859] shrink-0" aria-hidden="true" />
         <h3 className="font-bold text-slate-900 text-sm">Delivery Address</h3>
       </div>
 

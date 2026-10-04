@@ -71,7 +71,7 @@ function TrackingPageContent() {
               {/* Order Support Card */}
               <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 space-y-2 text-xs">
                 <div className="flex items-center gap-1.5 font-bold text-slate-800">
-                  <HelpCircle className="w-4 h-4 text-emerald-800 shrink-0" aria-hidden="true" />
+                  <HelpCircle className="w-4 h-4 text-[#023859] shrink-0" aria-hidden="true" />
                   <span>Tracking Support</span>
                 </div>
                 <p className="text-slate-600 leading-relaxed text-[11px]">
@@ -111,7 +111,7 @@ function TrackingPageContent() {
         <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/90 shadow-2xs space-y-4">
           <div className="space-y-1">
             <h2 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
-              <Truck className="w-4 h-4 text-emerald-800" aria-hidden="true" />
+              <Truck className="w-4 h-4 text-[#023859]" aria-hidden="true" />
               <span>Order Tracking</span>
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">

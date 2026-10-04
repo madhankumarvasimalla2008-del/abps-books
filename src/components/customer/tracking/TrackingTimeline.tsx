@@ -101,7 +101,7 @@ export const TrackingTimeline: React.FC<TrackingTimelineProps> = ({ order }) => 
     <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-2xs space-y-6">
       <div className="flex items-center justify-between border-b border-slate-100 pb-3">
         <div className="flex items-center gap-2">
-          <Package className="w-4 h-4 text-emerald-800" aria-hidden="true" />
+          <Package className="w-4 h-4 text-[#023859]" aria-hidden="true" />
           <h2 className="text-sm sm:text-base font-bold text-slate-900">
             Fulfillment Timeline
           </h2>
@@ -132,7 +132,7 @@ export const TrackingTimeline: React.FC<TrackingTimelineProps> = ({ order }) => 
               <div
                 className={`absolute -left-6 sm:-left-8 top-0.5 w-6 h-6 rounded-full flex items-center justify-center ring-4 ring-white transition-all ${
                   isDone
-                    ? 'bg-emerald-700 text-white'
+                    ? 'bg-[#023859] text-white'
                     : isCurrent
                     ? 'bg-amber-600 text-white ring-amber-100 animate-pulse'
                     : 'bg-slate-100 text-slate-400 border border-slate-300'
@@ -173,7 +173,7 @@ export const TrackingTimeline: React.FC<TrackingTimelineProps> = ({ order }) => 
                       </span>
                     )}
                     {isDone && (
-                      <span className="text-[10px] font-medium text-emerald-800 bg-emerald-50 px-1.5 py-0.2 rounded">
+                      <span className="text-[10px] font-medium text-[#023859] bg-[#EBF7FA] px-1.5 py-0.2 rounded">
                         Done
                       </span>
                     )}

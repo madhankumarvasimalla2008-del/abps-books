@@ -19,14 +19,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full">
         {label && (
-          <label htmlFor={inputId} className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
+          <label htmlFor={inputId} className="block text-xs font-semibold uppercase tracking-wider text-[#011C40] mb-1.5">
             {label}
             {required && <span className="text-red-500 ml-1" aria-hidden="true">*</span>}
           </label>
         )}
         <div className="relative rounded-lg shadow-xs">
           {leftIcon && (
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#537D99]">
               {leftIcon}
             </div>
           )}
@@ -36,12 +36,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             required={required}
             aria-invalid={!!error}
             aria-describedby={error ? errorId : helperId}
-            className={`w-full rounded-lg border bg-white px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent ${
+            className={`w-full rounded-lg border bg-white px-3.5 py-2 text-sm text-[#011C40] placeholder-[#537D99] transition-colors focus:outline-none focus:ring-2 focus:ring-[#023859] focus:border-transparent ${
               leftIcon ? 'pl-10' : ''
             } ${rightIcon || rightElement ? 'pr-10' : ''} ${
               error
                 ? 'border-red-400 focus:ring-red-500'
-                : 'border-slate-300 hover:border-slate-400'
+                : 'border-[#D4EBF0] hover:border-[#54ACBF]'
             } ${className}`}
             {...props}
           />
@@ -50,7 +50,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               {rightElement}
             </div>
           ) : rightIcon ? (
-            <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-400">
+            <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-[#537D99]">
               {rightIcon}
             </div>
           ) : null}
@@ -61,7 +61,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           </p>
         )}
         {helperText && !error && (
-          <p id={helperId} className="mt-1.5 text-xs text-slate-500">
+          <p id={helperId} className="mt-1.5 text-xs text-[#26658C]">
             {helperText}
           </p>
         )}

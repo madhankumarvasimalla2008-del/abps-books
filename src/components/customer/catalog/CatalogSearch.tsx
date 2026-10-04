@@ -42,10 +42,10 @@ export const CatalogSearch: React.FC<CatalogSearchProps> = ({
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder="Search by book title, ISBN, author, subject, grade, or publisher..."
-          className="w-full pl-10 pr-20 py-2.5 bg-white border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 shadow-2xs transition-all"
+          className="w-full pl-10 pr-20 py-2.5 bg-white border border-[#D4EBF0] rounded-xl text-xs sm:text-sm text-[#011C40] placeholder:text-[#537D99] focus:outline-none focus:ring-2 focus:ring-[#023859] focus:border-[#023859] shadow-2xs transition-all"
         />
         <Search
-          className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+          className="w-4 h-4 text-[#537D99] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
           aria-hidden="true"
         />
         <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
@@ -53,7 +53,7 @@ export const CatalogSearch: React.FC<CatalogSearchProps> = ({
             <button
               type="button"
               onClick={handleClear}
-              className="p-1 text-slate-400 hover:text-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-600"
+              className="p-1 text-[#537D99] hover:text-[#011C40] rounded-md focus:outline-none focus:ring-2 focus:ring-[#023859]"
               aria-label="Clear search input"
             >
               <X className="w-3.5 h-3.5" />
@@ -61,7 +61,7 @@ export const CatalogSearch: React.FC<CatalogSearchProps> = ({
           )}
           <button
             type="submit"
-            className="px-2.5 py-1 text-xs font-medium text-emerald-800 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-600"
+            className="px-2.5 py-1 text-xs font-semibold text-[#023859] bg-[#EBF7FA] hover:bg-[#A7EBF2]/40 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-[#023859]"
           >
             Search
           </button>

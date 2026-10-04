@@ -35,7 +35,7 @@ export default function CartPage() {
       <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-slate-200/80 pb-4">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2.5">
-            <ShoppingCart className="w-6 h-6 text-emerald-800" aria-hidden="true" />
+            <ShoppingCart className="w-6 h-6 text-[#023859]" aria-hidden="true" />
             <span>Your Cart</span>
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
@@ -44,7 +44,7 @@ export default function CartPage() {
         </div>
 
         {cart.items.length > 0 && (
-          <div className="text-xs font-semibold text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200/70 self-start sm:self-auto">
+          <div className="text-xs font-semibold text-[#023859] bg-[#EBF7FA] px-3 py-1.5 rounded-xl border border-[#D4EBF0] self-start sm:self-auto">
             {cart.items.length} {cart.items.length === 1 ? 'Title' : 'Titles'} • {cart.totalItems} {cart.totalItems === 1 ? 'Copy' : 'Copies'}
           </div>
         )}

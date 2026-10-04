@@ -208,10 +208,10 @@ function LoginForm() {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+    <div className="bg-white rounded-xl shadow-xs border border-[#D4EBF0] p-8">
       <div className="mb-6 text-center">
-        <h2 className="text-xl font-bold text-slate-900">Sign in to your account</h2>
-        <p className="text-xs text-slate-500 mt-1">Access your school booklists, orders, and branch operations</p>
+        <h2 className="text-xl font-serif font-bold text-[#011C40]">Sign in to your account</h2>
+        <p className="text-xs text-[#26658C] mt-1">Access your school booklists, orders, and branch operations</p>
       </div>
 
       {errorMessage && (
@@ -222,8 +222,8 @@ function LoginForm() {
       )}
 
       {successMessage && (
-        <div className="mb-5 p-3.5 bg-emerald-50 border border-emerald-200 rounded-lg flex items-start gap-2.5 text-xs text-emerald-800">
-          <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-emerald-600" />
+        <div className="mb-5 p-3.5 bg-[#EBF7FA] border border-[#D4EBF0] rounded-lg flex items-start gap-2.5 text-xs text-[#023859]">
+          <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-[#023859]" />
           <div className="flex-1 font-medium">{successMessage}</div>
         </div>
       )}
@@ -234,10 +234,10 @@ function LoginForm() {
           type="button"
           onClick={handleGoogleSignIn}
           disabled={isGoogleLoading || isLoading || isSendingOtp || isVerifyingOtp}
-          className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-600 transition-colors shadow-xs disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+          className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 border border-[#D4EBF0] rounded-lg text-sm font-medium text-[#011C40] bg-white hover:bg-[#F7FCFD] focus:outline-none focus:ring-2 focus:ring-[#023859] transition-colors shadow-xs disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           {isGoogleLoading ? (
-            <Loader2 className="w-4 h-4 animate-spin text-slate-600" />
+            <Loader2 className="w-4 h-4 animate-spin text-[#537D99]" />
           ) : (
             <svg className="w-4 h-4" viewBox="0 0 24 24" aria-hidden="true">
               <path
@@ -264,15 +264,15 @@ function LoginForm() {
 
       <div className="relative mb-5">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-slate-200" />
+          <div className="w-full border-t border-[#D4EBF0]" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-white px-2 text-slate-500 font-medium">Or continue with</span>
+          <span className="bg-white px-2 text-[#537D99] font-medium">Or continue with</span>
         </div>
       </div>
 
       {/* Mode Switcher: Email | Phone */}
-      <div className="flex rounded-lg bg-slate-100 p-1 mb-5" role="tablist" aria-label="Sign in method">
+      <div className="flex rounded-lg bg-[#EFF8FA] border border-[#D4EBF0] p-1 mb-5" role="tablist" aria-label="Sign in method">
         <button
           type="button"
           role="tab"
@@ -284,8 +284,8 @@ function LoginForm() {
           }}
           className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-semibold rounded-md transition-all cursor-pointer ${
             authMode === 'email'
-              ? 'bg-white text-slate-900 shadow-xs'
-              : 'text-slate-600 hover:text-slate-900'
+              ? 'bg-white text-[#011C40] shadow-xs'
+              : 'text-[#26658C] hover:text-[#011C40]'
           }`}
         >
           <Mail className="w-3.5 h-3.5" />
@@ -302,8 +302,8 @@ function LoginForm() {
           }}
           className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-semibold rounded-md transition-all cursor-pointer ${
             authMode === 'phone'
-              ? 'bg-white text-slate-900 shadow-xs'
-              : 'text-slate-600 hover:text-slate-900'
+              ? 'bg-white text-[#011C40] shadow-xs'
+              : 'text-[#26658C] hover:text-[#011C40]'
           }`}
         >
           <Smartphone className="w-3.5 h-3.5" />
@@ -316,8 +316,8 @@ function LoginForm() {
         <form className="space-y-4" onSubmit={handleEmailSubmit}>
           {isDev && (
             <div>
-              <label className="block text-xs font-medium text-slate-500 mb-1.5 flex items-center gap-1.5">
-                <UserCheck className="w-3.5 h-3.5 text-slate-400" />
+              <label className="block text-xs font-medium text-[#26658C] mb-1.5 flex items-center gap-1.5">
+                <UserCheck className="w-3.5 h-3.5 text-[#537D99]" />
                 Quick Dev Persona
               </label>
               <div className="grid grid-cols-2 gap-1.5">
@@ -335,8 +335,8 @@ function LoginForm() {
                     onClick={() => handleQuickLogin(r, defaultEmail)}
                     className={`text-left px-2.5 py-1.5 rounded-lg border text-xs transition-all ${
                       selectedRole === r
-                        ? 'border-emerald-600 bg-emerald-50 text-emerald-900 font-medium'
-                        : 'border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50'
+                        ? 'border-[#023859] bg-[#EBF7FA] text-[#023859] font-semibold'
+                        : 'border-[#D4EBF0] text-[#26658C] hover:border-[#54ACBF] hover:bg-[#F7FCFD]'
                     }`}
                   >
                     <span className="block font-medium truncate">{label}</span>
@@ -370,7 +370,7 @@ function LoginForm() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-slate-400 hover:text-slate-600 focus:outline-none focus:text-slate-600 p-1 cursor-pointer"
+                  className="text-[#537D99] hover:text-[#011C40] focus:outline-none p-1 cursor-pointer"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                   title={showPassword ? 'Hide password' : 'Show password'}
                 >
@@ -382,7 +382,7 @@ function LoginForm() {
             <div className="flex items-center justify-end mt-1.5">
               <Link
                 href="/reset-password"
-                className="text-xs text-emerald-700 hover:text-emerald-800 font-medium"
+                className="text-xs text-[#023859] hover:text-[#54ACBF] font-semibold"
               >
                 Forgot password?
               </Link>
@@ -417,17 +417,17 @@ function LoginForm() {
           <div>
             <label
               htmlFor="phone-input"
-              className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5"
+              className="block text-xs font-semibold uppercase tracking-wider text-[#011C40] mb-1.5"
             >
               Mobile Phone Number
               <span className="text-red-500 ml-1" aria-hidden="true">*</span>
             </label>
             <div className="relative flex rounded-lg shadow-xs">
               <div
-                className="inline-flex items-center gap-1.5 px-3 rounded-l-lg border border-r-0 border-slate-300 bg-slate-50 text-slate-700 text-sm font-semibold select-none shrink-0"
+                className="inline-flex items-center gap-1.5 px-3 rounded-l-lg border border-r-0 border-[#D4EBF0] bg-[#EBF7FA] text-[#011C40] text-sm font-semibold select-none shrink-0"
                 aria-hidden="true"
               >
-                <Smartphone className="w-4 h-4 text-slate-400" />
+                <Smartphone className="w-4 h-4 text-[#537D99]" />
                 <span>+91</span>
               </div>
               <input
@@ -450,10 +450,10 @@ function LoginForm() {
                 }}
                 placeholder="98765 43210"
                 aria-label="10-digit Indian mobile number"
-                className="block w-full min-w-0 flex-1 rounded-none rounded-r-lg border border-slate-300 bg-white px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent hover:border-slate-400 font-mono tracking-wider"
+                className="block w-full min-w-0 flex-1 rounded-none rounded-r-lg border border-[#D4EBF0] bg-white px-3.5 py-2 text-sm text-[#011C40] placeholder-[#537D99] transition-colors focus:outline-none focus:ring-2 focus:ring-[#023859] focus:border-transparent hover:border-[#54ACBF] font-mono tracking-wider"
               />
             </div>
-            <p className="mt-1.5 text-xs text-slate-500">
+            <p className="mt-1.5 text-xs text-[#26658C]">
               Enter your 10-digit Indian mobile number to receive a one-time SMS verification code.
             </p>
           </div>
@@ -483,9 +483,9 @@ function LoginForm() {
       {/* Mode 2: Phone Mode (Enter OTP) */}
       {authMode === 'phone' && otpSent && (
         <form className="space-y-4" onSubmit={handleVerifyPhoneOtp}>
-          <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-xs text-emerald-800 flex items-center justify-between">
+          <div className="bg-[#EBF7FA] border border-[#D4EBF0] rounded-lg p-3 text-xs text-[#023859] flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-[#023859] shrink-0" />
               <span>
                 Code sent to <span className="font-semibold">{formatPhoneDisplay(normalizedPhone)}</span>
               </span>
@@ -493,7 +493,7 @@ function LoginForm() {
             <button
               type="button"
               onClick={handleResetPhoneMode}
-              className="text-xs font-semibold text-emerald-700 hover:text-emerald-900 underline ml-2 cursor-pointer"
+              className="text-xs font-semibold text-[#023859] hover:text-[#54ACBF] underline ml-2 cursor-pointer"
             >
               Change
             </button>
@@ -522,19 +522,19 @@ function LoginForm() {
             <button
               type="button"
               onClick={handleResetPhoneMode}
-              className="text-slate-500 hover:text-slate-700 cursor-pointer"
+              className="text-[#26658C] hover:text-[#011C40] cursor-pointer"
             >
               ← Change phone number
             </button>
 
             {resendCooldown > 0 ? (
-              <span className="text-slate-400">Resend OTP in {resendCooldown}s</span>
+              <span className="text-[#537D99]">Resend OTP in {resendCooldown}s</span>
             ) : (
               <button
                 type="button"
                 onClick={handleResendPhoneOtp}
                 disabled={isSendingOtp}
-                className="font-semibold text-emerald-700 hover:text-emerald-800 underline cursor-pointer flex items-center gap-1"
+                className="font-semibold text-[#023859] hover:text-[#54ACBF] underline cursor-pointer flex items-center gap-1"
               >
                 <RotateCcw className="w-3 h-3" />
                 <span>Resend OTP</span>
@@ -564,19 +564,19 @@ function LoginForm() {
         </form>
       )}
 
-      <div className="mt-6 border-t border-slate-100 pt-4 text-center space-y-2">
-        <p className="text-xs text-slate-600">
+      <div className="mt-6 border-t border-[#E8F4F7] pt-4 text-center space-y-2">
+        <p className="text-xs text-[#26658C]">
           Don&apos;t have an account?{' '}
           <Link
             href={redirectParam ? `/signup?next=${encodeURIComponent(redirectParam)}` : '/signup'}
-            className="font-semibold text-emerald-700 hover:text-emerald-800"
+            className="font-semibold text-[#023859] hover:text-[#54ACBF]"
           >
             Create an account
           </Link>
         </p>
-        <p className="text-[11px] text-slate-400">
+        <p className="text-[11px] text-[#537D99]">
           Need branch registration assistance?{' '}
-          <span className="font-medium text-slate-600">Contact Central Operations</span>
+          <span className="font-medium text-[#26658C]">Contact Central Operations</span>
         </p>
       </div>
     </div>
@@ -585,28 +585,28 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-[80vh] flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-slate-50">
+    <div className="min-h-[80vh] flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-[#F7FCFD]">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center mb-4">
-          <div className="w-12 h-12 rounded-xl bg-emerald-700 flex items-center justify-center text-white shadow-sm">
+          <div className="w-12 h-12 rounded-xl bg-[#023859] flex items-center justify-center text-white shadow-sm">
             <BookOpen className="w-6 h-6" />
           </div>
         </div>
-        <h1 className="text-center text-2xl font-bold text-slate-900 tracking-tight">
+        <h1 className="text-center text-2xl font-serif font-bold text-[#011C40] tracking-tight">
           Aditya Birla Public School
         </h1>
-        <p className="mt-1 text-center text-xs font-medium text-slate-500 uppercase tracking-widest">
+        <p className="mt-1 text-center text-xs font-semibold text-[#26658C] uppercase tracking-widest">
           Unified Booklist & Operational Portal
         </p>
       </div>
 
       <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md">
-        <Suspense fallback={<div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200 text-center text-slate-500">Loading sign in...</div>}>
+        <Suspense fallback={<div className="bg-white p-8 rounded-xl shadow-xs border border-[#D4EBF0] text-center text-[#537D99]">Loading sign in...</div>}>
           <LoginForm />
         </Suspense>
 
-        <div className="mt-6 flex items-center justify-center gap-2 text-xs text-slate-400">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
+        <div className="mt-6 flex items-center justify-center gap-2 text-xs text-[#537D99]">
+          <ShieldCheck className="w-3.5 h-3.5 text-[#023859]" />
           <span>Secured by ABPS Enterprise Authentication</span>
         </div>
       </div>

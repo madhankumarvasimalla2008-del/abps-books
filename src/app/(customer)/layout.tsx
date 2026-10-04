@@ -4,7 +4,7 @@ import { CustomerFooter } from '@/components/customer/CustomerFooter';
 
 export default function CustomerLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
+    <div className="min-h-screen flex flex-col bg-[#F7FCFD] text-[#011C40]">
       <a href="#main-content" className="skip-to-content">
         Skip to main content
       </a>

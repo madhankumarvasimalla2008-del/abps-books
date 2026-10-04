@@ -60,7 +60,7 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
     <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-2xs space-y-4">
       <div className="flex items-center justify-between border-b border-slate-100 pb-3">
         <div className="flex items-center gap-2">
-          <Truck className="w-4 h-4 text-emerald-800" />
+          <Truck className="w-4 h-4 text-[#023859]" />
           <h2 className="text-sm sm:text-base font-bold text-slate-900">
             Order Status Timeline
           </h2>
@@ -84,9 +84,9 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
               <div
                 className={`absolute -left-6 sm:-left-8 top-0.5 w-6 h-6 rounded-full flex items-center justify-center ring-4 ring-white ${
                   isDone
-                    ? 'bg-emerald-700 text-white'
+                    ? 'bg-[#023859] text-white'
                     : isCurrent
-                    ? 'bg-emerald-600 text-white ring-emerald-100 animate-pulse'
+                    ? 'bg-[#54ACBF] text-white ring-[#A7EBF2]/40 animate-pulse'
                     : 'bg-slate-200 text-slate-400'
                 }`}
               >

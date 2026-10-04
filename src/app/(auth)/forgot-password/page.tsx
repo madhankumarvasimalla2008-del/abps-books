@@ -30,19 +30,19 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F7FCFD] flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-600 text-white shadow-lg mb-3">
+        <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[#023859] text-white shadow-sm mb-3">
           <BookOpen className="w-6 h-6" />
         </div>
-        <h2 className="text-2xl font-bold tracking-tight text-white">Reset Branch Password</h2>
-        <p className="mt-1 text-xs text-slate-400">
+        <h2 className="text-2xl font-serif font-bold tracking-tight text-[#011C40]">Reset Branch Password</h2>
+        <p className="mt-1 text-xs text-[#26658C]">
           Enter your registered ABPS email address to receive password reset instructions
         </p>
       </div>
 
       <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md px-4 sm:px-0">
-        <div className="bg-white py-8 px-6 shadow-xl rounded-2xl sm:px-10 border border-slate-200">
+        <div className="bg-white py-8 px-6 shadow-xs rounded-2xl sm:px-10 border border-[#D4EBF0]">
           {errorMessage && (
             <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 flex items-start gap-2.5 text-xs text-red-700">
               <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
@@ -52,17 +52,17 @@ export default function ForgotPasswordPage() {
 
           {isSubmitted ? (
             <div className="text-center py-4 space-y-3">
-              <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
+              <div className="w-12 h-12 rounded-full bg-[#EBF7FA] text-[#023859] flex items-center justify-center mx-auto">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
-              <h3 className="text-base font-bold text-slate-900">Reset Link Dispatched</h3>
-              <p className="text-xs text-slate-600">
-                If <span className="font-semibold text-slate-900">{email}</span> matches an authorized account, an email with verification instructions has been sent.
+              <h3 className="text-base font-bold text-[#011C40]">Reset Link Dispatched</h3>
+              <p className="text-xs text-[#26658C]">
+                If <span className="font-semibold text-[#011C40]">{email}</span> matches an authorized account, an email with verification instructions has been sent.
               </p>
               <div className="pt-3">
                 <Link
                   href="/reset-password"
-                  className={buttonVariants({ variant: 'outline', size: 'sm', className: 'w-full text-xs' })}
+                  className={buttonVariants({ variant: 'outline', size: 'sm', className: 'w-full text-xs border-[#D4EBF0] text-[#011C40] hover:bg-[#F7FCFD] hover:border-[#54ACBF]' })}
                 >
                   Proceed to Update Password
                 </Link>
@@ -91,10 +91,10 @@ export default function ForgotPasswordPage() {
             </form>
           )}
 
-          <div className="mt-6 border-t border-slate-100 pt-4 text-center">
+          <div className="mt-6 border-t border-[#E8F4F7] pt-4 text-center">
             <Link
               href="/login"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#26658C] hover:text-[#011C40]"
             >
               <ArrowLeft className="w-3.5 h-3.5" /> Back to Login
             </Link>

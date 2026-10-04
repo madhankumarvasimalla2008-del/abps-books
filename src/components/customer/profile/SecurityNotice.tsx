@@ -22,21 +22,21 @@ export const SecurityNotice: React.FC = () => {
       {/* Account Security Information Card */}
       <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-5 sm:p-6 space-y-4">
         <div className="flex items-center gap-2 text-slate-900">
-          <ShieldCheck className="w-4 h-4 text-emerald-800" aria-hidden="true" />
+          <ShieldCheck className="w-4 h-4 text-[#023859]" aria-hidden="true" />
           <h3 className="text-sm font-bold">Account Protection Guidelines</h3>
         </div>
 
         <ul className="space-y-2.5 text-xs text-slate-600">
           <li className="flex items-start gap-2.5">
-            <Lock className="w-3.5 h-3.5 text-emerald-700 shrink-0 mt-0.5" aria-hidden="true" />
+            <Lock className="w-3.5 h-3.5 text-[#54ACBF] shrink-0 mt-0.5" aria-hidden="true" />
             <span>Use a unique password of at least 8 characters with letters, numbers, and symbols.</span>
           </li>
           <li className="flex items-start gap-2.5">
-            <KeyRound className="w-3.5 h-3.5 text-emerald-700 shrink-0 mt-0.5" aria-hidden="true" />
+            <KeyRound className="w-3.5 h-3.5 text-[#54ACBF] shrink-0 mt-0.5" aria-hidden="true" />
             <span>Never share your login credentials with unverified contacts or third parties.</span>
           </li>
           <li className="flex items-start gap-2.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0 mt-0.5" aria-hidden="true" />
+            <ShieldCheck className="w-3.5 h-3.5 text-[#54ACBF] shrink-0 mt-0.5" aria-hidden="true" />
             <span>Always sign out when accessing the ordering system from shared or public computers.</span>
           </li>
         </ul>

@@ -28,11 +28,11 @@ export const RelatedProducts: React.FC<RelatedProductsProps> = ({
   if (related.length === 0) return null;
 
   return (
-    <section className="space-y-4 pt-4 border-t border-slate-200/80" aria-label="Related Books">
+    <section className="space-y-4 pt-6 border-t border-[#D4EBF0]" aria-label="Related Books">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <BookOpen className="w-5 h-5 text-emerald-800" />
-          <h2 className="text-lg sm:text-xl font-bold text-slate-900">
+          <BookOpen className="w-5 h-5 text-[#023859]" />
+          <h2 className="text-lg sm:text-xl font-serif font-bold text-[#011C40]">
             Related Curriculum Titles for {currentProduct.grade}
           </h2>
         </div>

@@ -53,7 +53,7 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
       tag: 'Recommended (Zero Fee)',
       description:
         'Pay instantly using Google Pay, PhonePe, BHIM, Paytm, or by scanning dynamic UPI QR Code.',
-      icon: <Smartphone className="w-4 h-4 text-emerald-700" />,
+      icon: <Smartphone className="w-4 h-4 text-[#023859]" />,
     },
     {
       id: 'Card',
@@ -61,7 +61,7 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
       tag: 'Visa, MC, RuPay',
       description:
         'Secure 3D-authenticated payment with corporate or personal debit/credit cards.',
-      icon: <CreditCard className="w-4 h-4 text-blue-700" />,
+      icon: <CreditCard className="w-4 h-4 text-[#023859]" />,
     },
     {
       id: 'Net Banking',
@@ -69,7 +69,7 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
       tag: '50+ Indian Banks',
       description:
         'Direct electronic transfer from SBI, HDFC, ICICI, Axis, Kotak, and other major Indian banks.',
-      icon: <Building2 className="w-4 h-4 text-indigo-700" />,
+      icon: <Building2 className="w-4 h-4 text-[#023859]" />,
     },
     {
       id: 'Wallet',
@@ -77,7 +77,7 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
       tag: 'PhonePe, Paytm, Amazon',
       description:
         'Quick checkout using linked digital wallets and prepaid balance.',
-      icon: <Wallet className="w-4 h-4 text-purple-700" />,
+      icon: <Wallet className="w-4 h-4 text-[#023859]" />,
     },
     {
       id: 'Manual Payment',
@@ -85,7 +85,7 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
       tag: 'Offline / Demo',
       description:
         'Generic manual payment recording for testing and demo order placement.',
-      icon: <FileCheck2 className="w-4 h-4 text-slate-700" />,
+      icon: <FileCheck2 className="w-4 h-4 text-[#26658C]" />,
     },
   ];
 
@@ -101,17 +101,17 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
   const popularWallets = ['PhonePe Wallet', 'Paytm Wallet', 'Amazon Pay', 'MobiKwik'];
 
   return (
-    <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-2xs space-y-5">
-      <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+    <div className="bg-white p-5 sm:p-6 rounded-2xl border border-[#D4EBF0] shadow-2xs space-y-5">
+      <div className="flex items-center justify-between border-b border-[#D4EBF0]/60 pb-3">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold text-xs">
+          <div className="w-7 h-7 rounded-lg bg-[#EBF7FA] text-[#023859] flex items-center justify-center font-bold text-xs">
             4
           </div>
           <div>
-            <h2 className="text-sm sm:text-base font-bold text-slate-900">
+            <h2 className="text-sm sm:text-base font-bold text-[#011C40]">
               Payment &amp; Settlement Method
             </h2>
-            <p className="text-[11px] text-slate-500">
+            <p className="text-[11px] text-[#537D99]">
               Select your preferred payment channel for this order
             </p>
           </div>
@@ -130,8 +130,8 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
               key={method.id}
               className={`rounded-2xl border transition-all overflow-hidden ${
                 isSelected
-                  ? 'border-emerald-700 bg-emerald-50/40 ring-2 ring-emerald-600/30'
-                  : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50/60'
+                  ? 'border-[#023859] bg-[#EBF7FA]/40 ring-2 ring-[#023859]/20'
+                  : 'border-[#D4EBF0] hover:border-[#54ACBF] hover:bg-[#F7FCFD]'
               }`}
             >
               <div
@@ -153,20 +153,20 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
                   name="checkout_payment_method"
                   checked={isSelected}
                   onChange={() => onChange(method.id)}
-                  className="mt-1 text-emerald-700 focus:ring-emerald-600 cursor-pointer shrink-0"
+                  className="mt-1 text-[#023859] focus:ring-[#023859] cursor-pointer shrink-0"
                 />
 
                 <div className="space-y-1 flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap justify-between">
-                    <span className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                    <span className="text-xs sm:text-sm font-bold text-[#011C40] flex items-center gap-1.5">
                       {method.icon}
                       {method.title}
                     </span>
-                    <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-100/70 px-2 py-0.5 rounded-md">
+                    <span className="text-[10px] font-semibold text-[#023859] bg-[#EBF7FA] px-2 py-0.5 rounded-md">
                       {method.tag}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-600 leading-relaxed">
+                  <p className="text-xs text-[#26658C] leading-relaxed">
                     {method.description}
                   </p>
                 </div>
@@ -174,8 +174,8 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
 
               {/* Sub-options for UPI */}
               {isSelected && method.id === 'UPI' && (
-                <div className="px-4 pb-4 pt-1 border-t border-emerald-100/80 bg-white/70 space-y-3">
-                  <span className="text-[11px] font-bold text-slate-700 block">
+                <div className="px-4 pb-4 pt-1 border-t border-[#D4EBF0] bg-white/70 space-y-3">
+                  <span className="text-[11px] font-bold text-[#011C40] block">
                     Choose UPI Payment Mode:
                   </span>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
@@ -184,15 +184,15 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
                       onClick={() => onUpiSubMethodChange?.('intent')}
                       className={`p-2.5 rounded-xl border text-left text-xs transition-all ${
                         upiSubMethod === 'intent'
-                          ? 'border-emerald-700 bg-emerald-50 text-emerald-900 font-bold'
-                          : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+                          ? 'border-[#023859] bg-[#EBF7FA] text-[#023859] font-bold'
+                          : 'border-[#D4EBF0] bg-white text-[#26658C] hover:bg-[#F7FCFD]'
                       }`}
                     >
                       <div className="flex items-center gap-1.5">
-                        <Smartphone className="w-3.5 h-3.5 text-emerald-700" />
+                        <Smartphone className="w-3.5 h-3.5 text-[#023859]" />
                         <span>UPI App Intent</span>
                       </div>
-                      <span className="text-[10px] font-normal text-slate-500 block mt-0.5">
+                      <span className="text-[10px] font-normal text-[#537D99] block mt-0.5">
                         PhonePe, GPay, BHIM
                       </span>
                     </button>
@@ -202,15 +202,15 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
                       onClick={() => onUpiSubMethodChange?.('qr')}
                       className={`p-2.5 rounded-xl border text-left text-xs transition-all ${
                         upiSubMethod === 'qr'
-                          ? 'border-emerald-700 bg-emerald-50 text-emerald-900 font-bold'
-                          : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+                          ? 'border-[#023859] bg-[#EBF7FA] text-[#023859] font-bold'
+                          : 'border-[#D4EBF0] bg-white text-[#26658C] hover:bg-[#F7FCFD]'
                       }`}
                     >
                       <div className="flex items-center gap-1.5">
-                        <QrCode className="w-3.5 h-3.5 text-emerald-700" />
+                        <QrCode className="w-3.5 h-3.5 text-[#023859]" />
                         <span>Scan UPI QR</span>
                       </div>
-                      <span className="text-[10px] font-normal text-slate-500 block mt-0.5">
+                      <span className="text-[10px] font-normal text-[#537D99] block mt-0.5">
                         Display dynamic QR
                       </span>
                     </button>
@@ -220,15 +220,15 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
                       onClick={() => onUpiSubMethodChange?.('collect')}
                       className={`p-2.5 rounded-xl border text-left text-xs transition-all ${
                         upiSubMethod === 'collect'
-                          ? 'border-emerald-700 bg-emerald-50 text-emerald-900 font-bold'
-                          : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+                          ? 'border-[#023859] bg-[#EBF7FA] text-[#023859] font-bold'
+                          : 'border-[#D4EBF0] bg-white text-[#26658C] hover:bg-[#F7FCFD]'
                       }`}
                     >
                       <div className="flex items-center gap-1.5">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#023859]" />
                         <span>UPI ID Collect</span>
                       </div>
-                      <span className="text-[10px] font-normal text-slate-500 block mt-0.5">
+                      <span className="text-[10px] font-normal text-[#537D99] block mt-0.5">
                         Request via VPA
                       </span>
                     </button>
@@ -236,7 +236,7 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
 
                   {upiSubMethod === 'intent' && (
                     <div className="space-y-1.5 pt-1">
-                      <span className="text-[11px] text-slate-500 block">
+                      <span className="text-[11px] text-[#537D99] block">
                         Select preferred UPI App:
                       </span>
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -252,8 +252,8 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
                             onClick={() => onUpiAppChange?.(app.id)}
                             className={`p-2 text-xs rounded-lg border font-semibold transition-all ${
                               upiApp === app.id
-                                ? 'bg-slate-900 text-white border-slate-900'
-                                : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                                ? 'bg-[#023859] text-white border-[#023859]'
+                                : 'bg-white text-[#26658C] border-[#D4EBF0] hover:bg-[#F7FCFD]'
                             }`}
                           >
                             {app.label}
@@ -265,7 +265,7 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
 
                   {upiSubMethod === 'collect' && (
                     <div className="space-y-1.5 pt-1">
-                      <label htmlFor="upi-vpa-input" className="text-[11px] font-semibold text-slate-700 block">
+                      <label htmlFor="upi-vpa-input" className="text-[11px] font-semibold text-[#011C40] block">
                         Enter UPI ID / VPA:
                       </label>
                       <div className="flex gap-2">
@@ -275,7 +275,7 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
                           placeholder="e.g. yourname@okhdfcbank"
                           value={upiId}
                           onChange={(e) => onUpiIdChange?.(e.target.value)}
-                          className="flex-1 px-3 py-1.5 text-xs bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-600 font-mono"
+                          className="flex-1 px-3 py-1.5 text-xs bg-white border border-[#D4EBF0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#023859] font-mono"
                         />
                       </div>
                     </div>
@@ -285,9 +285,9 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
 
               {/* Sub-options for Card */}
               {isSelected && method.id === 'Card' && (
-                <div className="px-4 pb-4 pt-1 border-t border-emerald-100/80 bg-white/70 space-y-3">
-                  <div className="p-2.5 bg-blue-50/70 border border-blue-200/60 rounded-xl text-[11px] text-blue-900 flex items-start gap-2">
-                    <ShieldCheck className="w-3.5 h-3.5 text-blue-700 shrink-0 mt-0.5" />
+                <div className="px-4 pb-4 pt-1 border-t border-[#D4EBF0] bg-white/70 space-y-3">
+                  <div className="p-2.5 bg-[#EBF7FA]/70 border border-[#D4EBF0] rounded-xl text-[11px] text-[#011C40] flex items-start gap-2">
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#023859] shrink-0 mt-0.5" />
                     <span>
                       <strong>Safe &amp; Compliant:</strong> Real card numbers, CVVs, or bank passwords
                       are NEVER stored or transmitted.
@@ -296,25 +296,25 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <div>
-                      <label className="text-[11px] font-semibold text-slate-700 block mb-1">
+                      <label className="text-[11px] font-semibold text-[#011C40] block mb-1">
                         Card Number (Demo):
                       </label>
                       <input
                         type="text"
                         disabled
                         value="•••• •••• •••• 4242"
-                        className="w-full px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-xl font-mono text-slate-600 text-xs"
+                        className="w-full px-3 py-1.5 bg-[#F7FCFD] border border-[#D4EBF0] rounded-xl font-mono text-[#26658C] text-xs"
                       />
                     </div>
                     <div>
-                      <label className="text-[11px] font-semibold text-slate-700 block mb-1">
+                      <label className="text-[11px] font-semibold text-[#011C40] block mb-1">
                         Cardholder Name:
                       </label>
                       <input
                         type="text"
                         disabled
                         value="ABPS Purchaser"
-                        className="w-full px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-xl text-slate-600 text-xs"
+                        className="w-full px-3 py-1.5 bg-[#F7FCFD] border border-[#D4EBF0] rounded-xl text-[#26658C] text-xs"
                       />
                     </div>
                   </div>
@@ -323,8 +323,8 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
 
               {/* Sub-options for Net Banking */}
               {isSelected && method.id === 'Net Banking' && (
-                <div className="px-4 pb-4 pt-1 border-t border-emerald-100/80 bg-white/70 space-y-2">
-                  <span className="text-[11px] font-bold text-slate-700 block">
+                <div className="px-4 pb-4 pt-1 border-t border-[#D4EBF0] bg-white/70 space-y-2">
+                  <span className="text-[11px] font-bold text-[#011C40] block">
                     Select Corporate / Retail Bank:
                   </span>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
@@ -335,8 +335,8 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
                         onClick={() => setSelectedBank(bank)}
                         className={`p-2 rounded-xl border text-center font-medium transition-all ${
                           selectedBank === bank
-                            ? 'bg-slate-900 text-white border-slate-900 font-bold'
-                            : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                            ? 'bg-[#023859] text-white border-[#023859] font-bold'
+                            : 'bg-white text-[#26658C] border-[#D4EBF0] hover:bg-[#F7FCFD]'
                         }`}
                       >
                         {bank}
@@ -348,8 +348,8 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
 
               {/* Sub-options for Wallets */}
               {isSelected && method.id === 'Wallet' && (
-                <div className="px-4 pb-4 pt-1 border-t border-emerald-100/80 bg-white/70 space-y-2">
-                  <span className="text-[11px] font-bold text-slate-700 block">
+                <div className="px-4 pb-4 pt-1 border-t border-[#D4EBF0] bg-white/70 space-y-2">
+                  <span className="text-[11px] font-bold text-[#011C40] block">
                     Select Digital Wallet:
                   </span>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
@@ -360,8 +360,8 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
                         onClick={() => setSelectedWallet(wallet)}
                         className={`p-2 rounded-xl border text-center font-medium transition-all ${
                           selectedWallet === wallet
-                            ? 'bg-slate-900 text-white border-slate-900 font-bold'
-                            : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                            ? 'bg-[#023859] text-white border-[#023859] font-bold'
+                            : 'bg-white text-[#26658C] border-[#D4EBF0] hover:bg-[#F7FCFD]'
                         }`}
                       >
                         {wallet}
@@ -376,8 +376,8 @@ export const CheckoutPaymentMethod: React.FC<CheckoutPaymentMethodProps> = ({
       </div>
 
       {/* Demo Disclaimer Box */}
-      <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 flex items-center gap-2 text-xs text-slate-600">
-        <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0" />
+      <div className="p-3 bg-[#F7FCFD] rounded-xl border border-[#D4EBF0] flex items-center gap-2 text-xs text-[#26658C]">
+        <ShieldCheck className="w-4 h-4 text-[#023859] shrink-0" />
         <span>
           <strong>Architecture Note:</strong> This checkout flow simulates payment selection and state transitions. In production, this cleanly delegates to bank/UPI gateways.
         </span>

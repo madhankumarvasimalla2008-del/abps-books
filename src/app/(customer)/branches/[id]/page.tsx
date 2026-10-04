@@ -55,7 +55,7 @@ export default function BranchDetailPage({ params }: { params: Promise<{ id: str
             </h1>
 
             <p className="text-xs sm:text-sm text-slate-600 flex items-center gap-1.5">
-              <MapPin className="w-4 h-4 text-emerald-700 shrink-0" />
+              <MapPin className="w-4 h-4 text-[#023859] shrink-0" />
               <span>
                 {branch.address}, {branch.city}, {branch.state} - {branch.pincode}
               </span>

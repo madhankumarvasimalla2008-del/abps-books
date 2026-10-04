@@ -15,7 +15,7 @@ export const OrderItems: React.FC<OrderItemsProps> = ({ items, showLinks = true 
     <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden">
       <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Package className="w-4 h-4 text-emerald-800" aria-hidden="true" />
+          <Package className="w-4 h-4 text-[#023859]" aria-hidden="true" />
           <h2 className="font-bold text-sm sm:text-base text-slate-900">
             Ordered Items ({items.length} {items.length === 1 ? 'Title' : 'Titles'})
           </h2>
@@ -43,14 +43,14 @@ export const OrderItems: React.FC<OrderItemsProps> = ({ items, showLinks = true 
               <tr key={item.id || idx} className="hover:bg-slate-50/50 transition-colors">
                 <td className="py-3.5 px-4">
                   <div className="flex items-start gap-3">
-                    <div className="w-9 h-11 bg-emerald-50 rounded-lg border border-emerald-100/80 flex items-center justify-center shrink-0 text-emerald-800">
+                    <div className="w-9 h-11 bg-[#EBF7FA] rounded-lg border border-[#D4EBF0] flex items-center justify-center shrink-0 text-[#023859]">
                       <BookOpen className="w-4 h-4" />
                     </div>
                     <div className="min-w-0">
                       {showLinks && item.productId ? (
                         <Link
                           href={`/books/${item.productId}`}
-                          className="font-bold text-slate-900 hover:text-emerald-800 transition-colors line-clamp-1 block"
+                          className="font-bold text-slate-900 hover:text-[#023859] transition-colors line-clamp-1 block"
                         >
                           {item.productTitle || item.title}
                         </Link>
@@ -104,14 +104,14 @@ export const OrderItems: React.FC<OrderItemsProps> = ({ items, showLinks = true 
         {items.map((item, idx) => (
           <div key={item.id || idx} className="p-4 space-y-2.5">
             <div className="flex items-start gap-3">
-              <div className="w-10 h-12 bg-emerald-50 rounded-lg border border-emerald-100/80 flex items-center justify-center shrink-0 text-emerald-800">
+              <div className="w-10 h-12 bg-[#EBF7FA] rounded-lg border border-[#D4EBF0] flex items-center justify-center shrink-0 text-[#023859]">
                 <BookOpen className="w-5 h-5" />
               </div>
               <div className="flex-1 min-w-0">
                 {showLinks && item.productId ? (
                   <Link
                     href={`/books/${item.productId}`}
-                    className="font-bold text-slate-900 hover:text-emerald-800 text-xs line-clamp-2 block"
+                    className="font-bold text-slate-900 hover:text-[#023859] text-xs line-clamp-2 block"
                   >
                     {item.productTitle || item.title}
                   </Link>

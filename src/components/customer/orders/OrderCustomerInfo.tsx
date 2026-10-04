@@ -16,7 +16,7 @@ export const OrderCustomerInfo: React.FC<OrderCustomerInfoProps> = ({ order }) =
       {/* Customer / Coordinator Details */}
       <div className="space-y-3">
         <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5 border-b border-slate-100 pb-2">
-          <User className="w-3.5 h-3.5 text-emerald-800" />
+          <User className="w-3.5 h-3.5 text-[#023859]" />
           <span>Customer &amp; Branch Information</span>
         </h3>
 
@@ -37,8 +37,8 @@ export const OrderCustomerInfo: React.FC<OrderCustomerInfoProps> = ({ order }) =
               <span>+91 {order.customerPhone}</span>
             </div>
           )}
-          <div className="flex items-center gap-2 text-emerald-900 bg-emerald-50/70 p-2 rounded-lg border border-emerald-100/70">
-            <Building2 className="w-3.5 h-3.5 text-emerald-800 shrink-0" />
+          <div className="flex items-center gap-2 text-[#023859] bg-[#EBF7FA] p-2 rounded-lg border border-[#D4EBF0]">
+            <Building2 className="w-3.5 h-3.5 text-[#023859] shrink-0" />
             <span className="font-medium truncate">{order.branchName}</span>
           </div>
         </div>
@@ -48,7 +48,7 @@ export const OrderCustomerInfo: React.FC<OrderCustomerInfoProps> = ({ order }) =
       {address && (
         <div className="space-y-3 pt-2 border-t border-slate-100">
           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5 border-b border-slate-100 pb-2">
-            <MapPin className="w-3.5 h-3.5 text-emerald-800" />
+            <MapPin className="w-3.5 h-3.5 text-[#023859]" />
             <span>Delivery Address</span>
           </h3>
 

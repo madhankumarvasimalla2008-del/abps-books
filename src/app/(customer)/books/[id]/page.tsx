@@ -42,7 +42,7 @@ function BookDetailContent({ paramsPromise }: { paramsPromise: Promise<{ id: str
       />
 
       {/* Main Product Overview: Gallery (Left) + Meta & Purchase (Right) */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden">
+      <div className="bg-white rounded-2xl border border-[#D4EBF0] shadow-xs overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 p-6 sm:p-8">
           {/* Left Column: Visual Book Cover & Gallery */}
           <div className="lg:col-span-5 flex flex-col items-center">

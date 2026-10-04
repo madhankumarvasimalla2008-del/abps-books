@@ -1,174 +1,196 @@
 import React from 'react';
 import Link from 'next/link';
-import { BookOpen, ShieldCheck, Truck, Headphones, Building2, Phone, Mail, Clock } from 'lucide-react';
+import { BookOpen, ShieldCheck, Truck, Building2 } from 'lucide-react';
 
 export const CustomerFooter: React.FC = () => {
   return (
-    <footer className="bg-slate-900 text-slate-300 mt-auto border-t border-slate-800" role="contentinfo">
-      {/* Key service commitments bar */}
-      <div className="border-b border-slate-800 bg-slate-950/40">
+    <footer className="bg-[#011C40] text-[#F7FCFD] mt-auto border-t border-[#023859]" role="contentinfo">
+      {/* Key service commitments bar - Factual based on actual application capabilities */}
+      <div className="border-b border-[#023859]/70 bg-[#00132C]/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="flex items-start gap-3.5">
-              <div className="p-2.5 rounded-xl bg-emerald-950 text-emerald-400 border border-emerald-800/40 shrink-0 mt-0.5">
-                <Truck className="w-5 h-5" aria-hidden="true" />
+              <div className="p-2.5 rounded-xl bg-[#023859] text-white border border-[#26658C]/50 shrink-0 mt-0.5 shadow-xs">
+                <BookOpen className="w-5 h-5 text-[#54ACBF]" aria-hidden="true" />
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-white">Book Delivery</h4>
-                <p className="text-xs text-slate-400 mt-0.5">Delivery information for customer orders</p>
+                <h4 className="text-sm font-semibold text-white">Curriculum Textbooks</h4>
+                <p className="text-xs text-[#A7EBF2]/70 mt-0.5">
+                  Prescribed coursebooks and supplementary educational resources.
+                </p>
               </div>
             </div>
 
             <div className="flex items-start gap-3.5">
-              <div className="p-2.5 rounded-xl bg-emerald-950 text-emerald-400 border border-emerald-800/40 shrink-0 mt-0.5">
-                <ShieldCheck className="w-5 h-5" aria-hidden="true" />
+              <div className="p-2.5 rounded-xl bg-[#023859] text-white border border-[#26658C]/50 shrink-0 mt-0.5 shadow-xs">
+                <Building2 className="w-5 h-5 text-[#54ACBF]" aria-hidden="true" />
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-white">Textbook Catalog</h4>
-                <p className="text-xs text-slate-400 mt-0.5">Browse books by title, subject, grade, and category</p>
+                <h4 className="text-sm font-semibold text-white">School Branches</h4>
+                <p className="text-xs text-[#A7EBF2]/70 mt-0.5">
+                  Direct distribution serving affiliated ABPS school branches.
+                </p>
               </div>
             </div>
 
             <div className="flex items-start gap-3.5">
-              <div className="p-2.5 rounded-xl bg-emerald-950 text-emerald-400 border border-emerald-800/40 shrink-0 mt-0.5">
-                <Building2 className="w-5 h-5" aria-hidden="true" />
+              <div className="p-2.5 rounded-xl bg-[#023859] text-white border border-[#26658C]/50 shrink-0 mt-0.5 shadow-xs">
+                <Truck className="w-5 h-5 text-[#54ACBF]" aria-hidden="true" />
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-white">Order Billing</h4>
-                <p className="text-xs text-slate-400 mt-0.5">Itemized billing and order summaries for customer accounts</p>
+                <h4 className="text-sm font-semibold text-white">Order Tracking</h4>
+                <p className="text-xs text-[#A7EBF2]/70 mt-0.5">
+                  Milestone tracking and fulfillment visibility for all orders.
+                </p>
               </div>
             </div>
 
             <div className="flex items-start gap-3.5">
-              <div className="p-2.5 rounded-xl bg-emerald-950 text-emerald-400 border border-emerald-800/40 shrink-0 mt-0.5">
-                <Headphones className="w-5 h-5" aria-hidden="true" />
+              <div className="p-2.5 rounded-xl bg-[#023859] text-white border border-[#26658C]/50 shrink-0 mt-0.5 shadow-xs">
+                <ShieldCheck className="w-5 h-5 text-[#54ACBF]" aria-hidden="true" />
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-white">Customer Support</h4>
-                <p className="text-xs text-slate-400 mt-0.5">Help desk assistance for orders and shipment inquiries</p>
+                <h4 className="text-sm font-semibold text-white">Secure Platform</h4>
+                <p className="text-xs text-[#A7EBF2]/70 mt-0.5">
+                  Protected parent and student accounts with itemized order records.
+                </p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Main footer navigation & support desk details */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Main footer navigation columns */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Platform Identity */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white">
-                <BookOpen className="w-4 h-4" aria-hidden="true" />
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-[#023859] flex items-center justify-center text-white border border-[#26658C]/50 shadow-xs">
+                <BookOpen className="w-5 h-5 text-[#54ACBF]" aria-hidden="true" />
               </div>
-              <span className="font-bold text-base text-white tracking-tight">ABPS Book Distribution</span>
+              <div>
+                <span className="font-serif font-bold text-lg text-white tracking-tight block">
+                  ABPS BOOKS
+                </span>
+                <span className="text-[10px] tracking-wider uppercase font-semibold text-[#54ACBF] block">
+                  Bookstore & Distribution
+                </span>
+              </div>
             </div>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Educational textbook ordering and distribution platform for school curriculum materials, reference books, and learning resources.
+            <p className="text-xs text-[#A7EBF2]/70 leading-relaxed">
+              Educational textbook ordering and distribution platform for school curriculum materials, reference books, and learning resources across affiliated branches.
             </p>
-            <p className="text-[11px] text-slate-500 italic">
-              Demonstration platform for educational textbook procurement.
-            </p>
+            <div className="pt-1">
+              <Link
+                href="/books"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#A7EBF2] hover:text-[#54ACBF] transition-colors"
+              >
+                <span>Browse Entire Catalog</span>
+                <span aria-hidden="true">→</span>
+              </Link>
+            </div>
           </div>
 
           {/* Quick Catalog Links */}
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-white mb-4">
-              Book Catalog
+            <h3 className="text-xs font-bold uppercase tracking-wider text-white mb-4">
+              Catalog & Books
             </h3>
-            <ul className="space-y-2.5 text-xs text-slate-300">
+            <ul className="space-y-2.5 text-xs text-[#A7EBF2]/80">
               <li>
-                <Link href="/books" className="hover:text-emerald-400 transition-colors focus:outline-none focus-visible:underline">
+                <Link href="/books" className="hover:text-[#54ACBF] transition-colors focus:outline-none focus-visible:underline">
                   All Textbooks
                 </Link>
               </li>
               <li>
-                <Link href="/categories" className="hover:text-emerald-400 transition-colors focus:outline-none focus-visible:underline">
+                <Link href="/categories" className="hover:text-[#54ACBF] transition-colors focus:outline-none focus-visible:underline">
                   Browse by Grade & Subject
                 </Link>
               </li>
               <li>
-                <Link href="/branches" className="hover:text-emerald-400 transition-colors focus:outline-none focus-visible:underline">
+                <Link href="/branches" className="hover:text-[#54ACBF] transition-colors focus:outline-none focus-visible:underline">
                   School Branches
                 </Link>
               </li>
               <li>
-                <Link href="/search" className="hover:text-emerald-400 transition-colors focus:outline-none focus-visible:underline">
+                <Link href="/search" className="hover:text-[#54ACBF] transition-colors focus:outline-none focus-visible:underline">
                   Search Catalog
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Branch Services */}
+          {/* Customer Account Services */}
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-white mb-4">
-              Account Services
+            <h3 className="text-xs font-bold uppercase tracking-wider text-white mb-4">
+              Account & Orders
             </h3>
-            <ul className="space-y-2.5 text-xs text-slate-300">
+            <ul className="space-y-2.5 text-xs text-[#A7EBF2]/80">
               <li>
-                <Link href="/orders" className="hover:text-emerald-400 transition-colors focus:outline-none focus-visible:underline">
+                <Link href="/orders" className="hover:text-[#54ACBF] transition-colors focus:outline-none focus-visible:underline">
                   Order History
                 </Link>
               </li>
               <li>
-                <Link href="/tracking" className="hover:text-emerald-400 transition-colors focus:outline-none focus-visible:underline">
-                  Shipment Tracking
+                <Link href="/tracking" className="hover:text-[#54ACBF] transition-colors focus:outline-none focus-visible:underline">
+                  Track Shipment
                 </Link>
               </li>
               <li>
-                <Link href="/cart" className="hover:text-emerald-400 transition-colors focus:outline-none focus-visible:underline">
+                <Link href="/cart" className="hover:text-[#54ACBF] transition-colors focus:outline-none focus-visible:underline">
                   Shopping Cart
                 </Link>
               </li>
               <li>
-                <Link href="/profile/addresses" className="hover:text-emerald-400 transition-colors focus:outline-none focus-visible:underline">
+                <Link href="/profile" className="hover:text-[#54ACBF] transition-colors focus:outline-none focus-visible:underline">
+                  My Profile
+                </Link>
+              </li>
+              <li>
+                <Link href="/profile/addresses" className="hover:text-[#54ACBF] transition-colors focus:outline-none focus-visible:underline">
                   Delivery Addresses
                 </Link>
               </li>
               <li>
-                <Link href="/profile/security" className="hover:text-emerald-400 transition-colors focus:outline-none focus-visible:underline">
-                  Account Settings
+                <Link href="/profile/security" className="hover:text-[#54ACBF] transition-colors focus:outline-none focus-visible:underline">
+                  Security Settings
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Support & Contact */}
+          {/* Distribution & School Network */}
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-white mb-4">
-              Support & Contact
+            <h3 className="text-xs font-bold uppercase tracking-wider text-white mb-4">
+              Distribution Network
             </h3>
-            <div className="space-y-2 text-xs text-slate-400">
-              <p className="text-slate-300 font-medium">Distribution Operations (Demo)</p>
-              <p>Fulfillment & Distribution Center</p>
-              <div className="pt-2 space-y-1.5 text-slate-300">
-                <p className="flex items-center gap-2">
-                  <Mail className="w-3.5 h-3.5 text-emerald-400 shrink-0" aria-hidden="true" />
-                  <span className="font-mono text-[11px]">support@example.com (Demo)</span>
-                </p>
-                <p className="flex items-center gap-2">
-                  <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" aria-hidden="true" />
-                  <span>+91 (000) 000-0000 (Demo)</span>
-                </p>
-                <p className="flex items-center gap-2 text-[11px] text-slate-400">
-                  <Clock className="w-3.5 h-3.5 text-slate-500 shrink-0" aria-hidden="true" />
-                  <span>Mon – Sat (9:00 AM – 6:00 PM)</span>
-                </p>
+            <div className="space-y-3 text-xs text-[#A7EBF2]/70">
+              <p className="leading-relaxed">
+                Aditya Birla Public School curriculum distribution facilitates prescribed educational books for enrolled students.
+              </p>
+              <div className="pt-2">
+                <Link
+                  href="/branches"
+                  className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-[#023859] text-white hover:bg-[#26658C] transition-colors border border-[#26658C]/50 text-xs font-medium"
+                >
+                  <Building2 className="w-4 h-4 text-[#54ACBF]" />
+                  <span>View School Branches</span>
+                </Link>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Legal and demo notice footer row */}
-        <div className="border-t border-slate-800 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-          <p>© {new Date().getFullYear()} ABPS Book Distribution. Demo Platform.</p>
-          <div className="flex flex-wrap items-center gap-4 text-xs">
-            <span className="text-slate-400">Terms of Service</span>
-            <span className="text-slate-700" aria-hidden="true">•</span>
-            <span className="text-slate-400">Privacy Policy</span>
-            <span className="text-slate-700" aria-hidden="true">•</span>
-            <span className="text-slate-400">Shipping & Returns</span>
+        {/* Legal & institutional footer row */}
+        <div className="border-t border-[#023859] mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-[#A7EBF2]/60 gap-4">
+          <p>© {new Date().getFullYear()} ABPS Books. All rights reserved.</p>
+          <div className="flex flex-wrap items-center gap-4 text-xs text-[#A7EBF2]/60">
+            <span className="hover:text-white transition-colors cursor-default">Terms of Service</span>
+            <span className="text-[#26658C]" aria-hidden="true">•</span>
+            <span className="hover:text-white transition-colors cursor-default">Privacy Policy</span>
+            <span className="text-[#26658C]" aria-hidden="true">•</span>
+            <span className="hover:text-white transition-colors cursor-default">Textbook Distribution</span>
           </div>
         </div>
       </div>

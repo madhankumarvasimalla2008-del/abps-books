@@ -228,25 +228,25 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F7FCFD] flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-600 text-white shadow-lg mb-3">
+        <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[#023859] text-white shadow-sm mb-3">
           <BookOpen className="w-6 h-6" />
         </div>
-        <h2 className="text-2xl font-bold tracking-tight text-white">Create New Password</h2>
-        <p className="mt-1 text-xs text-slate-400">
+        <h2 className="text-2xl font-serif font-bold tracking-tight text-[#011C40]">Create New Password</h2>
+        <p className="mt-1 text-xs text-[#26658C]">
           Set your updated secure access password
         </p>
       </div>
 
       <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md px-4 sm:px-0">
-        <div className="bg-white py-8 px-6 shadow-xl rounded-2xl sm:px-10 border border-slate-200">
+        <div className="bg-white py-8 px-6 shadow-xs rounded-2xl sm:px-10 border border-[#D4EBF0]">
           {/* STATE: CHECKING SESSION / RECOVERY TOKEN */}
           {status === 'checking' && (
             <div className="text-center py-8 space-y-3">
-              <Loader2 className="w-8 h-8 text-emerald-600 animate-spin mx-auto" />
-              <p className="text-sm font-medium text-slate-700">Verifying password reset link...</p>
-              <p className="text-xs text-slate-400">Please wait while we validate your recovery session.</p>
+              <Loader2 className="w-8 h-8 text-[#023859] animate-spin mx-auto" />
+              <p className="text-sm font-medium text-[#011C40]">Verifying password reset link...</p>
+              <p className="text-xs text-[#537D99]">Please wait while we validate your recovery session.</p>
             </div>
           )}
 
@@ -257,21 +257,21 @@ export default function ResetPasswordPage() {
                 <AlertCircle className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-slate-900">Reset Link Invalid or Expired</h3>
-                <p className="mt-1.5 text-xs text-slate-600">
+                <h3 className="text-base font-bold text-[#011C40]">Reset Link Invalid or Expired</h3>
+                <p className="mt-1.5 text-xs text-[#26658C]">
                   {errorMessage || 'This password reset link is invalid, has already been used, or has expired.'}
                 </p>
               </div>
               <div className="pt-2 space-y-2">
                 <Link
                   href="/forgot-password"
-                  className="w-full inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 select-none cursor-pointer bg-emerald-700 text-white hover:bg-emerald-800 active:bg-emerald-900 focus-visible:ring-emerald-600 shadow-xs text-xs px-4 py-2 min-h-[40px] gap-2"
+                  className="w-full inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 select-none cursor-pointer bg-[#023859] text-white hover:bg-[#011C40] active:bg-[#00132C] focus-visible:ring-[#023859] shadow-xs text-xs px-4 py-2 min-h-[40px] gap-2"
                 >
                   Request New Reset Link
                 </Link>
                 <Link
                   href="/login"
-                  className="w-full inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 select-none cursor-pointer border border-slate-300 text-slate-700 bg-white hover:bg-slate-50 hover:border-slate-400 active:bg-slate-100 focus-visible:ring-slate-400 shadow-xs text-xs px-4 py-2 min-h-[40px] gap-2"
+                  className="w-full inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 select-none cursor-pointer border border-[#D4EBF0] text-[#011C40] bg-white hover:bg-[#F7FCFD] hover:border-[#54ACBF] active:bg-[#EFF8FA] focus-visible:ring-[#023859] shadow-xs text-xs px-4 py-2 min-h-[40px] gap-2"
                 >
                   Return to Login
                 </Link>
@@ -282,26 +282,26 @@ export default function ResetPasswordPage() {
           {/* STATE: SUCCESS */}
           {status === 'success' && (
             <div className="text-center py-4 space-y-4">
-              <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
+              <div className="w-12 h-12 rounded-full bg-[#EBF7FA] text-[#023859] flex items-center justify-center mx-auto">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-slate-900">Password Updated Successfully</h3>
-                <p className="mt-1.5 text-xs text-slate-600">
+                <h3 className="text-base font-bold text-[#011C40]">Password Updated Successfully</h3>
+                <p className="mt-1.5 text-xs text-[#26658C]">
                   Your credentials have been securely updated. You can now sign in to your account.
                 </p>
               </div>
               <div className="pt-2 space-y-2">
                 <Link
                   href="/login?redirect=/admin"
-                  className="w-full inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 select-none cursor-pointer bg-emerald-700 text-white hover:bg-emerald-800 active:bg-emerald-900 focus-visible:ring-emerald-600 shadow-xs text-xs px-4 py-2 min-h-[40px] gap-2"
+                  className="w-full inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 select-none cursor-pointer bg-[#023859] text-white hover:bg-[#011C40] active:bg-[#00132C] focus-visible:ring-[#023859] shadow-xs text-xs px-4 py-2 min-h-[40px] gap-2"
                 >
                   <ShieldCheck className="w-4 h-4" />
                   <span>Proceed to Admin Login</span>
                 </Link>
                 <Link
                   href="/login"
-                  className="w-full inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 select-none cursor-pointer border border-slate-300 text-slate-700 bg-white hover:bg-slate-50 hover:border-slate-400 active:bg-slate-100 focus-visible:ring-slate-400 shadow-xs text-xs px-4 py-2 min-h-[40px] gap-2"
+                  className="w-full inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 select-none cursor-pointer border border-[#D4EBF0] text-[#011C40] bg-white hover:bg-[#F7FCFD] hover:border-[#54ACBF] active:bg-[#EFF8FA] focus-visible:ring-[#023859] shadow-xs text-xs px-4 py-2 min-h-[40px] gap-2"
                 >
                   <span>Sign In to Store Portal</span>
                 </Link>
@@ -332,7 +332,7 @@ export default function ResetPasswordPage() {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="text-slate-400 hover:text-slate-600 focus:outline-none focus:text-slate-600 p-1 cursor-pointer"
+                      className="text-[#537D99] hover:text-[#011C40] focus:outline-none p-1 cursor-pointer"
                       aria-label={showPassword ? 'Hide password' : 'Show password'}
                       title={showPassword ? 'Hide password' : 'Show password'}
                     >
@@ -352,7 +352,7 @@ export default function ResetPasswordPage() {
                     <button
                       type="button"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="text-slate-400 hover:text-slate-600 focus:outline-none focus:text-slate-600 p-1 cursor-pointer"
+                      className="text-[#537D99] hover:text-[#011C40] focus:outline-none p-1 cursor-pointer"
                       aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
                       title={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
                     >
@@ -372,10 +372,10 @@ export default function ResetPasswordPage() {
                 </Button>
               </form>
 
-              <div className="mt-6 border-t border-slate-100 pt-4 text-center">
+              <div className="mt-6 border-t border-[#E8F4F7] pt-4 text-center">
                 <Link
                   href="/login"
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#26658C] hover:text-[#011C40]"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" /> Back to Login
                 </Link>

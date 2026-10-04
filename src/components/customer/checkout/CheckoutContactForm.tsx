@@ -28,17 +28,17 @@ export const CheckoutContactForm: React.FC<CheckoutContactFormProps> = ({
   onChange,
 }) => {
   return (
-    <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-2xs space-y-4">
-      <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+    <div className="bg-white p-5 sm:p-6 rounded-2xl border border-[#D4EBF0] shadow-2xs space-y-4">
+      <div className="flex items-center justify-between border-b border-[#D4EBF0]/60 pb-3">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold text-xs">
+          <div className="w-7 h-7 rounded-lg bg-[#EBF7FA] text-[#023859] flex items-center justify-center font-bold text-xs">
             1
           </div>
-          <h2 className="text-sm sm:text-base font-bold text-slate-900">
+          <h2 className="text-sm sm:text-base font-bold text-[#011C40]">
             Customer Information
           </h2>
         </div>
-        <span className="text-[11px] text-slate-400 font-medium hidden sm:inline">
+        <span className="text-[11px] text-[#537D99] font-medium hidden sm:inline">
           Order updates and contact details
         </span>
       </div>

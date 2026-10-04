@@ -88,7 +88,7 @@ export const CartItemList: React.FC<CartItemListProps> = ({
 
       {/* Distribution Packaging Note */}
       <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200/90 flex items-start sm:items-center gap-3 text-xs text-slate-700">
-        <PackageCheck className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5 sm:mt-0" />
+        <PackageCheck className="w-4 h-4 text-[#023859] shrink-0 mt-0.5 sm:mt-0" />
         <div className="leading-relaxed">
           <span className="font-bold text-slate-900">Packaging Note:</span>{' '}
           Books and learning materials are securely packaged and labeled by grade level and subject for easy distribution upon delivery.
