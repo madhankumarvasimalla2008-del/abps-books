@@ -9,7 +9,7 @@ import { getTableColumns } from 'drizzle-orm';
 import { db } from '../src/db';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { getSafeRedirectUrl } from '../src/app/(auth)/login/page';
-import { normalizeIndianPhone, formatPhoneDisplay } from '../src/lib/phone';
+import { normalizeIndianPhone, formatPhoneDisplay, sanitizeIndianMobileInput } from '../src/lib/phone';
 
 describe('Phase 5.4: Supabase Authentication & Secure Session Integration', () => {
   // --------------------------------------------------------------------------
@@ -497,6 +497,57 @@ describe('Phase 5.4: Supabase Authentication & Secure Session Integration', () =
       it('formats phone numbers for clean user display', () => {
         assert.strictEqual(formatPhoneDisplay('+919876543210'), '+91 98765 43210');
         assert.strictEqual(formatPhoneDisplay('9876543210'), '+91 98765 43210');
+      });
+
+      describe('India-Only 10-Digit Mobile Input Sanitization & UI Invariants', () => {
+        it('accepts and preserves valid 10-digit Indian mobile numbers without modification', () => {
+          const valid10 = '9876543210';
+          const sanitized = sanitizeIndianMobileInput(valid10);
+          assert.strictEqual(sanitized, '9876543210');
+
+          const norm = normalizeIndianPhone(sanitized);
+          assert.strictEqual(norm.valid, true);
+          assert.strictEqual(norm.phone, '+919876543210', 'Normalized phone passed to Supabase must be +91XXXXXXXXXX');
+        });
+
+        it('displays and handles fixed +91 prefix correctly', () => {
+          // Fixed display formatting
+          assert.strictEqual(formatPhoneDisplay('+919876543210'), '+91 98765 43210');
+          // When 10 digits are submitted, Supabase receives exactly +91XXXXXXXXXX
+          const norm = normalizeIndianPhone('9876543210');
+          assert.strictEqual(norm.phone, '+919876543210');
+        });
+
+        it('prevents user from typing or pasting +91 into the 10-digit phone input', () => {
+          // Typing '+' or '+91' alone yields empty input
+          assert.strictEqual(sanitizeIndianMobileInput('+'), '');
+          assert.strictEqual(sanitizeIndianMobileInput('+91'), '');
+
+          // Pasting +91-prefixed numbers strips the +91 so it is not duplicated
+          assert.strictEqual(sanitizeIndianMobileInput('+919876543210'), '9876543210');
+          assert.strictEqual(sanitizeIndianMobileInput('+91 98765 43210'), '9876543210');
+          assert.strictEqual(sanitizeIndianMobileInput('919876543210'), '9876543210'); // 12-digit with country code
+          assert.strictEqual(sanitizeIndianMobileInput('09876543210'), '9876543210');  // 11-digit with domestic 0
+        });
+
+        it('enforces maximum 10-digit length and rejects short numbers upon normalization', () => {
+          // Numbers exceeding 10 digits are capped strictly at 10 digits
+          assert.strictEqual(sanitizeIndianMobileInput('9876543210999'), '9876543210');
+
+          // Numbers shorter than 10 digits are sanitized to digits but fail normalization validation
+          const short = sanitizeIndianMobileInput('98765');
+          assert.strictEqual(short, '98765');
+          const normShort = normalizeIndianPhone(short);
+          assert.strictEqual(normShort.valid, false);
+          assert.match(normShort.error!, /too short|10-digit/i);
+        });
+
+        it('strips all non-numeric input characters', () => {
+          assert.strictEqual(sanitizeIndianMobileInput('abcdefghij'), '');
+          assert.strictEqual(sanitizeIndianMobileInput('98765abcde'), '98765');
+          assert.strictEqual(sanitizeIndianMobileInput('987-654-3210'), '9876543210');
+          assert.strictEqual(sanitizeIndianMobileInput('!@#$%^&*()'), '');
+        });
       });
     });
 

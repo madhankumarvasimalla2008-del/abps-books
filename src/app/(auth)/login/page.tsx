@@ -23,7 +23,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuth, DEMO_USERS } from '@/context/AuthContext';
 import { Role } from '@/types';
-import { normalizeIndianPhone, formatPhoneDisplay } from '@/lib/phone';
+import { normalizeIndianPhone, formatPhoneDisplay, sanitizeIndianMobileInput } from '@/lib/phone';
 
 /**
  * Sanitizes open redirect parameters to prevent external Phishing / Open Redirect vulnerabilities.
@@ -415,16 +415,47 @@ function LoginForm() {
       {authMode === 'phone' && !otpSent && (
         <form className="space-y-4" onSubmit={handleSendPhoneOtp}>
           <div>
-            <Input
-              label="Mobile Phone Number"
-              type="tel"
-              required
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              leftIcon={<Smartphone className="w-4 h-4" />}
-              placeholder="+91 98765 43210 or 9876543210"
-              helperText="Enter your 10-digit Indian mobile number to receive a one-time SMS verification code."
-            />
+            <label
+              htmlFor="phone-input"
+              className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5"
+            >
+              Mobile Phone Number
+              <span className="text-red-500 ml-1" aria-hidden="true">*</span>
+            </label>
+            <div className="relative flex rounded-lg shadow-xs">
+              <div
+                className="inline-flex items-center gap-1.5 px-3 rounded-l-lg border border-r-0 border-slate-300 bg-slate-50 text-slate-700 text-sm font-semibold select-none shrink-0"
+                aria-hidden="true"
+              >
+                <Smartphone className="w-4 h-4 text-slate-400" />
+                <span>+91</span>
+              </div>
+              <input
+                id="phone-input"
+                name="phone"
+                type="tel"
+                inputMode="numeric"
+                pattern="[0-9]{10}"
+                maxLength={10}
+                required
+                value={phone}
+                onChange={(e) => {
+                  const sanitized = sanitizeIndianMobileInput(e.target.value);
+                  setPhone(sanitized);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === '+' || e.key === 'e' || e.key === 'E') {
+                    e.preventDefault();
+                  }
+                }}
+                placeholder="98765 43210"
+                aria-label="10-digit Indian mobile number"
+                className="block w-full min-w-0 flex-1 rounded-none rounded-r-lg border border-slate-300 bg-white px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent hover:border-slate-400 font-mono tracking-wider"
+              />
+            </div>
+            <p className="mt-1.5 text-xs text-slate-500">
+              Enter your 10-digit Indian mobile number to receive a one-time SMS verification code.
+            </p>
           </div>
 
           <div className="pt-2">

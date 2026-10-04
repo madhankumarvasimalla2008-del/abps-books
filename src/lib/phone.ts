@@ -98,3 +98,37 @@ export function formatPhoneDisplay(phone: string): string {
   }
   return phone;
 }
+
+/**
+ * Sanitizes input for the India-only 10-digit mobile phone field.
+ * - Strips leading +91, +, or domestic trunk 0
+ * - Strips any non-numeric characters
+ * - Prevents the user from typing or pasting +91 into the field
+ * - Caps strictly at 10 numeric digits
+ */
+export function sanitizeIndianMobileInput(input: string): string {
+  if (!input || typeof input !== 'string') return '';
+
+  let cleaned = input.trim();
+
+  // Strip leading +91 or + if present (e.g. from paste or autocomplete)
+  if (cleaned.startsWith('+91')) {
+    cleaned = cleaned.substring(3);
+  } else if (cleaned.startsWith('+')) {
+    cleaned = cleaned.substring(1);
+  }
+
+  // Strip non-numeric characters
+  let digits = cleaned.replace(/\D/g, '');
+
+  // If user pasted 12 digits starting with 91, strip the country code 91
+  if (digits.startsWith('91') && digits.length === 12) {
+    digits = digits.substring(2);
+  } else if (digits.startsWith('0') && digits.length === 11) {
+    // Domestic trunk prefix 0
+    digits = digits.substring(1);
+  }
+
+  // Restrict to exactly max 10 digits
+  return digits.slice(0, 10);
+}
