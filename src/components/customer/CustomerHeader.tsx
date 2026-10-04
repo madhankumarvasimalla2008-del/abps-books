@@ -140,22 +140,22 @@ export const CustomerHeader: React.FC = () => {
 
       {/* Main Brand & Navigation Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20 sm:h-22 gap-4 lg:gap-8">
-          {/* Logo & Brand Identity */}
+        <div className="flex items-center justify-between h-16 sm:h-18 gap-3 sm:gap-4 lg:gap-8">
+          {/* Logo & Brand Identity (Refined Editorial Imprint) */}
           <Link
             href="/"
-            className="flex items-center gap-3 shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#023859] rounded-lg py-1 pr-2"
+            className="flex items-center gap-2.5 sm:gap-3 shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#023859] rounded-xl py-1 pr-1 sm:pr-2 min-h-[44px]"
             aria-label="ABPS Books Home"
           >
-            <div className="w-10 h-10 rounded-lg bg-[#023859] flex items-center justify-center text-white shadow-xs">
-              <BookOpen className="w-5 h-5 text-white" aria-hidden="true" />
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#011C40] to-[#023859] flex items-center justify-center text-[#A7EBF2] shadow-xs border border-[#54ACBF]/20 shrink-0">
+              <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-[#A7EBF2]" aria-hidden="true" />
             </div>
             <div>
-              <span className="font-serif font-bold text-xl sm:text-2xl text-[#011C40] tracking-tight leading-none block">
+              <span className="font-serif font-bold text-lg sm:text-xl text-[#011C40] tracking-tight leading-none block">
                 ABPS BOOKS
               </span>
-              <span className="text-[10px] tracking-widest uppercase font-semibold text-[#26658C] block mt-1">
-                Bookstore & Distribution
+              <span className="text-[9px] sm:text-[10px] tracking-widest uppercase font-semibold text-[#26658C] block mt-1">
+                BOOKSTORE &amp; DISTRIBUTION
               </span>
             </div>
           </Link>
@@ -174,10 +174,10 @@ export const CustomerHeader: React.FC = () => {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`px-3 py-2 rounded-md transition-all text-xs font-semibold tracking-wide ${
+                  className={`px-3.5 py-2 min-h-[40px] rounded-lg transition-all text-xs font-semibold tracking-wide inline-flex items-center ${
                     isActive
-                      ? 'text-[#023859] bg-[#023859]/8 font-bold'
-                      : 'text-[#011C40] hover:text-[#54ACBF] hover:bg-[#EFF8FA]'
+                      ? 'text-[#011C40] bg-[#011C40]/8 font-bold'
+                      : 'text-[#011C40] hover:text-[#54ACBF] hover:bg-[#FAF8F5]'
                   } focus:outline-none focus-visible:ring-2 focus-visible:ring-[#023859]`}
                 >
                   {link.label}
@@ -189,7 +189,7 @@ export const CustomerHeader: React.FC = () => {
           {/* Prominent Bookstore Search Bar (Desktop) */}
           <form
             onSubmit={handleSearch}
-            className="hidden md:flex flex-1 max-w-sm lg:max-w-md relative"
+            className="hidden md:flex flex-1 max-w-xs lg:max-w-sm xl:max-w-md relative"
             role="search"
           >
             <label htmlFor="customer-search-input" className="sr-only">
@@ -201,7 +201,7 @@ export const CustomerHeader: React.FC = () => {
               placeholder="Search books, ISBN, author, grade..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-9 py-2 text-xs sm:text-sm bg-white border border-[#D4EBF0] rounded-full focus:outline-none focus:ring-2 focus:ring-[#023859] focus:border-transparent transition-colors text-[#011C40] placeholder-[#537D99] shadow-xs hover:border-[#54ACBF]"
+              className="w-full pl-10 pr-9 py-2.5 text-xs sm:text-sm bg-white border border-[#D4EBF0] rounded-full focus:outline-none focus:ring-2 focus:ring-[#023859] focus:border-transparent transition-colors text-[#011C40] placeholder-[#537D99] shadow-xs hover:border-[#54ACBF]"
             />
             <Search
               className="w-4 h-4 text-[#537D99] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
@@ -211,7 +211,7 @@ export const CustomerHeader: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#537D99] hover:text-[#011C40] p-1"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#537D99] hover:text-[#011C40] p-1 min-h-[28px] min-w-[28px] flex items-center justify-center"
                 aria-label="Clear search input"
               >
                 <X className="w-3.5 h-3.5" />
@@ -219,15 +219,15 @@ export const CustomerHeader: React.FC = () => {
             )}
           </form>
 
-          {/* Desktop Right actions: Account & Cart */}
-          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+          {/* Right Actions: Account, Cart & Mobile Toggle (All 44px+ touch targets) */}
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
             {/* Customer Account Menu */}
             {user ? (
               <div className="relative" ref={userMenuRef}>
                 <button
                   type="button"
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center gap-2.5 min-h-[40px] px-3 py-1.5 text-sm font-medium text-[#011C40] hover:bg-[#023859]/5 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#023859] cursor-pointer"
+                  className="flex items-center gap-2.5 min-h-[44px] px-2.5 sm:px-3 py-1.5 text-sm font-medium text-[#011C40] hover:bg-[#011C40]/5 rounded-xl transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#023859] cursor-pointer"
                   aria-expanded={userMenuOpen}
                   aria-haspopup="true"
                   aria-label="Customer Account Menu"
@@ -345,16 +345,16 @@ export const CustomerHeader: React.FC = () => {
             ) : (
               <Link
                 href="/login"
-                className="inline-flex items-center justify-center px-4 py-2 text-xs font-semibold text-white bg-[#023859] hover:bg-[#011C40] rounded-lg transition-all duration-150 shadow-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-[#023859] min-h-[38px]"
+                className="inline-flex items-center justify-center px-4 py-2 text-xs font-semibold text-white bg-[#023859] hover:bg-[#011C40] rounded-xl transition-all duration-150 shadow-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-[#023859] min-h-[44px]"
               >
                 Sign In
               </Link>
             )}
 
-            {/* Cart Button */}
+            {/* Cart Button (44px+ touch target) */}
             <Link
               href="/cart"
-              className="relative min-h-[40px] px-3 py-2 text-[#011C40] hover:text-[#023859] hover:bg-[#023859]/5 rounded-lg transition-colors flex items-center gap-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#023859]"
+              className="relative min-h-[44px] min-w-[44px] px-2.5 sm:px-3 py-2 text-[#011C40] hover:text-[#023859] hover:bg-[#011C40]/5 rounded-xl transition-colors flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#023859]"
               aria-label={`Shopping cart with ${cart.totalItems} items`}
             >
               <div className="relative">
@@ -373,11 +373,11 @@ export const CustomerHeader: React.FC = () => {
               </span>
             </Link>
 
-            {/* Mobile menu hamburger toggle button */}
+            {/* Mobile menu hamburger toggle button (44px+ touch target) */}
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 min-h-[40px] min-w-[40px] text-[#011C40] hover:text-[#023859] hover:bg-[#023859]/5 rounded-lg lg:hidden flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#023859]"
+              className="p-2.5 min-h-[44px] min-w-[44px] text-[#011C40] hover:text-[#023859] hover:bg-[#011C40]/5 rounded-xl lg:hidden flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#023859] cursor-pointer"
               aria-label={mobileMenuOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
               aria-expanded={mobileMenuOpen}
             >
@@ -387,33 +387,37 @@ export const CustomerHeader: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Drawer Overlay & Menu */}
+      {/* Mobile Drawer Overlay & Menu (App-Quality Navigation) */}
       {mobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-50 bg-[#011C40]/60 backdrop-blur-xs flex justify-end">
-          <div className="bg-[#F7FCFD] w-full max-w-sm h-full shadow-2xl flex flex-col overflow-y-auto animate-in slide-in-from-right duration-200 border-l border-[#D4EBF0]">
-            {/* Drawer Header */}
-            <div className="p-4 border-b border-[#D4EBF0] flex items-center justify-between bg-white">
+          <div className="bg-[#FAF8F5] w-full max-w-sm h-full shadow-2xl flex flex-col overflow-y-auto animate-in slide-in-from-right duration-200 border-l border-[#011C40]/10">
+            {/* Drawer Header with Refined Imprint Branding */}
+            <div className="p-4 border-b border-[#011C40]/10 flex items-center justify-between bg-white">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-[#023859] flex items-center justify-center text-white">
-                  <BookOpen className="w-4 h-4" />
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#011C40] to-[#023859] flex items-center justify-center text-[#A7EBF2] shadow-xs border border-[#54ACBF]/20 shrink-0">
+                  <BookOpen className="w-4 h-4 text-[#A7EBF2]" />
                 </div>
                 <div>
-                  <span className="font-serif font-bold text-base text-[#011C40] block">ABPS BOOKS</span>
-                  <span className="text-[9px] uppercase tracking-wider text-[#26658C]">Store & Distribution</span>
+                  <span className="font-serif font-bold text-base text-[#011C40] tracking-tight block leading-tight">
+                    ABPS BOOKS
+                  </span>
+                  <span className="text-[9px] uppercase tracking-widest font-semibold text-[#26658C]">
+                    BOOKSTORE &amp; DISTRIBUTION
+                  </span>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2 text-[#011C40] hover:text-[#023859] rounded-lg"
+                className="p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center text-[#011C40] hover:text-[#023859] hover:bg-[#FAF8F5] rounded-xl cursor-pointer"
                 aria-label="Close menu"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Mobile Search */}
-            <div className="p-4 bg-white border-b border-[#D4EBF0]">
+            {/* Mobile Search with 44px+ Height */}
+            <div className="p-4 bg-white border-b border-[#011C40]/10">
               <form onSubmit={handleSearch} className="relative" role="search">
                 <label htmlFor="mobile-search-input" className="sr-only">
                   Search textbook catalog
@@ -421,29 +425,29 @@ export const CustomerHeader: React.FC = () => {
                 <input
                   id="mobile-search-input"
                   type="text"
-                  placeholder="Search books, ISBN, author..."
+                  placeholder="Search books, ISBN, author, grade..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-8 py-2 text-xs bg-[#F7FCFD] border border-[#D4EBF0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#023859] text-[#011C40] placeholder-[#537D99]"
+                  className="w-full pl-10 pr-9 min-h-[44px] text-sm bg-[#FAF8F5] border border-[#011C40]/15 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#023859] text-[#011C40] placeholder-[#537D99]"
                 />
-                <Search className="w-4 h-4 text-[#537D99] absolute left-2.5 top-1/2 -translate-y-1/2" />
+                <Search className="w-4 h-4 text-[#537D99] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 {searchQuery && (
                   <button
                     type="button"
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#537D99]"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-[#537D99] hover:text-[#011C40] min-h-[40px] min-w-[40px] flex items-center justify-center cursor-pointer"
                     aria-label="Clear search"
                   >
-                    <X className="w-3.5 h-3.5" />
+                    <X className="w-4 h-4" />
                   </button>
                 )}
               </form>
             </div>
 
-            {/* Navigation links */}
-            <div className="p-4 space-y-1">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-[#26658C] px-3 py-1">
-                Navigation
+            {/* Primary Navigation Links with Comfortable 44px+ Thumb Reach */}
+            <div className="p-4 space-y-1.5">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[#54ACBF] px-3 py-1">
+                Storefront Navigation
               </p>
               {primaryNavLinks.map((link) => {
                 const isActive =
@@ -454,10 +458,10 @@ export const CustomerHeader: React.FC = () => {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`block px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
+                    className={`flex items-center min-h-[44px] px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
                       isActive
-                        ? 'bg-[#023859] text-white'
-                        : 'text-[#011C40] hover:bg-[#EFF8FA]'
+                        ? 'bg-[#011C40] text-white shadow-xs'
+                        : 'text-[#011C40] hover:bg-white hover:text-[#54ACBF]'
                     }`}
                   >
                     {link.label}
@@ -467,28 +471,29 @@ export const CustomerHeader: React.FC = () => {
             </div>
 
             {/* Account & Institutional Links */}
-            <div className="p-4 border-t border-[#D4EBF0] mt-auto space-y-3 bg-white">
+            <div className="p-4 border-t border-[#011C40]/10 mt-auto space-y-3 bg-white">
               {user ? (
                 <>
-                  <div className="p-3 rounded-lg bg-[#F7FCFD] border border-[#D4EBF0]">
+                  <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#011C40]/10">
                     <p className="text-xs font-semibold text-[#011C40]">{customerName}</p>
                     <p className="text-[11px] text-[#26658C] truncate">{customerEmail}</p>
                     {customerBranch && (
-                      <p className="text-[11px] text-[#023859] font-medium mt-1 truncate">
-                        Branch: {customerBranch}
+                      <p className="text-[11px] text-[#023859] font-medium mt-1 truncate flex items-center gap-1">
+                        <Building2 className="w-3 h-3 text-[#54ACBF] shrink-0" />
+                        <span>{customerBranch}</span>
                       </p>
                     )}
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <Link
                       href="/profile"
-                      className="px-3 py-2 text-center rounded-lg border border-[#D4EBF0] text-[#011C40] hover:bg-[#F7FCFD] font-medium"
+                      className="min-h-[44px] flex items-center justify-center px-3 py-2 text-center rounded-xl border border-[#011C40]/15 text-[#011C40] hover:bg-[#FAF8F5] font-semibold"
                     >
                       Profile
                     </Link>
                     <Link
                       href="/orders"
-                      className="px-3 py-2 text-center rounded-lg border border-[#D4EBF0] text-[#011C40] hover:bg-[#F7FCFD] font-medium"
+                      className="min-h-[44px] flex items-center justify-center px-3 py-2 text-center rounded-xl border border-[#011C40]/15 text-[#011C40] hover:bg-[#FAF8F5] font-semibold"
                     >
                       Orders
                     </Link>
@@ -496,7 +501,7 @@ export const CustomerHeader: React.FC = () => {
                   {isStaff && (
                     <Link
                       href="/admin"
-                      className="block px-3 py-2 text-center text-xs font-semibold rounded-lg bg-[#EBF7FA] text-[#023859] border border-[#D4EBF0]"
+                      className="min-h-[44px] flex items-center justify-center px-3 py-2 text-center text-xs font-semibold rounded-xl bg-[#EBF7FA] text-[#023859] border border-[#D4EBF0]"
                     >
                       Admin Portal
                     </Link>
@@ -504,7 +509,7 @@ export const CustomerHeader: React.FC = () => {
                   <button
                     type="button"
                     onClick={logout}
-                    className="w-full text-center text-xs text-red-600 font-medium py-2 hover:bg-red-50 rounded-lg"
+                    className="min-h-[44px] flex items-center justify-center w-full text-center text-xs text-red-600 font-semibold py-2.5 hover:bg-red-50 rounded-xl cursor-pointer"
                   >
                     Sign Out
                   </button>
@@ -512,7 +517,7 @@ export const CustomerHeader: React.FC = () => {
               ) : (
                 <Link
                   href="/login"
-                  className="block w-full py-2.5 text-center text-xs font-semibold text-white bg-[#023859] hover:bg-[#011C40] rounded-lg shadow-xs"
+                  className="min-h-[46px] flex items-center justify-center w-full py-3 text-center text-xs font-semibold text-white bg-[#011C40] hover:bg-[#023859] rounded-xl shadow-xs"
                 >
                   Sign In to Account
                 </Link>

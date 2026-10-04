@@ -6,59 +6,69 @@ import { Product } from '@/types';
 
 export interface BookCoverProps {
   product: Pick<Product, 'id' | 'title' | 'subject' | 'grade' | 'publisher' | 'author' | 'coverImage'>;
-  size?: 'sm' | 'md' | 'lg' | 'xl' | 'hero';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'hero' | 'mobile-hero' | 'mobile-flank';
   className?: string;
   shadow?: boolean;
 }
 
 function getSubjectTheme(subject: string) {
   const lower = (subject || '').toLowerCase();
+  if (lower.includes('chem')) {
+    return {
+      bg: 'bg-gradient-to-br from-[#3D1A45] via-[#5A2568] to-[#2A0F30]',
+      accent: 'text-[#F0C4FF]',
+      border: 'border-[#F0C4FF]/30',
+      tag: 'bg-[#F0C4FF]/20 text-[#F0C4FF]',
+      Icon: Atom,
+      pattern: 'opacity-10 bg-[radial-gradient(#F0C4FF_1px,transparent_1px)] [background-size:10px_10px]',
+    };
+  }
+  if (lower.includes('bio') || lower.includes('sci') || lower.includes('physic')) {
+    return {
+      bg: 'bg-gradient-to-br from-[#0F3827] via-[#1A5C41] to-[#0A261B]',
+      accent: 'text-[#85E8B6]',
+      border: 'border-[#85E8B6]/30',
+      tag: 'bg-[#85E8B6]/20 text-[#85E8B6]',
+      Icon: Atom,
+      pattern: 'opacity-10 bg-[radial-gradient(#85E8B6_1px,transparent_1px)] [background-size:10px_10px]',
+    };
+  }
   if (lower.includes('math') || lower.includes('calculus')) {
     return {
-      bg: 'bg-gradient-to-br from-[#011C40] via-[#023859] to-[#011C40]',
+      bg: 'bg-gradient-to-br from-[#022B52] via-[#05437D] to-[#011C40]',
       accent: 'text-[#A7EBF2]',
-      border: 'border-[#54ACBF]/30',
-      tag: 'bg-[#A7EBF2]/15 text-[#A7EBF2]',
+      border: 'border-[#54ACBF]/40',
+      tag: 'bg-[#A7EBF2]/20 text-[#A7EBF2]',
       Icon: Calculator,
       pattern: 'opacity-10 bg-[radial-gradient(#A7EBF2_1px,transparent_1px)] [background-size:8px_8px]',
     };
   }
-  if (lower.includes('sci') || lower.includes('physic') || lower.includes('chem') || lower.includes('bio')) {
-    return {
-      bg: 'bg-gradient-to-br from-[#023859] via-[#1B4D6E] to-[#011C40]',
-      accent: 'text-[#54ACBF]',
-      border: 'border-[#A7EBF2]/30',
-      tag: 'bg-[#54ACBF]/20 text-[#A7EBF2]',
-      Icon: Atom,
-      pattern: 'opacity-10 bg-[radial-gradient(#54ACBF_1px,transparent_1px)] [background-size:10px_10px]',
-    };
-  }
   if (lower.includes('eng') || lower.includes('hind') || lower.includes('liter') || lower.includes('lang')) {
     return {
-      bg: 'bg-gradient-to-br from-[#1A3A54] via-[#26658C] to-[#0E283D]',
-      accent: 'text-[#F7FCFD]',
-      border: 'border-[#A7EBF2]/40',
-      tag: 'bg-white/15 text-[#F7FCFD]',
+      bg: 'bg-gradient-to-br from-[#6E2E1B] via-[#8C3E26] to-[#4F1E10]',
+      accent: 'text-[#FDD5B1]',
+      border: 'border-[#FDD5B1]/35',
+      tag: 'bg-[#FDD5B1]/20 text-[#FDD5B1]',
       Icon: Languages,
-      pattern: 'opacity-10 bg-[radial-gradient(#F7FCFD_1px,transparent_1px)] [background-size:8px_8px]',
+      pattern: 'opacity-10 bg-[radial-gradient(#FDD5B1_1px,transparent_1px)] [background-size:8px_8px]',
     };
   }
   if (lower.includes('social') || lower.includes('hist') || lower.includes('geog') || lower.includes('civic')) {
     return {
-      bg: 'bg-gradient-to-br from-[#0B2D4A] via-[#164E6E] to-[#071F33]',
-      accent: 'text-[#A7EBF2]',
-      border: 'border-[#54ACBF]/40',
-      tag: 'bg-[#A7EBF2]/20 text-[#A7EBF2]',
+      bg: 'bg-gradient-to-br from-[#6E5023] via-[#8A6730] to-[#4D3615]',
+      accent: 'text-[#FCE0A6]',
+      border: 'border-[#FCE0A6]/35',
+      tag: 'bg-[#FCE0A6]/20 text-[#FCE0A6]',
       Icon: Globe2,
-      pattern: 'opacity-10 bg-[radial-gradient(#A7EBF2_1px,transparent_1px)] [background-size:9px_9px]',
+      pattern: 'opacity-10 bg-[radial-gradient(#FCE0A6_1px,transparent_1px)] [background-size:9px_9px]',
     };
   }
-  if (lower.includes('econ') || lower.includes('account') || lower.includes('busin') || lower.includes('com')) {
+  if (lower.includes('comp') || lower.includes('tech') || lower.includes('cyber') || lower.includes('econ') || lower.includes('account') || lower.includes('busin') || lower.includes('com')) {
     return {
-      bg: 'bg-gradient-to-br from-[#0A2647] via-[#023859] to-[#05172C]',
+      bg: 'bg-gradient-to-br from-[#041E38] via-[#09355E] to-[#021121]',
       accent: 'text-[#54ACBF]',
-      border: 'border-[#54ACBF]/30',
-      tag: 'bg-[#54ACBF]/15 text-[#A7EBF2]',
+      border: 'border-[#54ACBF]/35',
+      tag: 'bg-[#54ACBF]/20 text-[#A7EBF2]',
       Icon: Compass,
       pattern: 'opacity-10 bg-[radial-gradient(#54ACBF_1px,transparent_1px)] [background-size:8px_8px]',
     };
@@ -95,6 +105,8 @@ export const BookCover: React.FC<BookCoverProps> = ({
     lg: 'w-40 sm:w-48 h-56 sm:h-68 text-sm',
     xl: 'w-48 sm:w-60 h-68 sm:h-84 text-base',
     hero: 'w-44 sm:w-56 lg:w-64 h-64 sm:h-80 lg:h-92 text-sm sm:text-base',
+    'mobile-hero': 'w-[205px] min-[390px]:w-[215px] h-[275px] min-[390px]:h-[290px] text-xs min-[390px]:text-sm',
+    'mobile-flank': 'w-[175px] min-[390px]:w-[185px] h-[235px] min-[390px]:h-[250px] text-[11px] min-[390px]:text-xs',
   }[size];
 
   const shadowClass = shadow

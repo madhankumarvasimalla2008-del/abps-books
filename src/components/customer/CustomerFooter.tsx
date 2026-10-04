@@ -4,7 +4,7 @@ import { BookOpen, ShieldCheck, Truck, Building2 } from 'lucide-react';
 
 export const CustomerFooter: React.FC = () => {
   return (
-    <footer className="bg-[#011C40] text-[#F7FCFD] mt-auto border-t border-[#023859]" role="contentinfo">
+    <footer className="bg-[#011C40] text-[#F7FCFD] mt-auto border-t border-[#023859] overflow-hidden w-full" role="contentinfo">
       {/* Key service commitments bar - Factual based on actual application capabilities */}
       <div className="border-b border-[#023859]/70 bg-[#00132C]/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
