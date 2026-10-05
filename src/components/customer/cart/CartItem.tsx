@@ -2,8 +2,9 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Trash2, Plus, Minus, BookOpen, ExternalLink, AlertCircle } from 'lucide-react';
+import { Trash2, Plus, Minus, AlertCircle } from 'lucide-react';
 import { CartItem as CartItemType } from '@/types';
+import { BookCover } from '@/components/customer/BookCover';
 import { Badge } from '@/components/ui/Badge';
 
 export interface CartItemProps {
@@ -43,35 +44,21 @@ export const CartItem: React.FC<CartItemProps> = ({
 
   return (
     <div
-      className={`bg-white rounded-2xl border p-4 sm:p-5 transition-all shadow-2xs ${
+      className={`bg-white rounded-sm border p-4 sm:p-5 transition-all  ${
         isOutOfStock
           ? 'border-red-200 bg-red-50/20'
           : isExceedingStock
           ? 'border-amber-200 bg-amber-50/20'
-          : 'border-slate-200/90 hover:border-slate-300'
+          : 'border-[#DDDCD3] hover:border-slate-300'
       }`}
     >
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
         {/* Left: Visual Book Cover & Meta Details */}
         <div className="flex items-start gap-4 flex-1 min-w-0">
-          {/* Book cover visual block */}
-          <Link
-            href={`/books/${product.id}`}
-            className="w-14 h-20 sm:w-16 sm:h-22 bg-gradient-to-b from-[#011C40] to-[#023859] text-white rounded-xl flex flex-col items-center justify-between p-2 shrink-0 text-center shadow-2xs group relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#023859]"
-            aria-label={`View details for ${product.title}`}
-          >
-            <div className="w-full flex justify-between items-center text-[9px] text-[#A7EBF2]">
-              <span className="font-bold truncate">{product.subject.slice(0, 3).toUpperCase()}</span>
-              <BookOpen className="w-3 h-3 text-[#A7EBF2] shrink-0" />
-            </div>
-            <span className="text-[10px] font-bold text-white leading-tight line-clamp-2 px-0.5">
-              {product.title}
-            </span>
-            <span className="text-[8px] text-slate-300 font-mono">
-              {product.grade.replace('Class ', 'C')}
-            </span>
+          {/* Book cover */}
+          <Link href={`/books/${product.id}`} className="store-cart-cover" aria-label={`View ${product.title}`}>
+            <BookCover product={product} size="sm" />
           </Link>
-
           {/* Book Metadata */}
           <div className="space-y-1.5 min-w-0 flex-1">
             <div className="flex items-center gap-1.5 flex-wrap">
@@ -98,13 +85,13 @@ export const CartItem: React.FC<CartItemProps> = ({
 
             <Link
               href={`/books/${product.id}`}
-              className="font-bold text-sm sm:text-base text-slate-900 hover:text-[#023859] transition-colors block truncate group"
+              className="font-serif font-medium text-lg sm:text-xl text-[#142C43] hover:text-[#28657A] transition-colors block group"
             >
               <span className="group-hover:underline">{product.title}</span>
             </Link>
 
-            <div className="flex items-center gap-3 text-xs text-slate-500 flex-wrap">
-              <span>Publisher: <strong className="text-slate-700 font-medium">{product.publisher}</strong></span>
+            <div className="flex items-center gap-3 text-xs text-[#61717B] flex-wrap">
+              <span>Publisher: <strong className="text-[#526570] font-medium">{product.publisher}</strong></span>
               {product.isbn && (
                 <span className="hidden md:inline font-mono text-slate-400 text-[11px]">
                   ISBN: {product.isbn}
@@ -113,9 +100,9 @@ export const CartItem: React.FC<CartItemProps> = ({
             </div>
 
             {isBulkApplied && (
-              <div className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#023859] bg-[#EBF7FA] px-2 py-0.5 rounded-md border border-[#D4EBF0]">
+              <div className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#28657A] bg-[#EDF2F1] px-2 py-0.5 rounded-md border border-[#DDDCD3]">
                 <span>{product.bulkDiscountPercent}% Bulk Discount Applied</span>
-                <span className="text-slate-500 font-normal">({product.bulkThreshold}+ units)</span>
+                <span className="text-[#61717B] font-normal">({product.bulkThreshold}+ units)</span>
               </div>
             )}
 
@@ -129,15 +116,15 @@ export const CartItem: React.FC<CartItemProps> = ({
         </div>
 
         {/* Right: Quantity Controls, Pricing & Actions */}
-        <div className="flex items-center justify-between sm:justify-end gap-5 sm:gap-6 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+        <div className="flex items-center justify-between xl:justify-end gap-2 sm:gap-4 pt-3 xl:pt-0 border-t xl:border-t-0 border-[#DDDCD3]/60">
           {/* Stepper + Input */}
           <div className="flex flex-col items-start sm:items-center gap-1">
-            <div className="flex items-center border border-slate-200 rounded-xl bg-slate-50 overflow-hidden shadow-2xs">
+            <div className="flex items-center border border-[#DDDCD3] rounded-sm bg-[#FAF8F3] overflow-hidden ">
               <button
                 type="button"
                 onClick={() => handleStep(-1)}
                 disabled={isOutOfStock || quantity <= 1}
-                className="px-2.5 py-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-200/70 disabled:opacity-30 disabled:hover:bg-transparent transition-colors focus:outline-none focus:ring-1 focus:ring-[#023859]"
+                className="px-2.5 py-1.5 text-[#61717B] hover:text-[#142C43] hover:bg-slate-200/70 disabled:opacity-30 disabled:hover:bg-transparent transition-colors focus:outline-none focus:ring-1 focus:ring-[#28657A]"
                 aria-label={`Decrease quantity of ${product.title}`}
               >
                 <Minus className="w-3.5 h-3.5" />
@@ -150,7 +137,7 @@ export const CartItem: React.FC<CartItemProps> = ({
                 disabled={isOutOfStock}
                 value={quantity}
                 onChange={handleInputChange}
-                className="w-14 text-center text-xs font-bold text-slate-900 bg-white py-1.5 focus:outline-none focus:ring-1 focus:ring-[#023859] border-x border-slate-200 disabled:bg-slate-100 disabled:text-slate-400"
+                className="w-11 text-center text-xs font-bold text-[#142C43] bg-white py-1.5 focus:outline-none focus:ring-1 focus:ring-[#28657A] border-x border-[#DDDCD3] disabled:bg-[#F0EEE7] disabled:text-slate-400"
                 aria-label={`Quantity of ${product.title}`}
               />
 
@@ -158,7 +145,7 @@ export const CartItem: React.FC<CartItemProps> = ({
                 type="button"
                 onClick={() => handleStep(1)}
                 disabled={isOutOfStock || quantity >= maxStock}
-                className="px-2.5 py-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-200/70 disabled:opacity-30 disabled:hover:bg-transparent transition-colors focus:outline-none focus:ring-1 focus:ring-[#023859]"
+                className="px-2.5 py-1.5 text-[#61717B] hover:text-[#142C43] hover:bg-slate-200/70 disabled:opacity-30 disabled:hover:bg-transparent transition-colors focus:outline-none focus:ring-1 focus:ring-[#28657A]"
                 aria-label={`Increase quantity of ${product.title}`}
               >
                 <Plus className="w-3.5 h-3.5" />
@@ -170,8 +157,8 @@ export const CartItem: React.FC<CartItemProps> = ({
           </div>
 
           {/* Line Total */}
-          <div className="text-right min-w-[90px]">
-            <div className="text-base font-extrabold text-slate-900">
+          <div className="text-right min-w-[70px]">
+            <div className="text-base font-extrabold text-[#142C43]">
               ₹{totalPrice}
             </div>
             {product.mrp * quantity > totalPrice && (
@@ -185,7 +172,7 @@ export const CartItem: React.FC<CartItemProps> = ({
           <button
             type="button"
             onClick={() => onRemoveItem(product.id)}
-            className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-sm transition-colors focus:outline-none focus:ring-2 focus:ring-red-500"
             aria-label={`Remove ${product.title} from cart`}
             title="Remove item"
           >

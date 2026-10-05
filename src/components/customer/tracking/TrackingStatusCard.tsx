@@ -49,20 +49,20 @@ export const TrackingStatusCard: React.FC<TrackingStatusCardProps> = ({
   const trackingNumber = order.trackingNumber;
 
   return (
-    <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-2xs space-y-4">
+    <div className="bg-white p-5 sm:p-6 rounded-sm border border-[#DDDCD3]  space-y-4">
       {/* Top Bar: Order Identifier & Status */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#DDDCD3]/60 pb-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="text-[11px] font-bold text-[#023859] uppercase tracking-wider bg-[#EBF7FA] px-2 py-0.5 rounded-full">
+            <span className="text-[11px] font-bold text-[#28657A] uppercase tracking-wider bg-[#EDF2F1] px-2 py-0.5 rounded-full">
               Fulfillment Status
             </span>
-            <span className="font-mono font-bold text-slate-900 text-sm sm:text-base">
+            <span className="font-mono font-bold text-[#142C43] text-sm sm:text-base">
               Order {order.id}
             </span>
             <OrderStatusBadge status={order.status} type="order" />
           </div>
-          <p className="text-xs text-slate-500 flex items-center gap-2 flex-wrap">
+          <p className="text-xs text-[#61717B] flex items-center gap-2 flex-wrap">
             <span className="flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5 text-slate-400" aria-hidden="true" />
               Placed on {order.createdAt}
@@ -93,12 +93,12 @@ export const TrackingStatusCard: React.FC<TrackingStatusCardProps> = ({
       {/* Snapshot Information Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
         {/* Tracking Reference */}
-        <div className="p-3.5 bg-slate-50/80 rounded-xl border border-slate-200/80 space-y-1">
-          <span className="text-[11px] font-semibold text-slate-500 block uppercase tracking-wider">
+        <div className="p-3.5 bg-[#FAF8F3]/80 rounded-sm border border-[#DDDCD3] space-y-1">
+          <span className="text-[11px] font-semibold text-[#61717B] block uppercase tracking-wider">
             Tracking Reference
           </span>
           {trackingNumber ? (
-            <span className="font-mono font-bold text-slate-900 text-xs sm:text-sm block">
+            <span className="font-mono font-bold text-[#142C43] text-xs sm:text-sm block">
               {trackingNumber}
             </span>
           ) : (
@@ -109,28 +109,28 @@ export const TrackingStatusCard: React.FC<TrackingStatusCardProps> = ({
         </div>
 
         {/* Carrier / Delivery Partner */}
-        <div className="p-3.5 bg-slate-50/80 rounded-xl border border-slate-200/80 space-y-1">
-          <span className="text-[11px] font-semibold text-slate-500 block uppercase tracking-wider">
+        <div className="p-3.5 bg-[#FAF8F3]/80 rounded-sm border border-[#DDDCD3] space-y-1">
+          <span className="text-[11px] font-semibold text-[#61717B] block uppercase tracking-wider">
             Delivery Partner
           </span>
           {carrierName ? (
-            <span className="font-semibold text-slate-900 text-xs sm:text-sm flex items-center gap-1.5">
-              <Truck className="w-3.5 h-3.5 text-[#023859] shrink-0" aria-hidden="true" />
+            <span className="font-semibold text-[#142C43] text-xs sm:text-sm flex items-center gap-1.5">
+              <Truck className="w-3.5 h-3.5 text-[#28657A] shrink-0" aria-hidden="true" />
               <span className="truncate">{carrierName}</span>
             </span>
           ) : (
-            <span className="text-xs text-slate-500 block">
+            <span className="text-xs text-[#61717B] block">
               Carrier information will appear when available.
             </span>
           )}
         </div>
 
         {/* Last Updated Timestamp */}
-        <div className="p-3.5 bg-slate-50/80 rounded-xl border border-slate-200/80 space-y-1">
-          <span className="text-[11px] font-semibold text-slate-500 block uppercase tracking-wider">
+        <div className="p-3.5 bg-[#FAF8F3]/80 rounded-sm border border-[#DDDCD3] space-y-1">
+          <span className="text-[11px] font-semibold text-[#61717B] block uppercase tracking-wider">
             Last Updated
           </span>
-          <span className="text-xs text-slate-700 font-medium flex items-center gap-1.5">
+          <span className="text-xs text-[#526570] font-medium flex items-center gap-1.5">
             <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" aria-hidden="true" />
             <span>{lastUpdatedDisplay}</span>
           </span>
@@ -139,10 +139,10 @@ export const TrackingStatusCard: React.FC<TrackingStatusCardProps> = ({
 
       {/* Estimated Delivery Note (only if present in mock data) */}
       {order.estimatedDelivery && (
-        <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/70 text-xs text-slate-600 flex items-start gap-2">
-          <Info className="w-4 h-4 text-[#023859] shrink-0 mt-0.5" aria-hidden="true" />
+        <div className="p-3 bg-[#FAF8F3] rounded-sm border border-[#DDDCD3]/70 text-xs text-[#526570] flex items-start gap-2">
+          <Info className="w-4 h-4 text-[#28657A] shrink-0 mt-0.5" aria-hidden="true" />
           <div>
-            <span className="font-semibold text-slate-800">Estimated Delivery: </span>
+            <span className="font-semibold text-[#142C43]">Estimated Delivery: </span>
             <span>{order.estimatedDelivery}</span>
           </div>
         </div>

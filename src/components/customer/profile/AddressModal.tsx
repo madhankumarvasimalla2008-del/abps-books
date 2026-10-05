@@ -135,21 +135,21 @@ export const AddressModal: React.FC<AddressModalProps> = ({
       aria-modal="true"
       aria-labelledby="address-modal-title"
     >
-      <div className="bg-white w-full max-w-lg rounded-2xl shadow-xl border border-slate-200 overflow-hidden animate-in zoom-in-95 duration-150">
+      <div className="bg-white w-full max-w-lg rounded-sm shadow-xl border border-[#DDDCD3] overflow-hidden animate-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+        <div className="px-6 py-4 border-b border-[#DDDCD3]/60 flex items-center justify-between bg-[#FAF8F3]/50">
           <div>
-            <h2 id="address-modal-title" className="text-base font-bold text-slate-900">
+            <h2 id="address-modal-title" className="text-base font-bold text-[#142C43]">
               {addressToEdit ? 'Edit Delivery Address' : 'Add New Delivery Address'}
             </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-[#61717B] mt-0.5">
               Enter delivery recipient and destination details.
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#023859]"
+            className="p-1.5 text-slate-400 hover:text-[#526570] rounded-sm hover:bg-[#F0EEE7] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#28657A]"
             aria-label="Close dialog"
           >
             <X className="w-5 h-5" />
@@ -160,7 +160,7 @@ export const AddressModal: React.FC<AddressModalProps> = ({
         <form onSubmit={handleSubmit} className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
           {/* Label / Identifier */}
           <div className="space-y-1.5">
-            <label htmlFor="address-label" className="block text-xs font-bold text-slate-700">
+            <label htmlFor="address-label" className="block text-xs font-bold text-[#526570]">
               Address Label <span className="text-slate-400 font-normal">(Optional)</span>
             </label>
             <input
@@ -169,14 +169,14 @@ export const AddressModal: React.FC<AddressModalProps> = ({
               value={label}
               onChange={(e) => setLabel(e.target.value)}
               placeholder="e.g. Main Delivery Address, Academic Block A"
-              className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#023859] focus:bg-white transition-colors"
+              className="w-full px-3 py-2 text-xs bg-[#FAF8F3] border border-slate-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-[#28657A] focus:bg-white transition-colors"
             />
           </div>
 
           {/* Recipient Name & Phone */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label htmlFor="recipient-name" className="block text-xs font-bold text-slate-700">
+              <label htmlFor="recipient-name" className="block text-xs font-bold text-[#526570]">
                 Recipient Name <span className="text-red-500">*</span>
               </label>
               <input
@@ -186,10 +186,10 @@ export const AddressModal: React.FC<AddressModalProps> = ({
                 value={recipientName}
                 onChange={(e) => setRecipientName(e.target.value)}
                 placeholder="Full name"
-                className={`w-full px-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
+                className={`w-full px-3 py-2 text-xs bg-[#FAF8F3] border rounded-sm focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
                   errors.recipientName
                     ? 'border-red-300 focus:ring-red-500'
-                    : 'border-slate-300 focus:ring-[#023859]'
+                    : 'border-slate-300 focus:ring-[#28657A]'
                 }`}
                 aria-invalid={errors.recipientName ? 'true' : 'false'}
                 aria-describedby={errors.recipientName ? 'recipient-name-error' : undefined}
@@ -204,7 +204,7 @@ export const AddressModal: React.FC<AddressModalProps> = ({
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="recipient-phone" className="block text-xs font-bold text-slate-700">
+              <label htmlFor="recipient-phone" className="block text-xs font-bold text-[#526570]">
                 Contact Phone <span className="text-red-500">*</span>
               </label>
               <input
@@ -214,10 +214,10 @@ export const AddressModal: React.FC<AddressModalProps> = ({
                 onChange={(e) => setPhone(e.target.value)}
                 maxLength={10}
                 placeholder="10-digit number"
-                className={`w-full px-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
+                className={`w-full px-3 py-2 text-xs bg-[#FAF8F3] border rounded-sm focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
                   errors.phone
                     ? 'border-red-300 focus:ring-red-500'
-                    : 'border-slate-300 focus:ring-[#023859]'
+                    : 'border-slate-300 focus:ring-[#28657A]'
                 }`}
                 aria-invalid={errors.phone ? 'true' : 'false'}
                 aria-describedby={errors.phone ? 'recipient-phone-error' : undefined}
@@ -234,7 +234,7 @@ export const AddressModal: React.FC<AddressModalProps> = ({
 
           {/* Address Line 1 */}
           <div className="space-y-1.5">
-            <label htmlFor="address-line-1" className="block text-xs font-bold text-slate-700">
+            <label htmlFor="address-line-1" className="block text-xs font-bold text-[#526570]">
               Address Line 1 <span className="text-red-500">*</span>
             </label>
             <input
@@ -243,10 +243,10 @@ export const AddressModal: React.FC<AddressModalProps> = ({
               value={addressLine1}
               onChange={(e) => setAddressLine1(e.target.value)}
               placeholder="Campus name, street address, building"
-              className={`w-full px-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
+              className={`w-full px-3 py-2 text-xs bg-[#FAF8F3] border rounded-sm focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
                 errors.addressLine1
                   ? 'border-red-300 focus:ring-red-500'
-                  : 'border-slate-300 focus:ring-[#023859]'
+                  : 'border-slate-300 focus:ring-[#28657A]'
               }`}
               aria-invalid={errors.addressLine1 ? 'true' : 'false'}
               aria-describedby={errors.addressLine1 ? 'address-line1-error' : undefined}
@@ -262,7 +262,7 @@ export const AddressModal: React.FC<AddressModalProps> = ({
 
           {/* Address Line 2 */}
           <div className="space-y-1.5">
-            <label htmlFor="address-line-2" className="block text-xs font-bold text-slate-700">
+            <label htmlFor="address-line-2" className="block text-xs font-bold text-[#526570]">
               Address Line 2 <span className="text-slate-400 font-normal">(Optional)</span>
             </label>
             <input
@@ -271,14 +271,14 @@ export const AddressModal: React.FC<AddressModalProps> = ({
               value={addressLine2}
               onChange={(e) => setAddressLine2(e.target.value)}
               placeholder="Gate number, landmark, block"
-              className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#023859] focus:bg-white transition-colors"
+              className="w-full px-3 py-2 text-xs bg-[#FAF8F3] border border-slate-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-[#28657A] focus:bg-white transition-colors"
             />
           </div>
 
           {/* City, State & PIN */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="space-y-1.5">
-              <label htmlFor="address-city" className="block text-xs font-bold text-slate-700">
+              <label htmlFor="address-city" className="block text-xs font-bold text-[#526570]">
                 City <span className="text-red-500">*</span>
               </label>
               <input
@@ -287,10 +287,10 @@ export const AddressModal: React.FC<AddressModalProps> = ({
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 placeholder="City"
-                className={`w-full px-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
+                className={`w-full px-3 py-2 text-xs bg-[#FAF8F3] border rounded-sm focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
                   errors.city
                     ? 'border-red-300 focus:ring-red-500'
-                    : 'border-slate-300 focus:ring-[#023859]'
+                    : 'border-slate-300 focus:ring-[#28657A]'
                 }`}
                 aria-invalid={errors.city ? 'true' : 'false'}
                 aria-describedby={errors.city ? 'address-city-error' : undefined}
@@ -304,7 +304,7 @@ export const AddressModal: React.FC<AddressModalProps> = ({
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="address-state" className="block text-xs font-bold text-slate-700">
+              <label htmlFor="address-state" className="block text-xs font-bold text-[#526570]">
                 State <span className="text-red-500">*</span>
               </label>
               <input
@@ -313,10 +313,10 @@ export const AddressModal: React.FC<AddressModalProps> = ({
                 value={state}
                 onChange={(e) => setState(e.target.value)}
                 placeholder="State"
-                className={`w-full px-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
+                className={`w-full px-3 py-2 text-xs bg-[#FAF8F3] border rounded-sm focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
                   errors.state
                     ? 'border-red-300 focus:ring-red-500'
-                    : 'border-slate-300 focus:ring-[#023859]'
+                    : 'border-slate-300 focus:ring-[#28657A]'
                 }`}
                 aria-invalid={errors.state ? 'true' : 'false'}
                 aria-describedby={errors.state ? 'address-state-error' : undefined}
@@ -330,7 +330,7 @@ export const AddressModal: React.FC<AddressModalProps> = ({
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="address-pincode" className="block text-xs font-bold text-slate-700">
+              <label htmlFor="address-pincode" className="block text-xs font-bold text-[#526570]">
                 PIN Code <span className="text-red-500">*</span>
               </label>
               <input
@@ -340,10 +340,10 @@ export const AddressModal: React.FC<AddressModalProps> = ({
                 onChange={(e) => setPincode(e.target.value)}
                 maxLength={6}
                 placeholder="6-digit PIN"
-                className={`w-full px-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
+                className={`w-full px-3 py-2 text-xs bg-[#FAF8F3] border rounded-sm focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
                   errors.pincode
                     ? 'border-red-300 focus:ring-red-500'
-                    : 'border-slate-300 focus:ring-[#023859]'
+                    : 'border-slate-300 focus:ring-[#28657A]'
                 }`}
                 aria-invalid={errors.pincode ? 'true' : 'false'}
                 aria-describedby={errors.pincode ? 'address-pincode-error' : undefined}
@@ -359,13 +359,13 @@ export const AddressModal: React.FC<AddressModalProps> = ({
 
           {/* Set as default checkbox */}
           <div className="pt-2">
-            <label className="flex items-center gap-2.5 text-xs text-slate-700 cursor-pointer">
+            <label className="flex items-center gap-2.5 text-xs text-[#526570] cursor-pointer">
               <input
                 type="checkbox"
                 checked={isDefault || isFirstAddress}
                 disabled={isFirstAddress || (!!addressToEdit && addressToEdit.isDefault)}
                 onChange={(e) => setIsDefault(e.target.checked)}
-                className="w-4 h-4 rounded text-[#023859] focus:ring-[#023859] border-slate-300"
+                className="w-4 h-4 rounded text-[#28657A] focus:ring-[#28657A] border-slate-300"
               />
               <span className="font-medium">
                 Set as default delivery address
@@ -375,7 +375,7 @@ export const AddressModal: React.FC<AddressModalProps> = ({
           </div>
 
           {/* Footer */}
-          <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-2.5">
+          <div className="pt-4 border-t border-[#DDDCD3]/60 flex items-center justify-end gap-2.5">
             <Button
               type="button"
               variant="outline"

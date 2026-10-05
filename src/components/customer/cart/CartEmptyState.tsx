@@ -24,16 +24,16 @@ export const CartEmptyState: React.FC = () => {
   ];
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 p-8 sm:p-12 text-center max-w-3xl mx-auto shadow-2xs space-y-8">
+    <div className="bg-white rounded-sm border border-[#DDDCD3] p-8 sm:p-12 text-center max-w-3xl mx-auto  space-y-8">
       {/* Icon & Title */}
       <div className="space-y-3">
-        <div className="w-16 h-16 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center mx-auto ring-8 ring-slate-50">
+        <div className="w-16 h-16 bg-[#F0EEE7] text-slate-400 rounded-sm flex items-center justify-center mx-auto ring-8 ring-slate-50">
           <ShoppingCart className="w-8 h-8" aria-hidden="true" />
         </div>
-        <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
+        <h2 className="text-xl sm:text-2xl font-bold text-[#142C43]">
           Your Cart is Currently Empty
         </h2>
-        <p className="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+        <p className="text-sm text-[#526570] max-w-md mx-auto leading-relaxed">
           You haven&apos;t added any textbooks or materials yet. Explore our academic catalogue to order prescribed books for your school or department.
         </p>
       </div>
@@ -45,7 +45,7 @@ export const CartEmptyState: React.FC = () => {
           className={buttonVariants({
             variant: 'primary',
             size: 'lg',
-            className: 'text-sm font-semibold shadow-xs gap-2',
+            className: 'text-sm font-semibold  gap-2',
           })}
         >
           <BookOpen className="w-4 h-4" />
@@ -54,16 +54,16 @@ export const CartEmptyState: React.FC = () => {
       </div>
 
       {/* Quick Discovery Shortcuts */}
-      <div className="pt-6 border-t border-slate-100 space-y-4 text-left">
+      <div className="pt-6 border-t border-[#DDDCD3]/60 space-y-4 text-left">
         <div className="text-center">
-          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+          <span className="text-xs font-bold text-[#61717B] uppercase tracking-wider">
             Quick Discovery Shortcuts
           </span>
         </div>
 
         <div className="space-y-3">
           <div>
-            <span className="text-xs font-semibold text-slate-700 block mb-2">
+            <span className="text-xs font-semibold text-[#526570] block mb-2">
               Browse by Class / Grade:
             </span>
             <div className="flex flex-wrap gap-2">
@@ -71,7 +71,7 @@ export const CartEmptyState: React.FC = () => {
                 <Link
                   key={g.label}
                   href={g.href}
-                  className="text-xs px-3 py-1.5 rounded-xl border border-[#D4EBF0] bg-[#F7FCFD] text-[#011C40] hover:bg-[#EBF7FA] hover:text-[#023859] hover:border-[#54ACBF] font-medium transition-colors"
+                  className="text-xs px-3 py-1.5 rounded-sm border border-[#DDDCD3] bg-[#FAF8F3] text-[#142C43] hover:bg-[#EDF2F1] hover:text-[#28657A] hover:border-[#4C8794] font-medium transition-colors"
                 >
                   {g.label}
                 </Link>
@@ -80,7 +80,7 @@ export const CartEmptyState: React.FC = () => {
           </div>
 
           <div>
-            <span className="text-xs font-semibold text-slate-700 block mb-2">
+            <span className="text-xs font-semibold text-[#526570] block mb-2">
               Browse by Subject:
             </span>
             <div className="flex flex-wrap gap-2">
@@ -88,7 +88,7 @@ export const CartEmptyState: React.FC = () => {
                 <Link
                   key={s.label}
                   href={s.href}
-                  className="text-xs px-3 py-1.5 rounded-xl border border-[#D4EBF0] bg-[#F7FCFD] text-[#011C40] hover:bg-[#EBF7FA] hover:text-[#023859] hover:border-[#54ACBF] font-medium transition-colors"
+                  className="text-xs px-3 py-1.5 rounded-sm border border-[#DDDCD3] bg-[#FAF8F3] text-[#142C43] hover:bg-[#EDF2F1] hover:text-[#28657A] hover:border-[#4C8794] font-medium transition-colors"
                 >
                   {s.label}
                 </Link>

@@ -19,10 +19,10 @@ export default function SecurityPage() {
 
       {/* Page Header */}
       <div className="space-y-1">
-        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+        <h1 className="text-xl sm:text-2xl font-bold text-[#142C43] tracking-tight">
           Security Settings
         </h1>
-        <p className="text-xs sm:text-sm text-slate-600">
+        <p className="text-xs sm:text-sm text-[#526570]">
           Manage your account credentials, security preferences, and active sessions.
         </p>
       </div>

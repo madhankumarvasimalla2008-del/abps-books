@@ -22,7 +22,7 @@ export const CheckoutValidation: React.FC<CheckoutValidationProps> = ({ cart }) 
   if (invalidItems.length === 0) return null;
 
   return (
-    <div className="p-4 sm:p-5 bg-red-50/80 border border-red-200 rounded-2xl space-y-3">
+    <div className="p-4 sm:p-5 bg-red-50/80 border border-red-200 rounded-sm space-y-3">
       <div className="flex items-start gap-3">
         <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" aria-hidden="true" />
         <div className="space-y-1 flex-1 min-w-0">
@@ -42,11 +42,11 @@ export const CheckoutValidation: React.FC<CheckoutValidationProps> = ({ cart }) 
           return (
             <div
               key={item.product.id}
-              className="flex items-center justify-between gap-3 text-xs bg-white/80 p-2.5 rounded-xl border border-red-100"
+              className="flex items-center justify-between gap-3 text-xs bg-white/80 p-2.5 rounded-sm border border-red-100"
             >
               <div className="truncate">
-                <span className="font-semibold text-slate-900">{item.product.title}</span>
-                <span className="text-slate-500 ml-1.5">({item.product.grade})</span>
+                <span className="font-semibold text-[#142C43]">{item.product.title}</span>
+                <span className="text-[#61717B] ml-1.5">({item.product.grade})</span>
               </div>
               <span className="font-medium text-red-600 text-[11px] shrink-0">
                 {isOut
@@ -64,7 +64,7 @@ export const CheckoutValidation: React.FC<CheckoutValidationProps> = ({ cart }) 
           className={buttonVariants({
             variant: 'secondary',
             size: 'sm',
-            className: 'text-xs font-semibold bg-white hover:bg-slate-50 border-red-200 text-red-800 gap-1.5',
+            className: 'text-xs font-semibold bg-white hover:bg-[#FAF8F3] border-red-200 text-red-800 gap-1.5',
           })}
         >
           <ShoppingCart className="w-3.5 h-3.5" />

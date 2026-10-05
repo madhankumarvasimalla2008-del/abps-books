@@ -14,16 +14,16 @@ export const CatalogErrorState: React.FC<CatalogErrorStateProps> = ({
   onRetry,
 }) => {
   return (
-    <div className="bg-white rounded-2xl border border-rose-200 p-8 sm:p-12 text-center max-w-lg mx-auto my-6 shadow-2xs space-y-4">
-      <div className="w-14 h-14 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mx-auto">
+    <div className="bg-white rounded-sm border border-rose-200 p-8 sm:p-12 text-center max-w-lg mx-auto my-6  space-y-4">
+      <div className="w-14 h-14 bg-rose-50 text-rose-600 rounded-sm flex items-center justify-center mx-auto">
         <AlertTriangle className="w-7 h-7" />
       </div>
 
       <div className="space-y-1">
-        <h3 className="text-base sm:text-lg font-bold text-slate-900">
+        <h3 className="text-base sm:text-lg font-bold text-[#142C43]">
           Catalog Loading Issue
         </h3>
-        <p className="text-xs sm:text-sm text-slate-500">{message}</p>
+        <p className="text-xs sm:text-sm text-[#61717B]">{message}</p>
       </div>
 
       <div className="pt-2">

@@ -46,12 +46,12 @@ export const QuantitySelector: React.FC<QuantitySelectorProps> = ({
 
   return (
     <div className={`space-y-2.5 ${className}`}>
-      <div className="flex items-center justify-between">
-        <label htmlFor={id} className="text-xs font-bold text-[#011C40]">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3">
+        <label htmlFor={id} className="text-xs font-bold text-[#142C43]">
           Order Quantity:
         </label>
         {showPresets && !disabled && (
-          <div className="flex items-center gap-1.5" role="group" aria-label="Quick quantity presets">
+          <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Quick quantity presets">
             {presets.map((preset) => (
               <button
                 key={preset}
@@ -59,8 +59,8 @@ export const QuantitySelector: React.FC<QuantitySelectorProps> = ({
                 onClick={() => onQuantityChange(preset)}
                 className={`text-[11px] px-2 py-0.5 rounded font-medium border transition-colors cursor-pointer ${
                   quantity === preset
-                    ? 'bg-[#023859] text-white border-[#023859] shadow-2xs'
-                    : 'bg-white text-[#011C40] border-[#D4EBF0] hover:bg-[#F7FCFD] hover:border-[#54ACBF]'
+                    ? 'bg-[#28657A] text-white border-[#28657A] '
+                    : 'bg-white text-[#142C43] border-[#DDDCD3] hover:bg-[#FAF8F3] hover:border-[#4C8794]'
                 }`}
                 aria-label={`Set quantity to ${preset}`}
               >
@@ -73,12 +73,12 @@ export const QuantitySelector: React.FC<QuantitySelectorProps> = ({
 
       <div className="flex items-center gap-3">
         {/* Stepper with direct text input */}
-        <div className="flex items-center border border-[#D4EBF0] rounded-xl bg-[#F7FCFD] overflow-hidden shadow-2xs">
+        <div className="flex items-center border border-[#DDDCD3] rounded-sm bg-[#FAF8F3] overflow-hidden ">
           <button
             type="button"
             onClick={() => handleStep(-1)}
             disabled={disabled || quantity <= min}
-            className="px-3 py-2 text-[#26658C] hover:text-[#011C40] hover:bg-[#EBF7FA] disabled:opacity-30 disabled:hover:bg-transparent transition-colors focus:outline-none focus:ring-1 focus:ring-[#023859] cursor-pointer"
+            className="px-3 py-2 text-[#526570] hover:text-[#142C43] hover:bg-[#EDF2F1] disabled:opacity-30 disabled:hover:bg-transparent transition-colors focus:outline-none focus:ring-1 focus:ring-[#28657A] cursor-pointer"
             aria-label="Decrease quantity"
           >
             <Minus className="w-3.5 h-3.5" />
@@ -91,14 +91,14 @@ export const QuantitySelector: React.FC<QuantitySelectorProps> = ({
             disabled={disabled}
             value={quantity}
             onChange={handleInputChange}
-            className="w-16 text-center text-sm font-bold text-[#011C40] bg-white py-2 focus:outline-none focus:ring-1 focus:ring-[#023859] border-x border-[#D4EBF0] disabled:bg-[#F7FCFD] disabled:text-[#537D99]"
+            className="w-16 text-center text-sm font-bold text-[#142C43] bg-white py-2 focus:outline-none focus:ring-1 focus:ring-[#28657A] border-x border-[#DDDCD3] disabled:bg-[#FAF8F3] disabled:text-[#61717B]"
             aria-label="Enter specific quantity"
           />
           <button
             type="button"
             onClick={() => handleStep(1)}
             disabled={disabled || quantity >= max}
-            className="px-3 py-2 text-[#26658C] hover:text-[#011C40] hover:bg-[#EBF7FA] disabled:opacity-30 disabled:hover:bg-transparent transition-colors focus:outline-none focus:ring-1 focus:ring-[#023859] cursor-pointer"
+            className="px-3 py-2 text-[#526570] hover:text-[#142C43] hover:bg-[#EDF2F1] disabled:opacity-30 disabled:hover:bg-transparent transition-colors focus:outline-none focus:ring-1 focus:ring-[#28657A] cursor-pointer"
             aria-label="Increase quantity"
           >
             <Plus className="w-3.5 h-3.5" />
@@ -106,7 +106,7 @@ export const QuantitySelector: React.FC<QuantitySelectorProps> = ({
         </div>
 
         {quantity > 1 && (
-          <span className="text-xs text-[#537D99] font-medium">
+          <span className="text-xs text-[#61717B] font-medium">
             ({quantity} units selected)
           </span>
         )}

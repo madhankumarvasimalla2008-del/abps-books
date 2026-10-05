@@ -20,29 +20,29 @@ export const CatalogEmptyState: React.FC<CatalogEmptyStateProps> = ({
   onResetAll,
 }) => {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 p-8 sm:p-12 text-center max-w-xl mx-auto my-6 shadow-2xs space-y-4">
-      <div className="w-14 h-14 bg-slate-100 text-slate-500 rounded-2xl flex items-center justify-center mx-auto">
+    <div className="bg-white rounded-sm border border-[#DDDCD3] p-8 sm:p-12 text-center max-w-xl mx-auto my-6  space-y-4">
+      <div className="w-14 h-14 bg-[#F0EEE7] text-[#61717B] rounded-sm flex items-center justify-center mx-auto">
         <SearchX className="w-7 h-7 text-slate-400" />
       </div>
 
       <div className="space-y-1">
-        <h3 className="text-base sm:text-lg font-bold text-slate-900">
+        <h3 className="text-base sm:text-lg font-bold text-[#142C43]">
           No matching books found
         </h3>
         {searchQuery ? (
-          <p className="text-xs sm:text-sm text-slate-500">
-            We couldn&apos;t find any books matching &quot;<span className="font-semibold text-slate-800">{searchQuery}</span>&quot;.
+          <p className="text-xs sm:text-sm text-[#61717B]">
+            We couldn&apos;t find any books matching &quot;<span className="font-semibold text-[#142C43]">{searchQuery}</span>&quot;.
           </p>
         ) : (
-          <p className="text-xs sm:text-sm text-slate-500">
+          <p className="text-xs sm:text-sm text-[#61717B]">
             No items matched your current filter criteria.
           </p>
         )}
       </div>
 
-      <div className="text-xs text-slate-500 bg-slate-50 p-4 rounded-xl text-left space-y-1.5 border border-slate-100">
-        <p className="font-semibold text-slate-700">Suggestions:</p>
-        <ul className="list-disc pl-4 space-y-1 text-[11px] text-slate-600">
+      <div className="text-xs text-[#61717B] bg-[#FAF8F3] p-4 rounded-sm text-left space-y-1.5 border border-[#DDDCD3]/60">
+        <p className="font-semibold text-[#526570]">Suggestions:</p>
+        <ul className="list-disc pl-4 space-y-1 text-[11px] text-[#526570]">
           <li>Check for spelling errors in the title, author, or publisher name.</li>
           <li>Try searching with broader terms (e.g. &quot;Mathematics&quot; instead of exact chapters).</li>
           <li>Try searching by standard 10 or 13-digit ISBN.</li>

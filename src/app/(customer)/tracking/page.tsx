@@ -69,16 +69,16 @@ function TrackingPageContent() {
               <TrackingDeliveryInfo order={matchedOrder} />
 
               {/* Order Support Card */}
-              <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 space-y-2 text-xs">
-                <div className="flex items-center gap-1.5 font-bold text-slate-800">
-                  <HelpCircle className="w-4 h-4 text-[#023859] shrink-0" aria-hidden="true" />
+              <div className="bg-[#FAF8F3] p-5 rounded-sm border border-[#DDDCD3] space-y-2 text-xs">
+                <div className="flex items-center gap-1.5 font-bold text-[#142C43]">
+                  <HelpCircle className="w-4 h-4 text-[#28657A] shrink-0" aria-hidden="true" />
                   <span>Tracking Support</span>
                 </div>
-                <p className="text-slate-600 leading-relaxed text-[11px]">
+                <p className="text-[#526570] leading-relaxed text-[11px]">
                   Tracking information is shown when available for an order. For questions, please quote reference{' '}
-                  <strong className="font-mono text-slate-800">{matchedOrder.id}</strong>.
+                  <strong className="font-mono text-[#142C43]">{matchedOrder.id}</strong>.
                 </p>
-                <div className="pt-2 border-t border-slate-200/60">
+                <div className="pt-2 border-t border-[#DDDCD3]/60">
                   <Link
                     href={`/orders/${matchedOrder.id}`}
                     className={buttonVariants({
@@ -108,19 +108,19 @@ function TrackingPageContent() {
 
       {/* Initial state before search: Neutral information notice */}
       {!hasSearched && (
-        <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/90 shadow-2xs space-y-4">
+        <div className="bg-white p-6 sm:p-8 rounded-sm border border-[#DDDCD3]  space-y-4">
           <div className="space-y-1">
-            <h2 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
-              <Truck className="w-4 h-4 text-[#023859]" aria-hidden="true" />
+            <h2 className="text-base sm:text-lg font-bold text-[#142C43] flex items-center gap-2">
+              <Truck className="w-4 h-4 text-[#28657A]" aria-hidden="true" />
               <span>Order Tracking</span>
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#526570] leading-relaxed">
               Tracking information is shown when available for an order. Enter your order reference or tracking number above to view the current status.
             </p>
           </div>
 
-          <div className="pt-2 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-            <span className="text-slate-500">
+          <div className="pt-2 border-t border-[#DDDCD3]/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <span className="text-[#61717B]">
               Looking for your past orders?
             </span>
             <Link
@@ -145,7 +145,7 @@ export default function TrackingPage() {
   return (
     <Suspense
       fallback={
-        <div className="p-12 text-center text-xs text-slate-500 max-w-5xl mx-auto">
+        <div className="p-12 text-center text-xs text-[#61717B] max-w-5xl mx-auto">
           Loading Tracking Portal...
         </div>
       }

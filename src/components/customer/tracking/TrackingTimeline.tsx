@@ -98,15 +98,15 @@ export const TrackingTimeline: React.FC<TrackingTimelineProps> = ({ order }) => 
   };
 
   return (
-    <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-2xs space-y-6">
-      <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+    <div className="bg-white p-5 sm:p-6 rounded-sm border border-[#DDDCD3]  space-y-6">
+      <div className="flex items-center justify-between border-b border-[#DDDCD3]/60 pb-3">
         <div className="flex items-center gap-2">
-          <Package className="w-4 h-4 text-[#023859]" aria-hidden="true" />
-          <h2 className="text-sm sm:text-base font-bold text-slate-900">
+          <Package className="w-4 h-4 text-[#28657A]" aria-hidden="true" />
+          <h2 className="text-sm sm:text-base font-bold text-[#142C43]">
             Fulfillment Timeline
           </h2>
         </div>
-        <span className="text-xs text-slate-500 font-medium">
+        <span className="text-xs text-[#61717B] font-medium">
           Step {Math.max(1, currentStatusIndex + 1)} of {ORDERED_STATUSES.length}
         </span>
       </div>
@@ -132,10 +132,10 @@ export const TrackingTimeline: React.FC<TrackingTimelineProps> = ({ order }) => 
               <div
                 className={`absolute -left-6 sm:-left-8 top-0.5 w-6 h-6 rounded-full flex items-center justify-center ring-4 ring-white transition-all ${
                   isDone
-                    ? 'bg-[#023859] text-white'
+                    ? 'bg-[#28657A] text-white'
                     : isCurrent
                     ? 'bg-amber-600 text-white ring-amber-100 animate-pulse'
-                    : 'bg-slate-100 text-slate-400 border border-slate-300'
+                    : 'bg-[#F0EEE7] text-slate-400 border border-slate-300'
                 }`}
               >
                 {isDone ? (
@@ -162,7 +162,7 @@ export const TrackingTimeline: React.FC<TrackingTimelineProps> = ({ order }) => 
                   <div className="flex items-center gap-2">
                     <span
                       className={`text-xs sm:text-sm font-bold ${
-                        isDone || isCurrent ? 'text-slate-900' : 'text-slate-400'
+                        isDone || isCurrent ? 'text-[#142C43]' : 'text-slate-400'
                       }`}
                     >
                       {step.label}
@@ -173,7 +173,7 @@ export const TrackingTimeline: React.FC<TrackingTimelineProps> = ({ order }) => 
                       </span>
                     )}
                     {isDone && (
-                      <span className="text-[10px] font-medium text-[#023859] bg-[#EBF7FA] px-1.5 py-0.2 rounded">
+                      <span className="text-[10px] font-medium text-[#28657A] bg-[#EDF2F1] px-1.5 py-0.2 rounded">
                         Done
                       </span>
                     )}
@@ -192,7 +192,7 @@ export const TrackingTimeline: React.FC<TrackingTimelineProps> = ({ order }) => 
 
                 <p
                   className={`text-xs leading-relaxed ${
-                    isDone || isCurrent ? 'text-slate-600' : 'text-slate-400'
+                    isDone || isCurrent ? 'text-[#526570]' : 'text-slate-400'
                   }`}
                 >
                   {step.description}
@@ -200,7 +200,7 @@ export const TrackingTimeline: React.FC<TrackingTimelineProps> = ({ order }) => 
 
                 {/* Location indicator (only if present in mock data) */}
                 {step.location && (
-                  <p className="text-[11px] text-slate-500 flex items-center gap-1 pt-0.5">
+                  <p className="text-[11px] text-[#61717B] flex items-center gap-1 pt-0.5">
                     <MapPin className="w-3 h-3 text-slate-400 shrink-0" aria-hidden="true" />
                     <span>{step.location}</span>
                   </p>

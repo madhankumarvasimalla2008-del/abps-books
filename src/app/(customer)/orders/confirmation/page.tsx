@@ -36,43 +36,43 @@ function ConfirmationContent() {
   return (
     <div className="max-w-4xl mx-auto space-y-6 py-4 sm:py-6">
       {/* Top success card */}
-      <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/90 shadow-2xs text-center space-y-4">
-        <div className="w-16 h-16 bg-[#EBF7FA] text-[#023859] rounded-2xl flex items-center justify-center mx-auto ring-8 ring-[#EBF7FA]/60">
+      <div className="bg-white p-6 sm:p-8 rounded-sm border border-[#DDDCD3]  text-center space-y-4">
+        <div className="w-16 h-16 bg-[#EDF2F1] text-[#28657A] rounded-sm flex items-center justify-center mx-auto ring-8 ring-[#EDF2F1]/60">
           <CheckCircle2 className="w-9 h-9" />
         </div>
 
         <div className="space-y-1.5">
-          <span className="text-xs font-bold text-[#023859] uppercase tracking-wider bg-[#EBF7FA] px-2.5 py-1 rounded-full">
+          <span className="text-xs font-bold text-[#28657A] uppercase tracking-wider bg-[#EDF2F1] px-2.5 py-1 rounded-full">
             Order Confirmed
           </span>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 pt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#142C43] pt-1">
             Order Confirmed
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 max-w-lg mx-auto">
+          <p className="text-xs sm:text-sm text-[#61717B] max-w-lg mx-auto">
             Your order has been recorded in this demo session.
           </p>
         </div>
 
         {/* Order Details Quick Reference */}
-        <div className="bg-slate-50/80 p-4 rounded-xl border border-slate-200/80 max-w-lg mx-auto grid grid-cols-1 sm:grid-cols-3 gap-3 text-left text-xs">
+        <div className="bg-[#FAF8F3]/80 p-4 rounded-sm border border-[#DDDCD3] max-w-lg mx-auto grid grid-cols-1 sm:grid-cols-3 gap-3 text-left text-xs">
           <div>
             <span className="text-slate-400 block text-[11px]">Order Reference</span>
-            <span className="font-mono font-bold text-slate-900 text-xs sm:text-sm">{displayId}</span>
+            <span className="font-mono font-bold text-[#142C43] text-xs sm:text-sm">{displayId}</span>
           </div>
           <div>
             <span className="text-slate-400 block text-[11px]">Order Date</span>
-            <span className="font-semibold text-slate-800 text-xs flex items-center gap-1 mt-0.5">
+            <span className="font-semibold text-[#142C43] text-xs flex items-center gap-1 mt-0.5">
               <Calendar className="w-3 h-3 text-slate-400" /> {displayDate}
             </span>
           </div>
           <div>
             <span className="text-slate-400 block text-[11px]">School Branch</span>
-            <span className="font-bold text-slate-900 truncate block text-xs mt-0.5">{displayBranch}</span>
+            <span className="font-bold text-[#142C43] truncate block text-xs mt-0.5">{displayBranch}</span>
           </div>
         </div>
 
         {/* Prototype demo banner */}
-        <div className="max-w-lg mx-auto p-2.5 bg-amber-50 text-amber-800 rounded-xl border border-amber-200/80 text-[11px] text-left flex items-start gap-2">
+        <div className="max-w-lg mx-auto p-2.5 bg-amber-50 text-amber-800 rounded-sm border border-amber-200/80 text-[11px] text-left flex items-start gap-2">
           <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
           <span>
             <strong>Demo Mode:</strong> This order has been recorded in your local browser session for testing.
@@ -129,35 +129,35 @@ function ConfirmationContent() {
       )}
 
       {/* Order Status Information */}
-      <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-2xs space-y-4 text-xs">
-        <h2 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-          <PackageCheck className="w-4 h-4 text-[#023859]" />
+      <div className="bg-white p-5 sm:p-6 rounded-sm border border-[#DDDCD3]  space-y-4 text-xs">
+        <h2 className="font-bold text-[#142C43] text-sm flex items-center gap-2">
+          <PackageCheck className="w-4 h-4 text-[#28657A]" />
           <span>Order Fulfillment Overview</span>
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-slate-600">
-          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-150 space-y-1">
-            <span className="font-bold text-slate-900 block">1. Order Logged</span>
-            <p className="text-[11px] leading-relaxed text-slate-500">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-[#526570]">
+          <div className="p-3.5 rounded-sm bg-[#FAF8F3] border border-slate-150 space-y-1">
+            <span className="font-bold text-[#142C43] block">1. Order Logged</span>
+            <p className="text-[11px] leading-relaxed text-[#61717B]">
               Your order items and branch details are registered.
             </p>
           </div>
-          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-150 space-y-1">
-            <span className="font-bold text-slate-900 block">2. Processing</span>
-            <p className="text-[11px] leading-relaxed text-slate-500">
+          <div className="p-3.5 rounded-sm bg-[#FAF8F3] border border-slate-150 space-y-1">
+            <span className="font-bold text-[#142C43] block">2. Processing</span>
+            <p className="text-[11px] leading-relaxed text-[#61717B]">
               Items are verified and prepared for shipment.
             </p>
           </div>
-          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-150 space-y-1">
-            <span className="font-bold text-slate-900 block">3. Delivery</span>
-            <p className="text-[11px] leading-relaxed text-slate-500">
+          <div className="p-3.5 rounded-sm bg-[#FAF8F3] border border-slate-150 space-y-1">
+            <span className="font-bold text-[#142C43] block">3. Delivery</span>
+            <p className="text-[11px] leading-relaxed text-[#61717B]">
               Dispatched to your designated school branch location.
             </p>
           </div>
         </div>
 
-        <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-2 text-slate-500">
+        <div className="pt-3 border-t border-[#DDDCD3]/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-[#61717B]">
             <Building2 className="w-4 h-4 text-slate-400 shrink-0" />
             <span>Questions regarding this order? Contact the school textbook coordinator.</span>
           </div>
@@ -182,7 +182,7 @@ export default function OrderConfirmationPage() {
   return (
     <Suspense
       fallback={
-        <div className="p-8 text-center text-xs text-slate-500">
+        <div className="p-8 text-center text-xs text-[#61717B]">
           Loading Order Confirmation...
         </div>
       }

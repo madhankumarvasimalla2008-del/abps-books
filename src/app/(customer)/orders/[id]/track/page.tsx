@@ -46,7 +46,7 @@ export default function OrderTrackingDetailPage({
   }
 
   // Initial loading state before hydration
-  if (!order) {
+  if (!order || !isInitialized) {
     return (
       <div className="space-y-6 max-w-5xl mx-auto pb-8">
         <Breadcrumbs
@@ -55,7 +55,7 @@ export default function OrderTrackingDetailPage({
             { label: 'Loading Order Tracking...' },
           ]}
         />
-        <div className="p-12 text-center text-xs text-slate-500 bg-white rounded-2xl border border-slate-200/90 shadow-2xs">
+        <div className="p-12 text-center text-xs text-[#61717B] bg-white rounded-sm border border-[#DDDCD3] ">
           Loading Order Tracking...
         </div>
       </div>
@@ -74,19 +74,19 @@ export default function OrderTrackingDetailPage({
       />
 
       {/* Main Header Card */}
-      <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white p-5 sm:p-6 rounded-sm border border-[#DDDCD3]  flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="text-xs font-bold text-[#023859] uppercase tracking-wider bg-[#EBF7FA] px-2 py-0.5 rounded-full">
+            <span className="text-xs font-bold text-[#28657A] uppercase tracking-wider bg-[#EDF2F1] px-2 py-0.5 rounded-full">
               Order Tracking
             </span>
-            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 font-mono tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-bold text-[#142C43] font-mono tracking-tight">
               {order.id}
             </h1>
             <OrderStatusBadge status={order.status} type="order" />
           </div>
 
-          <p className="text-xs text-slate-500 flex items-center gap-2 flex-wrap">
+          <p className="text-xs text-[#61717B] flex items-center gap-2 flex-wrap">
             <span className="flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5 text-slate-400" aria-hidden="true" />
               Placed on {order.createdAt}
@@ -139,14 +139,14 @@ export default function OrderTrackingDetailPage({
           <TrackingDeliveryInfo order={order} />
 
           {/* Need Help / Support Note */}
-          <div className="p-5 bg-slate-50 rounded-2xl border border-slate-200/80 text-xs text-slate-600 space-y-2">
-            <div className="flex items-center gap-1.5 font-bold text-slate-800">
-              <HelpCircle className="w-4 h-4 text-[#023859] shrink-0" aria-hidden="true" />
+          <div className="p-5 bg-[#FAF8F3] rounded-sm border border-[#DDDCD3] text-xs text-[#526570] space-y-2">
+            <div className="flex items-center gap-1.5 font-bold text-[#142C43]">
+              <HelpCircle className="w-4 h-4 text-[#28657A] shrink-0" aria-hidden="true" />
               <span>Need Assistance?</span>
             </div>
-            <p className="text-[11px] leading-relaxed text-slate-500">
+            <p className="text-[11px] leading-relaxed text-[#61717B]">
               For questions regarding this order, please quote reference{' '}
-              <strong className="font-mono text-slate-800">{order.id}</strong>.
+              <strong className="font-mono text-[#142C43]">{order.id}</strong>.
             </p>
           </div>
         </div>

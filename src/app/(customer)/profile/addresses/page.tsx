@@ -61,10 +61,10 @@ export default function AddressesPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="space-y-1">
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-bold text-[#142C43] tracking-tight">
             Saved Addresses
           </h1>
-          <p className="text-xs sm:text-sm text-slate-600">
+          <p className="text-xs sm:text-sm text-[#526570]">
             Manage your delivery locations and default delivery destination for orders.
           </p>
         </div>
@@ -90,13 +90,13 @@ export default function AddressesPage() {
         {/* Right Column (8 cols): Address Cards List */}
         <main className="lg:col-span-8 space-y-4">
           {addresses.length === 0 ? (
-            <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center space-y-3">
-              <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
+            <div className="bg-white rounded-sm border border-[#DDDCD3] p-8 text-center space-y-3">
+              <div className="w-12 h-12 rounded-full bg-[#F0EEE7] text-slate-400 flex items-center justify-center mx-auto">
                 <MapPin className="w-6 h-6" />
               </div>
               <div className="space-y-1">
-                <h2 className="text-sm font-bold text-slate-900">No Saved Addresses</h2>
-                <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                <h2 className="text-sm font-bold text-[#142C43]">No Saved Addresses</h2>
+                <p className="text-xs text-[#61717B] max-w-sm mx-auto">
                   You have not added any delivery addresses yet. Add an address to speed up your order checkout.
                 </p>
               </div>

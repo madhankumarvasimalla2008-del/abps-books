@@ -11,17 +11,17 @@ export interface ProductNotFoundProps {
 
 export const ProductNotFound: React.FC<ProductNotFoundProps> = ({ productId }) => {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 p-8 sm:p-14 text-center max-w-xl mx-auto my-8 shadow-2xs space-y-5">
-      <div className="w-16 h-16 bg-slate-100 text-slate-500 rounded-2xl flex items-center justify-center mx-auto">
+    <div className="bg-white rounded-sm border border-[#DDDCD3] p-8 sm:p-14 text-center max-w-xl mx-auto my-8  space-y-5">
+      <div className="w-16 h-16 bg-[#F0EEE7] text-[#61717B] rounded-sm flex items-center justify-center mx-auto">
         <BookX className="w-8 h-8 text-slate-400" />
       </div>
 
       <div className="space-y-1.5">
-        <h1 className="text-xl sm:text-2xl font-bold text-slate-900">
+        <h1 className="text-xl sm:text-2xl font-bold text-[#142C43]">
           Book Not Found
         </h1>
-        <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
-          The requested book {productId ? <span className="font-mono font-semibold text-slate-700">(&quot;{productId}&quot;)</span> : ''} could not be found in the current educational catalog. It may have been relocated or is currently inactive.
+        <p className="text-xs sm:text-sm text-[#61717B] max-w-md mx-auto">
+          The requested book {productId ? <span className="font-mono font-semibold text-[#526570]">(&quot;{productId}&quot;)</span> : ''} could not be found in the current educational catalog. It may have been relocated or is currently inactive.
         </p>
       </div>
 

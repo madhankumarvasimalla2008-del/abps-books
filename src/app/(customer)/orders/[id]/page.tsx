@@ -63,7 +63,7 @@ export default function CustomerOrderDetailPage({
   // Fallback for SSR or during initial load before hydration
   const activeOrder = order;
 
-  if (!activeOrder) {
+  if (!activeOrder || !isInitialized) {
     return (
       <div className="space-y-6 max-w-5xl mx-auto pb-8">
         <Breadcrumbs
@@ -72,7 +72,7 @@ export default function CustomerOrderDetailPage({
             { label: 'Loading Order...' },
           ]}
         />
-        <div className="p-12 text-center text-xs text-slate-500 bg-white rounded-2xl border border-slate-200/90 shadow-2xs">
+        <div className="p-12 text-center text-xs text-[#61717B] bg-white rounded-sm border border-[#DDDCD3] ">
           Loading Order Details...
         </div>
       </div>
@@ -94,19 +94,19 @@ export default function CustomerOrderDetailPage({
       </div>
 
       {/* Top Header Card */}
-      <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white p-5 sm:p-6 rounded-sm border border-[#DDDCD3]  flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="text-xs font-bold text-[#023859] uppercase tracking-wider bg-[#EBF7FA] px-2 py-0.5 rounded-full">
+            <span className="text-xs font-bold text-[#28657A] uppercase tracking-wider bg-[#EDF2F1] px-2 py-0.5 rounded-full">
               Order Details
             </span>
-            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 font-mono tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-bold text-[#142C43] font-mono tracking-tight">
               {activeOrder.orderNumber || activeOrder.id}
             </h1>
             <OrderStatusBadge status={activeOrder.status} type="order" />
             <OrderStatusBadge status={activeOrder.paymentStatus} type="payment" />
           </div>
-          <p className="text-xs text-slate-500 flex items-center gap-2 flex-wrap">
+          <p className="text-xs text-[#61717B] flex items-center gap-2 flex-wrap">
             <span className="flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5 text-slate-400" /> Placed on {activeOrder.createdAt}
             </span>
@@ -117,7 +117,7 @@ export default function CustomerOrderDetailPage({
             {poRef && (
               <>
                 <span>•</span>
-                <span className="font-mono text-slate-600">
+                <span className="font-mono text-[#526570]">
                   PO: {poRef}
                 </span>
               </>
@@ -143,7 +143,7 @@ export default function CustomerOrderDetailPage({
             className={buttonVariants({
               variant: 'primary',
               size: 'sm',
-              className: 'text-xs font-semibold shadow-2xs inline-flex items-center gap-1.5',
+              className: 'text-xs font-semibold  inline-flex items-center gap-1.5',
             })}
           >
             <Truck className="w-3.5 h-3.5" />
@@ -154,8 +154,8 @@ export default function CustomerOrderDetailPage({
 
       {/* Reorder Feedback Notification */}
       {reorderFeedback && (
-        <div className="p-3 bg-[#EBF7FA] text-[#023859] border border-[#D4EBF0] rounded-2xl text-xs flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 shrink-0 text-[#54ACBF]" />
+        <div className="p-3 bg-[#EDF2F1] text-[#28657A] border border-[#DDDCD3] rounded-sm text-xs flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 shrink-0 text-[#4C8794]" />
           <span>{reorderFeedback} Redirecting to your cart...</span>
         </div>
       )}
@@ -183,13 +183,13 @@ export default function CustomerOrderDetailPage({
           />
 
           {/* Help Note */}
-          <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200/80 text-[11px] text-slate-500 space-y-1">
-            <span className="font-bold text-slate-700 block flex items-center gap-1.5">
+          <div className="p-4 bg-[#FAF8F3] rounded-sm border border-[#DDDCD3] text-[11px] text-[#61717B] space-y-1">
+            <span className="font-bold text-[#526570] block flex items-center gap-1.5">
               <HelpCircle className="w-3.5 h-3.5 text-slate-400" /> Need Help With This Order?
             </span>
             <p className="leading-relaxed">
               For inquiries regarding this order, please contact your school textbook coordinator quoting order reference{' '}
-              <strong className="font-mono text-slate-700">{activeOrder.orderNumber || activeOrder.id}</strong>.
+              <strong className="font-mono text-[#526570]">{activeOrder.orderNumber || activeOrder.id}</strong>.
             </p>
           </div>
         </div>

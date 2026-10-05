@@ -12,15 +12,15 @@ export interface OrderItemsProps {
 
 export const OrderItems: React.FC<OrderItemsProps> = ({ items, showLinks = true }) => {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden">
-      <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between">
+    <div className="bg-white rounded-sm border border-[#DDDCD3]  overflow-hidden">
+      <div className="p-4 sm:p-5 border-b border-[#DDDCD3]/60 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Package className="w-4 h-4 text-[#023859]" aria-hidden="true" />
-          <h2 className="font-bold text-sm sm:text-base text-slate-900">
+          <Package className="w-4 h-4 text-[#28657A]" aria-hidden="true" />
+          <h2 className="font-bold text-sm sm:text-base text-[#142C43]">
             Ordered Items ({items.length} {items.length === 1 ? 'Title' : 'Titles'})
           </h2>
         </div>
-        <span className="text-xs text-slate-500 font-medium">
+        <span className="text-xs text-[#61717B] font-medium">
           {items.reduce((sum, item) => sum + item.quantity, 0)} Total Copies
         </span>
       </div>
@@ -28,7 +28,7 @@ export const OrderItems: React.FC<OrderItemsProps> = ({ items, showLinks = true 
       {/* Desktop Table View */}
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-left text-xs">
-          <thead className="bg-slate-50/80 text-slate-500 font-semibold border-b border-slate-100">
+          <thead className="bg-[#FAF8F3]/80 text-[#61717B] font-semibold border-b border-[#DDDCD3]/60">
             <tr>
               <th className="py-3 px-4">Book Details</th>
               <th className="py-3 px-3">Grade</th>
@@ -40,22 +40,22 @@ export const OrderItems: React.FC<OrderItemsProps> = ({ items, showLinks = true 
           </thead>
           <tbody className="divide-y divide-slate-100">
             {items.map((item, idx) => (
-              <tr key={item.id || idx} className="hover:bg-slate-50/50 transition-colors">
+              <tr key={item.id || idx} className="hover:bg-[#FAF8F3]/50 transition-colors">
                 <td className="py-3.5 px-4">
                   <div className="flex items-start gap-3">
-                    <div className="w-9 h-11 bg-[#EBF7FA] rounded-lg border border-[#D4EBF0] flex items-center justify-center shrink-0 text-[#023859]">
+                    <div className="w-9 h-11 bg-[#EDF2F1] rounded-sm border border-[#DDDCD3] flex items-center justify-center shrink-0 text-[#28657A]">
                       <BookOpen className="w-4 h-4" />
                     </div>
                     <div className="min-w-0">
                       {showLinks && item.productId ? (
                         <Link
                           href={`/books/${item.productId}`}
-                          className="font-bold text-slate-900 hover:text-[#023859] transition-colors line-clamp-1 block"
+                          className="font-bold text-[#142C43] hover:text-[#28657A] transition-colors line-clamp-1 block"
                         >
                           {item.productTitle || item.title}
                         </Link>
                       ) : (
-                        <span className="font-bold text-slate-900 line-clamp-1 block">
+                        <span className="font-bold text-[#142C43] line-clamp-1 block">
                           {item.productTitle || item.title}
                         </span>
                       )}
@@ -72,25 +72,25 @@ export const OrderItems: React.FC<OrderItemsProps> = ({ items, showLinks = true 
                   </div>
                 </td>
                 <td className="py-3.5 px-3">
-                  <span className="inline-block bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[11px] font-medium whitespace-nowrap">
+                  <span className="inline-block bg-[#F0EEE7] text-[#526570] px-2 py-0.5 rounded text-[11px] font-medium whitespace-nowrap">
                     {item.grade}
                   </span>
                 </td>
                 <td className="py-3.5 px-3">
-                  <div className="text-slate-600">
+                  <div className="text-[#526570]">
                     <p className="font-medium">{item.subject}</p>
                     <p className="text-[11px] text-slate-400 truncate max-w-[140px]">
                       {item.publisher}
                     </p>
                   </div>
                 </td>
-                <td className="py-3.5 px-3 text-right text-slate-700 font-medium">
+                <td className="py-3.5 px-3 text-right text-[#526570] font-medium">
                   ₹{item.unitPrice}
                 </td>
-                <td className="py-3.5 px-3 text-right font-bold text-slate-900">
+                <td className="py-3.5 px-3 text-right font-bold text-[#142C43]">
                   {item.quantity} {item.quantity === 1 ? 'copy' : 'copies'}
                 </td>
-                <td className="py-3.5 px-4 text-right font-bold text-slate-900">
+                <td className="py-3.5 px-4 text-right font-bold text-[#142C43]">
                   ₹{(item.totalPrice || item.unitPrice * item.quantity).toLocaleString('en-IN')}
                 </td>
               </tr>
@@ -104,19 +104,19 @@ export const OrderItems: React.FC<OrderItemsProps> = ({ items, showLinks = true 
         {items.map((item, idx) => (
           <div key={item.id || idx} className="p-4 space-y-2.5">
             <div className="flex items-start gap-3">
-              <div className="w-10 h-12 bg-[#EBF7FA] rounded-lg border border-[#D4EBF0] flex items-center justify-center shrink-0 text-[#023859]">
+              <div className="w-10 h-12 bg-[#EDF2F1] rounded-sm border border-[#DDDCD3] flex items-center justify-center shrink-0 text-[#28657A]">
                 <BookOpen className="w-5 h-5" />
               </div>
               <div className="flex-1 min-w-0">
                 {showLinks && item.productId ? (
                   <Link
                     href={`/books/${item.productId}`}
-                    className="font-bold text-slate-900 hover:text-[#023859] text-xs line-clamp-2 block"
+                    className="font-bold text-[#142C43] hover:text-[#28657A] text-xs line-clamp-2 block"
                   >
                     {item.productTitle || item.title}
                   </Link>
                 ) : (
-                  <span className="font-bold text-slate-900 text-xs line-clamp-2 block">
+                  <span className="font-bold text-[#142C43] text-xs line-clamp-2 block">
                     {item.productTitle || item.title}
                   </span>
                 )}
@@ -128,13 +128,13 @@ export const OrderItems: React.FC<OrderItemsProps> = ({ items, showLinks = true 
               </div>
             </div>
 
-            <div className="flex items-center justify-between text-xs pt-1 border-t border-slate-50 bg-slate-50/50 p-2 rounded-lg">
-              <div className="text-slate-600">
+            <div className="flex items-center justify-between text-xs pt-1 border-t border-slate-50 bg-[#FAF8F3]/50 p-2 rounded-sm">
+              <div className="text-[#526570]">
                 <span className="text-[11px]">
                   {item.quantity} × ₹{item.unitPrice}
                 </span>
               </div>
-              <div className="font-bold text-slate-900">
+              <div className="font-bold text-[#142C43]">
                 ₹{(item.totalPrice || item.unitPrice * item.quantity).toLocaleString('en-IN')}
               </div>
             </div>

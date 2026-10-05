@@ -44,7 +44,7 @@ export const AccountNavigation: React.FC = () => {
   return (
     <nav
       aria-label="Account Subnavigation"
-      className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-2 flex flex-row lg:flex-col gap-1 overflow-x-auto"
+      className="bg-white rounded-sm border border-[#DDDCD3]  p-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-1"
     >
       {navItems.map((item) => {
         const Icon = item.icon;
@@ -56,16 +56,16 @@ export const AccountNavigation: React.FC = () => {
           <Link
             key={item.href}
             href={item.href}
-            className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#023859] ${
+            className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-sm min-h-[44px] text-xs font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#28657A] ${
               isActive
-                ? 'bg-[#EBF7FA] text-[#023859] font-bold shadow-2xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                ? 'bg-[#EDF2F1] text-[#28657A] font-bold border-l-2 border-[#28657A] '
+                : 'text-[#526570] hover:text-[#142C43] hover:bg-[#FAF8F3]'
             }`}
             aria-current={isActive ? 'page' : undefined}
           >
             <Icon
               className={`w-4 h-4 shrink-0 ${
-                isActive ? 'text-[#023859]' : 'text-[#537D99]'
+                isActive ? 'text-[#28657A]' : 'text-[#61717B]'
               }`}
               aria-hidden="true"
             />

@@ -23,36 +23,36 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
   return (
     <div className="flex flex-col items-center w-full">
       {/* Visual Book Showcase Container */}
-      <div className="w-full bg-gradient-to-b from-[#FAFDFE] to-[#F0F9FB] rounded-2xl border border-[#D4EBF0] p-8 sm:p-12 flex items-center justify-center relative overflow-hidden min-h-[380px] sm:min-h-[440px] shadow-xs">
+      <div className="store-product-gallery relative">
         {/* Subtle bookstore paper grid pattern */}
         <div
-          className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#011C40_1px,transparent_1px)] [background-size:16px_16px]"
+          className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#142C43_1px,transparent_1px)] [background-size:16px_16px]"
           aria-hidden="true"
         />
 
         {/* Physical 3D Book Cover Component */}
-        <div className="relative transform hover:scale-105 transition-transform duration-300">
+        <div className="relative">
           <BookCover product={product} size="xl" shadow={true} />
         </div>
       </div>
 
       {/* Auxiliary actions: Share button & Verification note */}
       <div className="mt-4 flex items-center justify-between w-full px-1 text-xs">
-        <div className="flex items-center gap-1.5 text-[#26658C]">
-          <Sparkles className="w-3.5 h-3.5 text-[#54ACBF]" />
-          <span className="font-medium">Prescribed School Edition</span>
+        <div className="flex items-center gap-1.5 text-[#526570]">
+          <Sparkles className="w-3.5 h-3.5 text-[#4C8794]" />
+          <span className="font-medium">Book cover</span>
         </div>
 
         <button
           type="button"
           onClick={handleShare}
-          className="text-[#26658C] hover:text-[#023859] flex items-center gap-1.5 py-1.5 px-3 rounded-lg border border-[#D4EBF0] hover:border-[#54ACBF] hover:bg-[#F7FCFD] transition-colors focus:outline-none focus:ring-1 focus:ring-[#023859] cursor-pointer"
+          className="text-[#526570] hover:text-[#28657A] flex items-center gap-1.5 py-1.5 px-3 rounded-sm border border-[#DDDCD3] hover:border-[#4C8794] hover:bg-[#FAF8F3] transition-colors focus:outline-none focus:ring-1 focus:ring-[#28657A] cursor-pointer"
           aria-label="Copy shareable link to this book"
         >
           {copied ? (
             <>
-              <Check className="w-3.5 h-3.5 text-[#54ACBF]" />
-              <span className="text-[#023859] font-semibold">Link Copied!</span>
+              <Check className="w-3.5 h-3.5 text-[#4C8794]" />
+              <span className="text-[#28657A] font-semibold">Link Copied!</span>
             </>
           ) : (
             <>

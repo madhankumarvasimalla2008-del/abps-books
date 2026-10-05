@@ -38,7 +38,7 @@ export default function BranchDetailPage({ params }: { params: Promise<{ id: str
       />
 
       {/* Main Branch Banner */}
-      <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/80 shadow-xs space-y-6">
+      <div className="bg-white p-6 sm:p-8 rounded-sm border border-[#DDDCD3]  space-y-6">
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
           <div className="space-y-2">
             <div className="flex items-center gap-2 flex-wrap">
@@ -50,12 +50,12 @@ export default function BranchDetailPage({ params }: { params: Promise<{ id: str
               </Badge>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 leading-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#142C43] leading-tight">
               {branch.name}
             </h1>
 
-            <p className="text-xs sm:text-sm text-slate-600 flex items-center gap-1.5">
-              <MapPin className="w-4 h-4 text-[#023859] shrink-0" />
+            <p className="text-xs sm:text-sm text-[#526570] flex items-center gap-1.5">
+              <MapPin className="w-4 h-4 text-[#28657A] shrink-0" />
               <span>
                 {branch.address}, {branch.city}, {branch.state} - {branch.pincode}
               </span>
@@ -76,31 +76,31 @@ export default function BranchDetailPage({ params }: { params: Promise<{ id: str
         </div>
 
         {/* Location & Contact Information */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-slate-100 text-xs">
-          <div className="bg-slate-50 p-3.5 rounded-xl">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-[#DDDCD3]/60 text-xs">
+          <div className="bg-[#FAF8F3] p-3.5 rounded-sm">
             <span className="text-slate-400 block text-[11px]">City & State</span>
-            <span className="text-sm font-bold text-slate-900 truncate block mt-1">
+            <span className="text-sm font-bold text-[#142C43] truncate block mt-1">
               {branch.city}, {branch.state}
             </span>
           </div>
 
-          <div className="bg-slate-50 p-3.5 rounded-xl">
+          <div className="bg-[#FAF8F3] p-3.5 rounded-sm">
             <span className="text-slate-400 block text-[11px]">Postal PIN Code</span>
-            <span className="text-sm font-bold font-mono text-slate-900 truncate block mt-1">
+            <span className="text-sm font-bold font-mono text-[#142C43] truncate block mt-1">
               {branch.pincode}
             </span>
           </div>
 
-          <div className="bg-slate-50 p-3.5 rounded-xl">
+          <div className="bg-[#FAF8F3] p-3.5 rounded-sm">
             <span className="text-slate-400 block text-[11px]">Contact Phone</span>
-            <span className="text-xs font-semibold text-slate-900 truncate block mt-1">
+            <span className="text-xs font-semibold text-[#142C43] truncate block mt-1">
               {branch.phone}
             </span>
           </div>
 
-          <div className="bg-slate-50 p-3.5 rounded-xl">
+          <div className="bg-[#FAF8F3] p-3.5 rounded-sm">
             <span className="text-slate-400 block text-[11px]">Official Email</span>
-            <span className="text-xs font-semibold text-slate-900 truncate block mt-1">
+            <span className="text-xs font-semibold text-[#142C43] truncate block mt-1">
               {branch.email}
             </span>
           </div>
@@ -111,10 +111,10 @@ export default function BranchDetailPage({ params }: { params: Promise<{ id: str
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-bold text-slate-900">
+            <h2 className="text-lg font-bold text-[#142C43]">
               Prescribed Course Materials & Book Packs
             </h2>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-[#61717B]">
               Course titles available for textbook distribution to {branch.name}
             </p>
           </div>
@@ -141,19 +141,19 @@ export default function BranchDetailPage({ params }: { params: Promise<{ id: str
       {/* Recent Orders for this Branch */}
       {branchOrders.length > 0 && (
         <div className="space-y-4">
-          <h2 className="text-lg font-bold text-slate-900">
+          <h2 className="text-lg font-bold text-[#142C43]">
             Recent Orders for this Branch
           </h2>
-          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs divide-y divide-slate-100 overflow-hidden text-xs">
+          <div className="bg-white rounded-sm border border-[#DDDCD3]  divide-y divide-slate-100 overflow-hidden text-xs">
             {branchOrders.map((order) => (
               <div
                 key={order.id}
-                className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50/50"
+                className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-[#FAF8F3]/50"
               >
                 <div>
-                  <span className="font-mono font-bold text-slate-900">{order.orderNumber || order.id}</span>
+                  <span className="font-mono font-bold text-[#142C43]">{order.orderNumber || order.id}</span>
                   <span className="text-slate-400 ml-2">Placed: {order.createdAt}</span>
-                  <p className="text-slate-600 text-[11px] mt-0.5">
+                  <p className="text-[#526570] text-[11px] mt-0.5">
                     {order.items.length} titles • ₹{order.totalAmount.toLocaleString('en-IN')}
                   </p>
                 </div>

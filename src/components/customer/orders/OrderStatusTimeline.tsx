@@ -57,16 +57,16 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
         ];
 
   return (
-    <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-2xs space-y-4">
-      <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+    <div className="bg-white p-5 sm:p-6 rounded-sm border border-[#DDDCD3]  space-y-4">
+      <div className="flex items-center justify-between border-b border-[#DDDCD3]/60 pb-3">
         <div className="flex items-center gap-2">
-          <Truck className="w-4 h-4 text-[#023859]" />
-          <h2 className="text-sm sm:text-base font-bold text-slate-900">
+          <Truck className="w-4 h-4 text-[#28657A]" />
+          <h2 className="text-sm sm:text-base font-bold text-[#142C43]">
             Order Status Timeline
           </h2>
         </div>
         {order.trackingNumber && (
-          <span className="font-mono text-xs text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
+          <span className="font-mono text-xs text-[#526570] bg-[#F0EEE7] px-2 py-0.5 rounded">
             Tracking Ref: {order.trackingNumber}
           </span>
         )}
@@ -84,9 +84,9 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
               <div
                 className={`absolute -left-6 sm:-left-8 top-0.5 w-6 h-6 rounded-full flex items-center justify-center ring-4 ring-white ${
                   isDone
-                    ? 'bg-[#023859] text-white'
+                    ? 'bg-[#28657A] text-white'
                     : isCurrent
-                    ? 'bg-[#54ACBF] text-white ring-[#A7EBF2]/40 animate-pulse'
+                    ? 'bg-[#4C8794] text-white ring-[#A7EBF2]/40 animate-pulse'
                     : 'bg-slate-200 text-slate-400'
                 }`}
               >
@@ -102,7 +102,7 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
                 <div className="flex items-baseline justify-between gap-2 flex-wrap">
                   <span
                     className={`text-xs sm:text-sm font-bold ${
-                      isDone || isCurrent ? 'text-slate-900' : 'text-slate-400'
+                      isDone || isCurrent ? 'text-[#142C43]' : 'text-slate-400'
                     }`}
                   >
                     {step.label}
@@ -116,7 +116,7 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-slate-500 leading-relaxed">{step.description}</p>
+                <p className="text-xs text-[#61717B] leading-relaxed">{step.description}</p>
               </div>
             </div>
           );
@@ -124,7 +124,7 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
       </div>
 
       {showFullLink && (
-        <div className="pt-2 border-t border-slate-100">
+        <div className="pt-2 border-t border-[#DDDCD3]/60">
           <Link
             href={`/orders/${order.id}/track`}
             className={buttonVariants({

@@ -213,25 +213,25 @@ export const PaymentProcessingModal: React.FC<PaymentProcessingModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#011C40]/70 backdrop-blur-xs overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#142C43]/70 backdrop-blur-xs overflow-y-auto"
       role="dialog"
       aria-modal="true"
       aria-labelledby="payment-modal-title"
     >
-      <div className="bg-white rounded-3xl border border-[#D4EBF0] shadow-2xl max-w-xl w-full p-6 sm:p-7 space-y-6 my-8 animate-in fade-in zoom-in-95 duration-150">
+      <div className="bg-white rounded-3xl border border-[#DDDCD3] shadow-2xl max-w-xl w-full p-6 sm:p-7 space-y-6 my-8 animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="flex items-start justify-between border-b border-[#D4EBF0]/60 pb-4">
+        <div className="flex items-start justify-between border-b border-[#DDDCD3]/60 pb-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="text-[11px] font-bold text-[#023859] uppercase tracking-wider bg-[#EBF7FA] px-2.5 py-0.5 rounded-full border border-[#D4EBF0]">
+              <span className="text-[11px] font-bold text-[#28657A] uppercase tracking-wider bg-[#EDF2F1] px-2.5 py-0.5 rounded-full border border-[#DDDCD3]">
                 Payment Simulator
               </span>
-              <span className="text-[11px] font-semibold text-[#537D99] flex items-center gap-1 font-mono">
-                <Clock className="w-3 h-3 text-[#537D99]" />
+              <span className="text-[11px] font-semibold text-[#61717B] flex items-center gap-1 font-mono">
+                <Clock className="w-3 h-3 text-[#61717B]" />
                 {formatTimer(secondsRemaining)}
               </span>
             </div>
-            <h2 id="payment-modal-title" className="text-lg sm:text-xl font-bold text-[#011C40]">
+            <h2 id="payment-modal-title" className="text-lg sm:text-xl font-bold text-[#142C43]">
               {simulationState === 'success'
                 ? 'Payment Confirmed'
                 : simulationState === 'failed'
@@ -240,9 +240,9 @@ export const PaymentProcessingModal: React.FC<PaymentProcessingModalProps> = ({
                 ? 'Payment Cancelled'
                 : 'Awaiting Payment Approval'}
             </h2>
-            <p className="text-xs text-[#537D99] font-mono">
-              Order: <span className="font-bold text-[#011C40]">{order.orderNumber}</span> • Amount:{' '}
-              <span className="font-bold text-[#011C40] text-sm">
+            <p className="text-xs text-[#61717B] font-mono">
+              Order: <span className="font-bold text-[#142C43]">{order.orderNumber}</span> • Amount:{' '}
+              <span className="font-bold text-[#142C43] text-sm">
                 ₹{order.totalAmount.toLocaleString('en-IN')}
               </span>
             </p>
@@ -251,7 +251,7 @@ export const PaymentProcessingModal: React.FC<PaymentProcessingModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="text-[#537D99] hover:text-[#011C40] p-1.5 rounded-xl hover:bg-[#F7FCFD] transition-colors"
+            className="text-[#61717B] hover:text-[#142C43] p-1.5 rounded-sm hover:bg-[#FAF8F3] transition-colors"
             aria-label="Close modal"
           >
             ✕
@@ -259,8 +259,8 @@ export const PaymentProcessingModal: React.FC<PaymentProcessingModalProps> = ({
         </div>
 
         {/* Honest Architecture Disclaimer */}
-        <div className="p-3 bg-[#EBF7FA] rounded-2xl border border-[#D4EBF0] text-[11px] text-[#023859] flex items-start gap-2.5">
-          <Info className="w-4 h-4 text-[#023859] shrink-0 mt-0.5" />
+        <div className="p-3 bg-[#EDF2F1] rounded-sm border border-[#DDDCD3] text-[11px] text-[#28657A] flex items-start gap-2.5">
+          <Info className="w-4 h-4 text-[#28657A] shrink-0 mt-0.5" />
           <div className="space-y-0.5">
             <strong className="block font-semibold">Demo Simulation Mode:</strong>
             <span>
@@ -275,33 +275,33 @@ export const PaymentProcessingModal: React.FC<PaymentProcessingModalProps> = ({
         {simulationState === 'awaiting_user' && (
           <div className="space-y-4">
             {selectedRetryMethod === 'UPI' && (
-              <div className="p-4 bg-[#F7FCFD] rounded-2xl border border-[#D4EBF0] space-y-4">
+              <div className="p-4 bg-[#FAF8F3] rounded-sm border border-[#DDDCD3] space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-[#011C40] flex items-center gap-1.5">
-                    <Smartphone className="w-4 h-4 text-[#023859]" />
+                  <span className="text-xs font-bold text-[#142C43] flex items-center gap-1.5">
+                    <Smartphone className="w-4 h-4 text-[#28657A]" />
                     UPI Gateway Simulation
                   </span>
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-[#023859] bg-[#EBF7FA] px-2 py-0.5 rounded-md">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-[#28657A] bg-[#EDF2F1] px-2 py-0.5 rounded-md">
                     {selectedRetryUpiSubMethod.toUpperCase()}
                   </span>
                 </div>
 
                 {selectedRetryUpiSubMethod === 'qr' && (
-                  <div className="flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-[#D4EBF0] text-center space-y-3">
+                  <div className="flex flex-col items-center justify-center p-4 bg-white rounded-sm border border-[#DDDCD3] text-center space-y-3">
                     {/* Stylized QR placeholder SVG with real scan styling */}
-                    <div className="w-44 h-44 bg-[#011C40] p-3 rounded-2xl flex flex-col items-center justify-center text-white relative shadow-inner">
-                      <QrCode className="w-32 h-32 text-[#54ACBF]" />
+                    <div className="w-44 h-44 bg-[#142C43] p-3 rounded-sm flex flex-col items-center justify-center text-white relative shadow-inner">
+                      <QrCode className="w-32 h-32 text-[#4C8794]" />
                       <span className="text-[9px] font-mono tracking-widest text-[#A7EBF2]">
                         SCAN & PAY
                       </span>
                     </div>
 
                     <div className="space-y-1">
-                      <p className="text-xs font-bold text-[#011C40]">
+                      <p className="text-xs font-bold text-[#142C43]">
                         Scan with PhonePe, Google Pay, BHIM or any UPI App
                       </p>
-                      <p className="text-[11px] text-[#537D99] font-mono">
-                        VPA: <span className="font-semibold text-[#26658C]">abpsbooks.demo@icici</span>
+                      <p className="text-[11px] text-[#61717B] font-mono">
+                        VPA: <span className="font-semibold text-[#526570]">abpsbooks.demo@icici</span>
                       </p>
                     </div>
 
@@ -312,7 +312,7 @@ export const PaymentProcessingModal: React.FC<PaymentProcessingModalProps> = ({
                       onClick={() => handleCopyUPI(upiIntentUri)}
                       leftIcon={
                         copiedLink ? (
-                          <Check className="w-3.5 h-3.5 text-[#023859]" />
+                          <Check className="w-3.5 h-3.5 text-[#28657A]" />
                         ) : (
                           <Copy className="w-3.5 h-3.5" />
                         )
@@ -325,12 +325,12 @@ export const PaymentProcessingModal: React.FC<PaymentProcessingModalProps> = ({
                 )}
 
                 {selectedRetryUpiSubMethod === 'intent' && (
-                  <div className="p-4 bg-white rounded-xl border border-[#D4EBF0] space-y-3 text-center">
-                    <div className="w-12 h-12 bg-[#EBF7FA] text-[#023859] rounded-2xl flex items-center justify-center mx-auto">
+                  <div className="p-4 bg-white rounded-sm border border-[#DDDCD3] space-y-3 text-center">
+                    <div className="w-12 h-12 bg-[#EDF2F1] text-[#28657A] rounded-sm flex items-center justify-center mx-auto">
                       <Smartphone className="w-6 h-6" />
                     </div>
                     <div className="space-y-1">
-                      <h4 className="text-xs sm:text-sm font-bold text-[#011C40]">
+                      <h4 className="text-xs sm:text-sm font-bold text-[#142C43]">
                         Simulating UPI Intent Request for{' '}
                         {selectedRetryUpiApp === 'phonepe'
                           ? 'PhonePe'
@@ -340,7 +340,7 @@ export const PaymentProcessingModal: React.FC<PaymentProcessingModalProps> = ({
                           ? 'BHIM UPI'
                           : 'Paytm'}
                       </h4>
-                      <p className="text-[11px] text-[#537D99] leading-relaxed max-w-sm mx-auto">
+                      <p className="text-[11px] text-[#61717B] leading-relaxed max-w-sm mx-auto">
                         In production, the application triggers standard Android/iOS UPI deep link intent
                         to launch the customer&apos;s chosen UPI app.
                       </p>
@@ -349,18 +349,18 @@ export const PaymentProcessingModal: React.FC<PaymentProcessingModalProps> = ({
                 )}
 
                 {selectedRetryUpiSubMethod === 'collect' && (
-                  <div className="p-4 bg-white rounded-xl border border-[#D4EBF0] space-y-3 text-center">
-                    <div className="w-12 h-12 bg-[#EBF7FA] text-[#023859] rounded-2xl flex items-center justify-center mx-auto">
+                  <div className="p-4 bg-white rounded-sm border border-[#DDDCD3] space-y-3 text-center">
+                    <div className="w-12 h-12 bg-[#EDF2F1] text-[#28657A] rounded-sm flex items-center justify-center mx-auto">
                       <Smartphone className="w-6 h-6" />
                     </div>
                     <div className="space-y-1">
-                      <h4 className="text-xs sm:text-sm font-bold text-[#011C40]">
+                      <h4 className="text-xs sm:text-sm font-bold text-[#142C43]">
                         UPI Collect Request Dispatched
                       </h4>
-                      <p className="text-[11px] text-[#26658C] font-mono">
+                      <p className="text-[11px] text-[#526570] font-mono">
                         Target VPA: <strong>{upiId || 'purchaser@okhdfcbank'}</strong>
                       </p>
-                      <p className="text-[11px] text-[#537D99]">
+                      <p className="text-[11px] text-[#61717B]">
                         Simulating push notification collect request to customer app.
                       </p>
                     </div>
@@ -370,15 +370,15 @@ export const PaymentProcessingModal: React.FC<PaymentProcessingModalProps> = ({
             )}
 
             {selectedRetryMethod === 'Card' && (
-              <div className="p-4 bg-[#F7FCFD] rounded-2xl border border-[#D4EBF0] space-y-3 text-center">
-                <div className="w-12 h-12 bg-[#EBF7FA] text-[#023859] rounded-2xl flex items-center justify-center mx-auto">
+              <div className="p-4 bg-[#FAF8F3] rounded-sm border border-[#DDDCD3] space-y-3 text-center">
+                <div className="w-12 h-12 bg-[#EDF2F1] text-[#28657A] rounded-sm flex items-center justify-center mx-auto">
                   <CreditCard className="w-6 h-6" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-xs sm:text-sm font-bold text-[#011C40]">
+                  <h4 className="text-xs sm:text-sm font-bold text-[#142C43]">
                     3D Secure OTP Verification Simulator
                   </h4>
-                  <p className="text-[11px] text-[#537D99] max-w-sm mx-auto">
+                  <p className="text-[11px] text-[#61717B] max-w-sm mx-auto">
                     Simulating issuing bank ACS page redirect. Secure token generated.
                   </p>
                 </div>
@@ -386,15 +386,15 @@ export const PaymentProcessingModal: React.FC<PaymentProcessingModalProps> = ({
             )}
 
             {selectedRetryMethod === 'Net Banking' && (
-              <div className="p-4 bg-[#F7FCFD] rounded-2xl border border-[#D4EBF0] space-y-3 text-center">
-                <div className="w-12 h-12 bg-[#EBF7FA] text-[#023859] rounded-2xl flex items-center justify-center mx-auto">
+              <div className="p-4 bg-[#FAF8F3] rounded-sm border border-[#DDDCD3] space-y-3 text-center">
+                <div className="w-12 h-12 bg-[#EDF2F1] text-[#28657A] rounded-sm flex items-center justify-center mx-auto">
                   <Building2 className="w-6 h-6" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-xs sm:text-sm font-bold text-[#011C40]">
+                  <h4 className="text-xs sm:text-sm font-bold text-[#142C43]">
                     Net Banking Gateway Simulator
                   </h4>
-                  <p className="text-[11px] text-[#537D99] max-w-sm mx-auto">
+                  <p className="text-[11px] text-[#61717B] max-w-sm mx-auto">
                     Simulating corporate / institutional NetBanking authorization gateway.
                   </p>
                 </div>
@@ -402,15 +402,15 @@ export const PaymentProcessingModal: React.FC<PaymentProcessingModalProps> = ({
             )}
 
             {selectedRetryMethod === 'Wallet' && (
-              <div className="p-4 bg-[#F7FCFD] rounded-2xl border border-[#D4EBF0] space-y-3 text-center">
-                <div className="w-12 h-12 bg-[#EBF7FA] text-[#023859] rounded-2xl flex items-center justify-center mx-auto">
+              <div className="p-4 bg-[#FAF8F3] rounded-sm border border-[#DDDCD3] space-y-3 text-center">
+                <div className="w-12 h-12 bg-[#EDF2F1] text-[#28657A] rounded-sm flex items-center justify-center mx-auto">
                   <Wallet className="w-6 h-6" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-xs sm:text-sm font-bold text-[#011C40]">
+                  <h4 className="text-xs sm:text-sm font-bold text-[#142C43]">
                     Digital Wallet Simulator
                   </h4>
-                  <p className="text-[11px] text-[#537D99] max-w-sm mx-auto">
+                  <p className="text-[11px] text-[#61717B] max-w-sm mx-auto">
                     Simulating wallet balance check &amp; debit authorization.
                   </p>
                 </div>
@@ -420,26 +420,26 @@ export const PaymentProcessingModal: React.FC<PaymentProcessingModalProps> = ({
         )}
 
         {simulationState === 'verifying' && (
-          <div className="p-8 text-center space-y-3 bg-[#F7FCFD] rounded-2xl border border-[#D4EBF0]">
-            <RefreshCw className="w-8 h-8 text-[#023859] animate-spin mx-auto" />
-            <h4 className="text-sm font-bold text-[#011C40]">
+          <div className="p-8 text-center space-y-3 bg-[#FAF8F3] rounded-sm border border-[#DDDCD3]">
+            <RefreshCw className="w-8 h-8 text-[#28657A] animate-spin mx-auto" />
+            <h4 className="text-sm font-bold text-[#142C43]">
               Verifying Payment with Simulated Bank...
             </h4>
-            <p className="text-xs text-[#537D99]">
+            <p className="text-xs text-[#61717B]">
               Validating transaction signature and ledger integrity.
             </p>
           </div>
         )}
 
         {simulationState === 'success' && (
-          <div className="p-6 bg-[#EBF7FA] rounded-2xl border border-[#D4EBF0] text-center space-y-3">
-            <div className="w-12 h-12 bg-[#D4EBF0] text-[#023859] rounded-2xl flex items-center justify-center mx-auto">
+          <div className="p-6 bg-[#EDF2F1] rounded-sm border border-[#DDDCD3] text-center space-y-3">
+            <div className="w-12 h-12 bg-[#DDDCD3] text-[#28657A] rounded-sm flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-7 h-7" />
             </div>
-            <h4 className="text-sm font-bold text-[#011C40]">
+            <h4 className="text-sm font-bold text-[#142C43]">
               Payment Confirmed &amp; Verified!
             </h4>
-            <p className="text-xs text-[#26658C]">
+            <p className="text-xs text-[#526570]">
               Order status updated to <strong className="font-semibold">Confirmed (Paid)</strong>.
               Redirecting to order confirmation...
             </p>
@@ -447,7 +447,7 @@ export const PaymentProcessingModal: React.FC<PaymentProcessingModalProps> = ({
         )}
 
         {(simulationState === 'failed' || simulationState === 'cancelled') && (
-          <div className="p-6 bg-red-50 rounded-2xl border border-red-200 space-y-4">
+          <div className="p-6 bg-red-50 rounded-sm border border-red-200 space-y-4">
             <div className="flex items-start gap-3">
               <XCircle className="w-6 h-6 text-red-600 shrink-0 mt-0.5" />
               <div className="space-y-1 flex-1">
@@ -457,9 +457,9 @@ export const PaymentProcessingModal: React.FC<PaymentProcessingModalProps> = ({
                     : 'Payment Authorization Failed'}
                 </h4>
                 <p className="text-xs text-red-700">{errorMessage}</p>
-                <p className="text-[11px] text-slate-600 pt-1">
+                <p className="text-[11px] text-[#526570] pt-1">
                   <strong>Zero duplicate orders:</strong> Order{' '}
-                  <span className="font-mono font-bold text-slate-800">{order.orderNumber}</span>{' '}
+                  <span className="font-mono font-bold text-[#142C43]">{order.orderNumber}</span>{' '}
                   remains safely in <span className="font-semibold">Pending</span> status. You can
                   retry payment below.
                 </p>
@@ -468,7 +468,7 @@ export const PaymentProcessingModal: React.FC<PaymentProcessingModalProps> = ({
 
             {/* Change Payment Method on Retry */}
             <div className="pt-2 border-t border-red-200/80 space-y-2">
-              <span className="text-[11px] font-bold text-slate-700 block">
+              <span className="text-[11px] font-bold text-[#526570] block">
                 Retry with Payment Method:
               </span>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
@@ -477,10 +477,10 @@ export const PaymentProcessingModal: React.FC<PaymentProcessingModalProps> = ({
                     key={m}
                     type="button"
                     onClick={() => setSelectedRetryMethod(m)}
-                    className={`p-2 rounded-xl border text-center font-semibold transition-all ${
+                    className={`p-2 rounded-sm border text-center font-semibold transition-all ${
                       selectedRetryMethod === m
-                        ? 'bg-[#023859] text-white border-[#023859]'
-                        : 'bg-white text-[#26658C] border-[#D4EBF0] hover:bg-[#F7FCFD]'
+                        ? 'bg-[#28657A] text-white border-[#28657A]'
+                        : 'bg-white text-[#526570] border-[#DDDCD3] hover:bg-[#FAF8F3]'
                     }`}
                   >
                     {m}
@@ -515,12 +515,12 @@ export const PaymentProcessingModal: React.FC<PaymentProcessingModalProps> = ({
 
         {/* Interactive Simulation Controls */}
         {simulationState === 'awaiting_user' && (
-          <div className="pt-2 border-t border-[#D4EBF0]/60 space-y-3">
+          <div className="pt-2 border-t border-[#DDDCD3]/60 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-[#011C40]">
+              <span className="text-xs font-bold text-[#142C43]">
                 Simulate Gateway Outcome:
               </span>
-              <span className="text-[11px] text-[#537D99]">Click to trigger scenario</span>
+              <span className="text-[11px] text-[#61717B]">Click to trigger scenario</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
@@ -530,7 +530,7 @@ export const PaymentProcessingModal: React.FC<PaymentProcessingModalProps> = ({
                 size="sm"
                 onClick={handleSimulateSuccess}
                 leftIcon={<CheckCircle2 className="w-4 h-4" />}
-                className="text-xs font-bold bg-[#023859] hover:bg-[#011C40] text-white border-none shadow-xs"
+                className="text-xs font-bold bg-[#28657A] hover:bg-[#142C43] text-white border-none "
               >
                 Simulate Success
               </Button>
@@ -556,7 +556,7 @@ export const PaymentProcessingModal: React.FC<PaymentProcessingModalProps> = ({
                 size="sm"
                 onClick={handleSimulateCancel}
                 leftIcon={<AlertTriangle className="w-4 h-4 text-amber-600" />}
-                className="text-xs font-bold text-[#26658C]"
+                className="text-xs font-bold text-[#526570]"
               >
                 Simulate Cancel
               </Button>

@@ -16,13 +16,13 @@ export const OrderEmptyState: React.FC<OrderEmptyStateProps> = ({
 }) => {
   if (isFiltered) {
     return (
-      <div className="bg-white rounded-2xl border border-slate-200/90 p-8 sm:p-12 text-center space-y-4 max-w-lg mx-auto shadow-2xs">
-        <div className="w-14 h-14 bg-slate-100 text-slate-500 rounded-2xl flex items-center justify-center mx-auto">
+      <div className="bg-white rounded-sm border border-[#DDDCD3] p-8 sm:p-12 text-center space-y-4 max-w-lg mx-auto ">
+        <div className="w-14 h-14 bg-[#F0EEE7] text-[#61717B] rounded-sm flex items-center justify-center mx-auto">
           <PackageOpen className="w-7 h-7" />
         </div>
         <div className="space-y-1.5">
-          <h3 className="text-base font-bold text-slate-900">No Matching Orders Found</h3>
-          <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto">
+          <h3 className="text-base font-bold text-[#142C43]">No Matching Orders Found</h3>
+          <p className="text-xs sm:text-sm text-[#61717B] max-w-sm mx-auto">
             No orders match your current search query or status filter.
           </p>
         </div>
@@ -43,13 +43,13 @@ export const OrderEmptyState: React.FC<OrderEmptyStateProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 p-8 sm:p-12 text-center space-y-4 max-w-lg mx-auto shadow-2xs">
-      <div className="w-16 h-16 bg-[#EBF7FA] text-[#023859] rounded-2xl flex items-center justify-center mx-auto">
+    <div className="bg-white rounded-sm border border-[#DDDCD3] p-8 sm:p-12 text-center space-y-4 max-w-lg mx-auto ">
+      <div className="w-16 h-16 bg-[#EDF2F1] text-[#28657A] rounded-sm flex items-center justify-center mx-auto">
         <ShoppingBag className="w-8 h-8" />
       </div>
       <div className="space-y-1.5">
-        <h3 className="text-lg font-bold text-slate-900">No Orders Placed Yet</h3>
-        <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto">
+        <h3 className="text-lg font-bold text-[#142C43]">No Orders Placed Yet</h3>
+        <p className="text-xs sm:text-sm text-[#61717B] max-w-sm mx-auto">
           You haven&apos;t placed any orders yet. Explore the curriculum catalog to begin.
         </p>
       </div>

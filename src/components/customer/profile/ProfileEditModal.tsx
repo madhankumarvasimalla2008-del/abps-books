@@ -100,22 +100,22 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
     >
       <div
         ref={modalRef}
-        className="bg-white w-full max-w-md rounded-2xl shadow-xl border border-slate-200 overflow-hidden animate-in zoom-in-95 duration-150"
+        className="bg-white w-full max-w-md rounded-sm shadow-xl border border-[#DDDCD3] overflow-hidden animate-in zoom-in-95 duration-150"
       >
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+        <div className="px-6 py-4 border-b border-[#DDDCD3]/60 flex items-center justify-between bg-[#FAF8F3]/50">
           <div>
-            <h2 id="edit-profile-title" className="text-base font-bold text-slate-900">
+            <h2 id="edit-profile-title" className="text-base font-bold text-[#142C43]">
               Edit Personal Information
             </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-[#61717B] mt-0.5">
               Update your contact details for order notifications.
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#023859]"
+            className="p-1.5 text-slate-400 hover:text-[#526570] rounded-sm hover:bg-[#F0EEE7] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#28657A]"
             aria-label="Close dialog"
           >
             <X className="w-5 h-5" />
@@ -126,17 +126,17 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {isSaved && (
             <div
-              className="p-3 bg-[#EBF7FA] border border-[#D4EBF0] text-[#023859] text-xs rounded-xl flex items-center gap-2"
+              className="p-3 bg-[#EDF2F1] border border-[#DDDCD3] text-[#28657A] text-xs rounded-sm flex items-center gap-2"
               role="status"
             >
-              <CheckCircle2 className="w-4 h-4 text-[#54ACBF] shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-[#4C8794] shrink-0" />
               <span>Profile information updated successfully.</span>
             </div>
           )}
 
           {/* Full Name */}
           <div className="space-y-1.5">
-            <label htmlFor="profile-name" className="block text-xs font-bold text-slate-700">
+            <label htmlFor="profile-name" className="block text-xs font-bold text-[#526570]">
               Full Name <span className="text-red-500">*</span>
             </label>
             <div className="relative">
@@ -146,10 +146,10 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className={`w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
+                className={`w-full pl-9 pr-3 py-2 text-xs bg-[#FAF8F3] border rounded-sm focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
                   errors.name
                     ? 'border-red-300 focus:ring-red-500'
-                    : 'border-slate-300 focus:ring-[#023859] focus:border-transparent'
+                    : 'border-slate-300 focus:ring-[#28657A] focus:border-transparent'
                 }`}
                 placeholder="e.g. Priya Desai"
                 aria-invalid={errors.name ? 'true' : 'false'}
@@ -168,7 +168,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
 
           {/* Email Address */}
           <div className="space-y-1.5">
-            <label htmlFor="profile-email" className="block text-xs font-bold text-slate-700">
+            <label htmlFor="profile-email" className="block text-xs font-bold text-[#526570]">
               Email Address <span className="text-red-500">*</span>
             </label>
             <div className="relative">
@@ -177,10 +177,10 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className={`w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
+                className={`w-full pl-9 pr-3 py-2 text-xs bg-[#FAF8F3] border rounded-sm focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
                   errors.email
                     ? 'border-red-300 focus:ring-red-500'
-                    : 'border-slate-300 focus:ring-[#023859] focus:border-transparent'
+                    : 'border-slate-300 focus:ring-[#28657A] focus:border-transparent'
                 }`}
                 placeholder="e.g. priya.desai@abps.edu"
                 aria-invalid={errors.email ? 'true' : 'false'}
@@ -199,7 +199,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
 
           {/* Mobile Number */}
           <div className="space-y-1.5">
-            <label htmlFor="profile-phone" className="block text-xs font-bold text-slate-700">
+            <label htmlFor="profile-phone" className="block text-xs font-bold text-[#526570]">
               Mobile Number (10 Digits) <span className="text-red-500">*</span>
             </label>
             <div className="relative">
@@ -209,10 +209,10 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 maxLength={10}
-                className={`w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
+                className={`w-full pl-9 pr-3 py-2 text-xs bg-[#FAF8F3] border rounded-sm focus:outline-none focus:ring-2 focus:bg-white transition-colors ${
                   errors.phone
                     ? 'border-red-300 focus:ring-red-500'
-                    : 'border-slate-300 focus:ring-[#023859] focus:border-transparent'
+                    : 'border-slate-300 focus:ring-[#28657A] focus:border-transparent'
                 }`}
                 placeholder="e.g. 9876543210"
                 aria-invalid={errors.phone ? 'true' : 'false'}
@@ -230,7 +230,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
           </div>
 
           {/* Modal Footer */}
-          <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-2.5">
+          <div className="pt-4 border-t border-[#DDDCD3]/60 flex items-center justify-end gap-2.5">
             <Button
               type="button"
               variant="outline"

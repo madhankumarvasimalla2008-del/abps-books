@@ -48,38 +48,38 @@ export default function BranchesDirectoryPage() {
       <Breadcrumbs items={[{ label: 'ABPS Branch Network' }]} />
 
       {/* Header */}
-      <div className="bg-white p-6 sm:p-8 rounded-2xl border border-[#D4EBF0] shadow-2xs">
+      <div className="bg-white p-6 sm:p-8 rounded-sm border border-[#DDDCD3] ">
         <div className="max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EBF7FA] text-[#023859] text-xs font-semibold mb-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EDF2F1] text-[#28657A] text-xs font-semibold mb-2">
             <Building2 className="w-3.5 h-3.5" />
             <span>Institutional Distribution Network</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-[#011C40]">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#142C43]">
             Aditya Birla Public School Branches
           </h1>
-          <p className="text-xs sm:text-sm text-[#26658C] mt-1">
+          <p className="text-xs sm:text-sm text-[#526570] mt-1">
             Centralized book sales and distribution network serving ABPS campuses across India.
           </p>
         </div>
       </div>
 
       {/* Search and Filters */}
-      <div className="bg-white p-4 rounded-2xl border border-[#D4EBF0] shadow-2xs flex flex-col sm:flex-row gap-3">
+      <div className="bg-white p-4 rounded-sm border border-[#DDDCD3]  flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
           <input
             type="text"
             placeholder="Search by branch name, city, state, or PIN code..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 border border-[#D4EBF0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#023859] text-[#011C40] placeholder:text-[#537D99]"
+            className="w-full pl-9 pr-4 py-2 text-xs bg-[#FAF8F3] border border-[#DDDCD3] rounded-sm focus:outline-none focus:ring-2 focus:ring-[#28657A] text-[#142C43] placeholder:text-[#61717B]"
           />
-          <Search className="w-4 h-4 text-[#537D99] absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#61717B] absolute left-3 top-1/2 -translate-y-1/2" />
         </div>
 
         <select
           value={selectedState}
           onChange={(e) => setSelectedState(e.target.value)}
-          className="px-3 py-2 text-xs bg-slate-50 border border-[#D4EBF0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#023859] text-[#011C40]"
+          className="px-3 py-2 text-xs bg-[#FAF8F3] border border-[#DDDCD3] rounded-sm focus:outline-none focus:ring-2 focus:ring-[#28657A] text-[#142C43]"
         >
           <option value="">All States ({MOCK_BRANCHES.length} branches)</option>
           {states.map((st) => (
@@ -95,35 +95,35 @@ export default function BranchesDirectoryPage() {
         {filteredBranches.map((branch) => (
           <div
             key={branch.id}
-            className="bg-white rounded-2xl border border-[#D4EBF0] shadow-2xs p-6 flex flex-col justify-between hover:border-[#54ACBF] hover:shadow-xs transition-all space-y-4"
+            className="bg-white rounded-sm border border-[#DDDCD3]  p-6 flex flex-col justify-between hover:border-[#4C8794] hover: transition-all space-y-4"
           >
             <div className="space-y-3">
               <div className="flex items-start justify-between gap-2">
                 <Badge variant="neutral" size="sm" className="font-mono">
                   {branch.code}
                 </Badge>
-                <span className="text-[11px] font-mono text-[#26658C] bg-[#F7FCFD] border border-[#D4EBF0] px-2 py-0.5 rounded">
+                <span className="text-[11px] font-mono text-[#526570] bg-[#FAF8F3] border border-[#DDDCD3] px-2 py-0.5 rounded">
                   PIN: {branch.pincode}
                 </span>
               </div>
 
               <div>
-                <h2 className="font-bold text-base text-[#011C40] leading-snug">
+                <h2 className="font-bold text-base text-[#142C43] leading-snug">
                   {branch.name}
                 </h2>
-                <div className="flex items-center gap-1.5 text-xs text-[#26658C] mt-1">
-                  <MapPin className="w-3.5 h-3.5 text-[#023859] shrink-0" />
+                <div className="flex items-center gap-1.5 text-xs text-[#526570] mt-1">
+                  <MapPin className="w-3.5 h-3.5 text-[#28657A] shrink-0" />
                   <span>
                     {branch.city}, {branch.state}
                   </span>
                 </div>
               </div>
 
-              <p className="text-xs text-[#26658C] line-clamp-2">{branch.address}</p>
+              <p className="text-xs text-[#526570] line-clamp-2">{branch.address}</p>
             </div>
 
-            <div className="pt-2 border-t border-[#D4EBF0]/50 space-y-3">
-              <div className="space-y-1 text-xs text-slate-600">
+            <div className="pt-2 border-t border-[#DDDCD3]/50 space-y-3">
+              <div className="space-y-1 text-xs text-[#526570]">
                 <div className="flex items-center gap-2">
                   <Phone className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                   <span>{branch.phone}</span>

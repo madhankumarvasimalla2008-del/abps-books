@@ -32,7 +32,7 @@ export const ProductMeta: React.FC<ProductMetaProps> = ({ product }) => {
   };
 
   return (
-    <div className="space-y-3.5">
+    <div className="store-product-meta space-y-3.5">
       {/* Badges / Taxonomy Hierarchy */}
       <div className="flex flex-wrap items-center gap-2">
         <Badge variant="default" size="sm">
@@ -48,39 +48,39 @@ export const ProductMeta: React.FC<ProductMetaProps> = ({ product }) => {
       </div>
 
       {/* Book Title (Primary Heading in Newsreader) */}
-      <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#011C40] leading-tight tracking-tight">
+      <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#142C43] leading-tight tracking-tight">
         {product.title}
       </h1>
 
       {/* Author and Publisher byline */}
-      <div className="text-xs sm:text-sm text-[#26658C] flex flex-wrap items-center gap-x-4 gap-y-1">
+      <div className="text-xs sm:text-sm text-[#526570] flex flex-wrap items-center gap-x-4 gap-y-1">
         {product.author && (
           <p>
-            Author: <span className="font-semibold text-[#011C40]">{product.author}</span>
+            Author: <span className="font-semibold text-[#142C43]">{product.author}</span>
           </p>
         )}
         <p>
-          Publisher: <span className="font-semibold text-[#011C40]">{product.publisher}</span>
+          Publisher: <span className="font-semibold text-[#142C43]">{product.publisher}</span>
         </p>
       </div>
 
       {/* Quick Specs Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 py-3 border-y border-[#D4EBF0]/70 text-xs">
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 py-3 border-y border-[#DDDCD3]/70 text-xs">
         <div>
-          <span className="text-[#537D99] block font-medium">ISBN</span>
-          <span className="font-bold text-[#011C40] font-mono">{product.isbn || 'N/A'}</span>
+          <span className="text-[#61717B] block font-medium">ISBN</span>
+          <span className="font-bold text-[#142C43] font-mono">{product.isbn || 'N/A'}</span>
         </div>
         <div>
-          <span className="text-[#537D99] block font-medium">SKU / Item Code</span>
-          <span className="font-bold text-[#011C40] font-mono">{product.sku}</span>
+          <span className="text-[#61717B] block font-medium">SKU / Item Code</span>
+          <span className="font-bold text-[#142C43] font-mono">{product.sku}</span>
         </div>
         <div>
-          <span className="text-[#537D99] block font-medium">Edition</span>
-          <span className="font-bold text-[#011C40]">{product.edition}</span>
+          <span className="text-[#61717B] block font-medium">Edition</span>
+          <span className="font-bold text-[#142C43]">{product.edition}</span>
         </div>
         <div>
-          <span className="text-[#537D99] block font-medium">Academic Year</span>
-          <span className="font-bold text-[#011C40]">{product.academicYear}</span>
+          <span className="text-[#61717B] block font-medium">Academic Year</span>
+          <span className="font-bold text-[#142C43]">{product.academicYear}</span>
         </div>
       </div>
     </div>

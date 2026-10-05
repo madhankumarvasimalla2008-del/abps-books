@@ -15,42 +15,42 @@ export const CartSummary: React.FC<CartSummaryProps> = ({ cart, hasErrors = fals
   const isCheckoutDisabled = cart.items.length === 0 || hasErrors;
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-2xs space-y-5 sticky top-24">
-      <div className="border-b border-slate-100 pb-3">
-        <h2 className="text-base font-bold text-slate-900">Order Summary</h2>
-        <p className="text-xs text-slate-500">Summary of selected curriculum materials</p>
+    <div className="store-summary space-y-5">
+      <div className="border-b border-[#DDDCD3]/60 pb-3">
+        <h2 className="text-base font-bold text-[#142C43]">Order Summary</h2>
+        <p className="text-xs text-[#61717B]">Your books at a glance</p>
       </div>
 
       <div className="space-y-3 text-xs">
-        <div className="flex justify-between text-slate-600">
-          <span>Distinct Titles:</span>
-          <span className="font-semibold text-slate-900">
+        <div className="flex justify-between text-[#526570]">
+          <span>Titles</span>
+          <span className="font-semibold text-[#142C43]">
             {cart.items.length} {cart.items.length === 1 ? 'Title' : 'Titles'}
           </span>
         </div>
 
-        <div className="flex justify-between text-slate-600">
-          <span>Total Quantities:</span>
-          <span className="font-semibold text-slate-900">
+        <div className="flex justify-between text-[#526570]">
+          <span>Copies</span>
+          <span className="font-semibold text-[#142C43]">
             {cart.totalItems} {cart.totalItems === 1 ? 'Copy' : 'Copies'}
           </span>
         </div>
 
-        <div className="flex justify-between text-slate-600">
-          <span>Catalogue Subtotal:</span>
-          <span className="font-semibold text-slate-900">₹{cart.subtotal}</span>
+        <div className="flex justify-between text-[#526570]">
+          <span>Subtotal</span>
+          <span className="font-semibold text-[#142C43]">₹{cart.subtotal}</span>
         </div>
 
         {cart.discountTotal > 0 && (
-          <div className="flex justify-between text-[#023859] bg-[#EBF7FA] p-2 rounded-lg border border-[#D4EBF0] font-medium">
-            <span>Bulk Volume Rebate:</span>
+          <div className="flex justify-between text-[#28657A] bg-[#EDF2F1] p-2 rounded-sm border border-[#DDDCD3] font-medium">
+            <span>Bulk discount</span>
             <span className="font-bold">-₹{cart.discountTotal}</span>
           </div>
         )}
 
-        <div className="border-t border-slate-200 pt-3 flex justify-between items-baseline">
-          <span className="text-sm font-bold text-slate-900">Total Payable:</span>
-          <span className="text-2xl font-extrabold text-slate-900 tracking-tight">
+        <div className="border-t border-[#DDDCD3] pt-3 flex justify-between items-baseline">
+          <span className="text-sm font-bold text-[#142C43]">Total</span>
+          <span className="text-2xl font-extrabold text-[#142C43] tracking-tight">
             ₹{cart.grandTotal}
           </span>
         </div>
@@ -74,7 +74,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({ cart, hasErrors = fals
             className={buttonVariants({
               variant: 'primary',
               size: 'lg',
-              className: 'w-full text-sm font-semibold shadow-xs hover:shadow-sm gap-2',
+              className: 'w-full text-sm font-semibold  hover:shadow-sm gap-2',
             })}
           >
             <span>Proceed to Checkout</span>
@@ -96,17 +96,17 @@ export const CartSummary: React.FC<CartSummaryProps> = ({ cart, hasErrors = fals
       </div>
 
       {/* Trust & Policy Highlights */}
-      <div className="space-y-2 pt-3 border-t border-slate-100 text-[11px] text-slate-500">
+      <div className="space-y-2 pt-3 border-t border-[#DDDCD3]/60 text-[11px] text-[#61717B]">
         <div className="flex items-center gap-2">
-          <ShieldCheck className="w-4 h-4 text-[#023859] shrink-0" />
-          <span>Curriculum prescribed editions</span>
+          <ShieldCheck className="w-4 h-4 text-[#28657A] shrink-0" />
+          <span>Review title, edition and quantity before checkout</span>
         </div>
         <div className="flex items-center gap-2">
-          <FileText className="w-4 h-4 text-[#023859] shrink-0" />
+          <FileText className="w-4 h-4 text-[#28657A] shrink-0" />
           <span>Order summary &amp; confirmation generated on checkout</span>
         </div>
         <div className="flex items-center gap-2">
-          <Truck className="w-4 h-4 text-[#023859] shrink-0" />
+          <Truck className="w-4 h-4 text-[#28657A] shrink-0" />
           <span>Shipment tracking available after dispatch</span>
         </div>
       </div>

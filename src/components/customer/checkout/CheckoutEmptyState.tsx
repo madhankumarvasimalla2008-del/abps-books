@@ -7,16 +7,16 @@ import { buttonVariants } from '@/components/ui/Button';
 
 export const CheckoutEmptyState: React.FC = () => {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 p-8 sm:p-12 text-center max-w-2xl mx-auto shadow-2xs space-y-6 my-6">
-      <div className="w-16 h-16 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center mx-auto ring-8 ring-slate-50">
+    <div className="bg-white rounded-sm border border-[#DDDCD3] p-8 sm:p-12 text-center max-w-2xl mx-auto  space-y-6 my-6">
+      <div className="w-16 h-16 bg-[#F0EEE7] text-slate-400 rounded-sm flex items-center justify-center mx-auto ring-8 ring-slate-50">
         <ShoppingCart className="w-8 h-8" aria-hidden="true" />
       </div>
 
       <div className="space-y-2">
-        <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
+        <h2 className="text-xl sm:text-2xl font-bold text-[#142C43]">
           Your Cart is Empty
         </h2>
-        <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
+        <p className="text-xs sm:text-sm text-[#61717B] max-w-md mx-auto leading-relaxed">
           You need curriculum textbooks or academic materials in your cart before initiating checkout.
         </p>
       </div>
@@ -27,7 +27,7 @@ export const CheckoutEmptyState: React.FC = () => {
           className={buttonVariants({
             variant: 'primary',
             size: 'md',
-            className: 'w-full sm:w-auto text-xs font-semibold shadow-xs gap-2',
+            className: 'w-full sm:w-auto text-xs font-semibold  gap-2',
           })}
         >
           <BookOpen className="w-4 h-4" />

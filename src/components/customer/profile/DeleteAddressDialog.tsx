@@ -50,26 +50,26 @@ export const DeleteAddressDialog: React.FC<DeleteAddressDialogProps> = ({
       aria-labelledby="delete-address-title"
       aria-describedby="delete-address-desc"
     >
-      <div className="bg-white w-full max-w-md rounded-2xl shadow-xl border border-slate-200 overflow-hidden animate-in zoom-in-95 duration-150">
+      <div className="bg-white w-full max-w-md rounded-sm shadow-xl border border-[#DDDCD3] overflow-hidden animate-in zoom-in-95 duration-150">
         <div className="p-6 space-y-4">
           <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-sm bg-red-100 text-red-600 flex items-center justify-center shrink-0">
               <AlertTriangle className="w-5 h-5" aria-hidden="true" />
             </div>
             <div className="space-y-1">
-              <h2 id="delete-address-title" className="text-base font-bold text-slate-900">
+              <h2 id="delete-address-title" className="text-base font-bold text-[#142C43]">
                 Delete Saved Address?
               </h2>
-              <p id="delete-address-desc" className="text-xs text-slate-600 leading-relaxed">
+              <p id="delete-address-desc" className="text-xs text-[#526570] leading-relaxed">
                 Are you sure you want to remove the address for{' '}
-                <strong className="text-slate-800 font-semibold">{address.recipientName}</strong> (
+                <strong className="text-[#142C43] font-semibold">{address.recipientName}</strong> (
                 {address.addressLine1}, {address.city})?
               </p>
             </div>
           </div>
 
           {address.isDefault && remainingCount > 1 && (
-            <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-[11px] text-amber-800 leading-relaxed">
+            <div className="p-3 bg-amber-50 border border-amber-200 rounded-sm text-[11px] text-amber-800 leading-relaxed">
               This is currently your default delivery address. Deleting it will automatically designate another saved address as your default.
             </div>
           )}

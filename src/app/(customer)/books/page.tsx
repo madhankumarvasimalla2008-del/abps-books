@@ -26,7 +26,7 @@ function BooksCatalogContent() {
   const paramSubject = searchParams.get('subject') || undefined;
   const paramCategory = searchParams.get('category') || undefined;
   const paramPublisher = searchParams.get('publisher') || undefined;
-  const paramAvailability = (searchParams.get('availability') as any) || undefined;
+  const paramAvailability = (searchParams.get('availability') as CatalogFilterState['availability']) || undefined;
   const paramMinPrice = searchParams.get('minPrice')
     ? parseInt(searchParams.get('minPrice')!, 10)
     : undefined;
@@ -268,7 +268,7 @@ function BooksCatalogContent() {
           return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
       }
     });
-  }, [searchQuery, filters, sortOption]);
+  }, [products, searchQuery, filters, sortOption]);
 
   return (
     <div className="space-y-6">
@@ -281,20 +281,20 @@ function BooksCatalogContent() {
       />
 
       {/* Catalog Header & Top Actions */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-2xs space-y-4">
+      <div className="store-catalog-heading space-y-5">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-              Educational Books &amp; Study Material
+            <h1 className="text-xl sm:text-2xl font-bold text-[#142C43] tracking-tight">
+              The book collection
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1">
-              Browse prescribed textbooks, reference books, workbooks, and academic materials.
+            <p className="text-xs sm:text-sm text-[#61717B] mt-1">
+              Find your next textbook, reference or workbook. Browse by class, subject and publisher.
             </p>
           </div>
 
           {/* Quick Stats Pill */}
-          <div className="text-xs bg-[#EBF7FA] text-[#023859] font-medium px-3.5 py-1.5 rounded-xl border border-[#D4EBF0] self-start md:self-auto shrink-0">
-            Total Catalog: <strong className="font-bold">{products.length} titles</strong>
+          <div className="text-xs bg-[#EDF2F1] text-[#28657A] font-medium px-3.5 py-1.5 rounded-sm border border-[#DDDCD3] self-start md:self-auto shrink-0">
+            In the catalog: <strong className="font-bold">{products.length} titles</strong>
           </div>
         </div>
 
@@ -311,10 +311,10 @@ function BooksCatalogContent() {
             className="lg:hidden shrink-0 text-xs flex items-center gap-1.5"
             aria-label="Open filter sidebar"
           >
-            <SlidersHorizontal className="w-4 h-4 text-[#023859]" />
+            <SlidersHorizontal className="w-4 h-4 text-[#28657A]" />
             <span>Filters</span>
             {activeFilterCount > 0 && (
-              <span className="w-5 h-5 rounded-full bg-[#023859] text-white text-[10px] flex items-center justify-center font-bold">
+              <span className="w-5 h-5 rounded-full bg-[#28657A] text-white text-[10px] flex items-center justify-center font-bold">
                 {activeFilterCount}
               </span>
             )}
@@ -323,11 +323,11 @@ function BooksCatalogContent() {
 
         {/* Active Filter Chips / Pills */}
         {hasAnyActiveSelection && (
-          <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100">
-            <span className="text-xs font-semibold text-slate-500">Active filters:</span>
+          <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-[#DDDCD3]/60">
+            <span className="text-xs font-semibold text-[#61717B]">Active filters:</span>
 
             {searchQuery && (
-              <span className="inline-flex items-center gap-1 text-xs bg-slate-100 text-slate-800 px-2.5 py-1 rounded-lg border border-slate-200">
+              <span className="inline-flex items-center gap-1 text-xs bg-[#F0EEE7] text-[#142C43] px-2.5 py-1 rounded-sm border border-[#DDDCD3]">
                 Search: &quot;{searchQuery}&quot;
                 <button
                   type="button"
@@ -341,7 +341,7 @@ function BooksCatalogContent() {
             )}
 
             {filters.grade && (
-              <span className="inline-flex items-center gap-1 text-xs bg-[#EBF7FA] text-[#023859] px-2.5 py-1 rounded-lg border border-[#D4EBF0]">
+              <span className="inline-flex items-center gap-1 text-xs bg-[#EDF2F1] text-[#28657A] px-2.5 py-1 rounded-sm border border-[#DDDCD3]">
                 Class: {filters.grade}
                 <button
                   type="button"
@@ -355,7 +355,7 @@ function BooksCatalogContent() {
             )}
 
             {filters.subject && (
-              <span className="inline-flex items-center gap-1 text-xs bg-[#EBF7FA] text-[#023859] px-2.5 py-1 rounded-lg border border-[#D4EBF0]">
+              <span className="inline-flex items-center gap-1 text-xs bg-[#EDF2F1] text-[#28657A] px-2.5 py-1 rounded-sm border border-[#DDDCD3]">
                 Subject: {filters.subject}
                 <button
                   type="button"
@@ -369,7 +369,7 @@ function BooksCatalogContent() {
             )}
 
             {filters.category && (
-              <span className="inline-flex items-center gap-1 text-xs bg-[#EBF7FA] text-[#023859] px-2.5 py-1 rounded-lg border border-[#D4EBF0]">
+              <span className="inline-flex items-center gap-1 text-xs bg-[#EDF2F1] text-[#28657A] px-2.5 py-1 rounded-sm border border-[#DDDCD3]">
                 Category: {filters.category}
                 <button
                   type="button"
@@ -383,7 +383,7 @@ function BooksCatalogContent() {
             )}
 
             {filters.publisher && (
-              <span className="inline-flex items-center gap-1 text-xs bg-[#EBF7FA] text-[#023859] px-2.5 py-1 rounded-lg border border-[#D4EBF0]">
+              <span className="inline-flex items-center gap-1 text-xs bg-[#EDF2F1] text-[#28657A] px-2.5 py-1 rounded-sm border border-[#DDDCD3]">
                 Publisher: {filters.publisher}
                 <button
                   type="button"
@@ -397,7 +397,7 @@ function BooksCatalogContent() {
             )}
 
             {filters.availability && (
-              <span className="inline-flex items-center gap-1 text-xs bg-[#EBF7FA] text-[#023859] px-2.5 py-1 rounded-lg border border-[#D4EBF0]">
+              <span className="inline-flex items-center gap-1 text-xs bg-[#EDF2F1] text-[#28657A] px-2.5 py-1 rounded-sm border border-[#DDDCD3]">
                 Availability: {filters.availability === 'in_stock' ? 'In Stock Only' : 'Low Stock'}
                 <button
                   type="button"
@@ -411,7 +411,7 @@ function BooksCatalogContent() {
             )}
 
             {(filters.minPrice !== undefined || filters.maxPrice !== undefined) && (
-              <span className="inline-flex items-center gap-1 text-xs bg-[#EBF7FA] text-[#023859] px-2.5 py-1 rounded-lg border border-[#D4EBF0]">
+              <span className="inline-flex items-center gap-1 text-xs bg-[#EDF2F1] text-[#28657A] px-2.5 py-1 rounded-sm border border-[#DDDCD3]">
                 Price: ₹{filters.minPrice || 0} - ₹{filters.maxPrice || 'Any'}
                 <button
                   type="button"
@@ -456,11 +456,11 @@ function BooksCatalogContent() {
         />
 
         {/* Catalog Main Body */}
-        <main className="flex-1 w-full space-y-4" aria-label="Book listings">
+        <section className="flex-1 min-w-0 w-full space-y-5" aria-label="Book listings">
           {/* Top Bar: Results Count + Sorting Control */}
-          <div className="bg-white px-4 py-3 rounded-xl border border-slate-200/90 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="text-xs font-semibold text-slate-700">
-              Showing <span className="text-slate-900 font-bold">{filteredProducts.length}</span>{' '}
+          <div className="store-catalog-toolbar flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="text-xs font-semibold text-[#526570]">
+              Showing <span className="text-[#142C43] font-bold">{filteredProducts.length}</span>{' '}
               {filteredProducts.length === 1 ? 'book' : 'books'}
               {filteredProducts.length < products.length && (
                 <span className="text-slate-400 font-normal ml-1">
@@ -484,7 +484,7 @@ function BooksCatalogContent() {
               onResetAll={handleResetAll}
             />
           )}
-        </main>
+        </section>
       </div>
     </div>
   );
@@ -494,7 +494,7 @@ export default function BooksCatalogPage() {
   return (
     <Suspense
       fallback={
-        <div className="p-8 text-center text-xs text-slate-500">Loading book catalog...</div>
+        <div className="p-8 text-center text-xs text-[#61717B]">Loading book catalog...</div>
       }
     >
       <BooksCatalogContent />

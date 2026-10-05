@@ -27,24 +27,24 @@ export default function CartPage() {
       <Breadcrumbs
         items={[
           { label: 'Books', href: '/books' },
-          { label: 'Your Cart' },
+          { label: 'Your shopping bag' },
         ]}
       />
 
       {/* Cart Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-slate-200/80 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-[#DDDCD3] pb-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2.5">
-            <ShoppingCart className="w-6 h-6 text-[#023859]" aria-hidden="true" />
-            <span>Your Cart</span>
+          <h1 className="text-xl sm:text-2xl font-bold text-[#142C43] flex items-center gap-2.5">
+            <ShoppingCart className="w-6 h-6 text-[#28657A]" aria-hidden="true" />
+            <span>Your shopping bag</span>
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Review your selected curriculum textbooks, quantities, and order totals before proceeding.
+          <p className="text-xs sm:text-sm text-[#61717B] mt-1">
+            A few good books. Review your selection and quantities before checkout.
           </p>
         </div>
 
         {cart.items.length > 0 && (
-          <div className="text-xs font-semibold text-[#023859] bg-[#EBF7FA] px-3 py-1.5 rounded-xl border border-[#D4EBF0] self-start sm:self-auto">
+          <div className="text-xs font-semibold text-[#28657A] bg-[#EDF2F1] px-3 py-1.5 rounded-sm border border-[#DDDCD3] self-start sm:self-auto">
             {cart.items.length} {cart.items.length === 1 ? 'Title' : 'Titles'} • {cart.totalItems} {cart.totalItems === 1 ? 'Copy' : 'Copies'}
           </div>
         )}
@@ -63,9 +63,9 @@ export default function CartPage() {
       {cart.items.length === 0 ? (
         <CartEmptyState />
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 xl:gap-10 items-start">
           {/* Left Column: Cart Items List (8 cols) */}
-          <div className="lg:col-span-8">
+          <div className="md:col-span-8">
             <CartItemList
               cart={cart}
               onUpdateQuantity={updateQuantity}
@@ -76,7 +76,7 @@ export default function CartPage() {
           </div>
 
           {/* Right Column: Order Summary (4 cols) */}
-          <div className="lg:col-span-4">
+          <div className="md:col-span-4">
             <CartSummary cart={cart} hasErrors={hasOutOfStockItems} />
           </div>
         </div>
@@ -84,11 +84,11 @@ export default function CartPage() {
 
       {/* Mobile Sticky Bottom Checkout Bar (Visible only on mobile when items are present) */}
       {cart.items.length > 0 && (
-        <div className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200 p-4 lg:hidden z-30 shadow-lg">
+        <div className="store-mobile-checkout fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-[#DDDCD3] p-4 lg:hidden z-30 shadow-lg">
           <div className="flex items-center justify-between gap-4 max-w-lg mx-auto">
             <div>
-              <span className="text-[11px] text-slate-500 block">Total Payable:</span>
-              <span className="text-lg font-extrabold text-slate-900">₹{cart.grandTotal}</span>
+              <span className="text-[11px] text-[#61717B] block">Total Payable:</span>
+              <span className="text-lg font-extrabold text-[#142C43]">₹{cart.grandTotal}</span>
             </div>
 
             <div className="flex-1 max-w-[200px]">
@@ -107,7 +107,7 @@ export default function CartPage() {
                   className={buttonVariants({
                     variant: 'primary',
                     size: 'md',
-                    className: 'w-full text-xs font-semibold shadow-xs inline-flex items-center justify-center gap-1.5',
+                    className: 'w-full text-xs font-semibold  inline-flex items-center justify-center gap-1.5',
                   })}
                 >
                   <span>Checkout ({cart.totalItems})</span>

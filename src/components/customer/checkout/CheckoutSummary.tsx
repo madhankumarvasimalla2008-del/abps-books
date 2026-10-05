@@ -19,47 +19,47 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
   onSubmit,
 }) => {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-2xs space-y-5 sticky top-24">
-      <div className="border-b border-slate-100 pb-3">
-        <h3 className="text-base font-bold text-slate-900">Order Summary</h3>
-        <p className="text-xs text-slate-500">Order details &amp; total</p>
+    <div className="store-summary space-y-5">
+      <div className="border-b border-[#DDDCD3]/60 pb-3">
+        <h3 className="text-base font-bold text-[#142C43]">Order Summary</h3>
+        <p className="text-xs text-[#61717B]">Order details &amp; total</p>
       </div>
 
       <div className="space-y-3 text-xs">
-        <div className="flex justify-between text-slate-600">
+        <div className="flex justify-between text-[#526570]">
           <span>Distinct Titles:</span>
-          <span className="font-semibold text-slate-900">
+          <span className="font-semibold text-[#142C43]">
             {cart.items.length} {cart.items.length === 1 ? 'Title' : 'Titles'}
           </span>
         </div>
 
-        <div className="flex justify-between text-slate-600">
+        <div className="flex justify-between text-[#526570]">
           <span>Total Items:</span>
-          <span className="font-semibold text-slate-900">
+          <span className="font-semibold text-[#142C43]">
             {cart.totalItems} {cart.totalItems === 1 ? 'Copy' : 'Copies'}
           </span>
         </div>
 
-        <div className="flex justify-between text-slate-600">
+        <div className="flex justify-between text-[#526570]">
           <span>Subtotal:</span>
-          <span className="font-semibold text-slate-900">₹{cart.subtotal}</span>
+          <span className="font-semibold text-[#142C43]">₹{cart.subtotal}</span>
         </div>
 
         {cart.discountTotal > 0 && (
-          <div className="flex justify-between text-[#023859] bg-[#EBF7FA] p-2 rounded-lg border border-[#D4EBF0] font-medium">
+          <div className="flex justify-between text-[#28657A] bg-[#EDF2F1] p-2 rounded-sm border border-[#DDDCD3] font-medium">
             <span>Bulk Discount:</span>
             <span className="font-bold">-₹{cart.discountTotal}</span>
           </div>
         )}
 
-        <div className="flex justify-between text-slate-600">
+        <div className="flex justify-between text-[#526570]">
           <span>Delivery:</span>
-          <span className="font-medium text-slate-700">Details provided with order</span>
+          <span className="font-medium text-[#526570]">Details provided with order</span>
         </div>
 
-        <div className="border-t border-slate-200 pt-3 flex justify-between items-baseline">
-          <span className="text-sm font-bold text-slate-900">Order Total:</span>
-          <span className="text-2xl font-extrabold text-slate-900 tracking-tight">
+        <div className="border-t border-[#DDDCD3] pt-3 flex justify-between items-baseline">
+          <span className="text-sm font-bold text-[#142C43]">Order Total:</span>
+          <span className="text-2xl font-extrabold text-[#142C43] tracking-tight">
             ₹{cart.grandTotal}
           </span>
         </div>
@@ -73,7 +73,7 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
           disabled={isSubmitting || hasErrors || cart.items.length === 0}
           variant="primary"
           size="lg"
-          className="w-full text-sm font-bold shadow-xs hover:shadow-sm"
+          className="w-full text-sm font-bold  hover:shadow-sm"
           rightIcon={!isSubmitting ? <ArrowRight className="w-4 h-4" /> : undefined}
           isLoading={isSubmitting}
         >
@@ -88,17 +88,17 @@ export const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
       </div>
 
       {/* Reassurance & Verification details */}
-      <div className="space-y-2 pt-3 border-t border-slate-100 text-[11px] text-slate-500">
+      <div className="space-y-2 pt-3 border-t border-[#DDDCD3]/60 text-[11px] text-[#61717B]">
         <div className="flex items-center gap-2">
-          <ShieldCheck className="w-4 h-4 text-[#023859] shrink-0" />
-          <span>Curriculum-aligned editions</span>
+          <ShieldCheck className="w-4 h-4 text-[#28657A] shrink-0" />
+          <span>Review title, edition and quantity before ordering</span>
         </div>
         <div className="flex items-center gap-2">
-          <FileCheck2 className="w-4 h-4 text-[#023859] shrink-0" />
+          <FileCheck2 className="w-4 h-4 text-[#28657A] shrink-0" />
           <span>Order summary available immediately</span>
         </div>
         <div className="flex items-center gap-2">
-          <Truck className="w-4 h-4 text-[#023859] shrink-0" />
+          <Truck className="w-4 h-4 text-[#28657A] shrink-0" />
           <span>Standard order processing &amp; tracking</span>
         </div>
       </div>

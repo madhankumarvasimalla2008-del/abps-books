@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Filter, X, RotateCcw, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -40,6 +40,15 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
   isMobileDrawerOpen,
   setIsMobileDrawerOpen,
 }) => {
+  const filterDialog = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    if (!isMobileDrawerOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    filterDialog.current?.showModal();
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, [isMobileDrawerOpen]);
+
   const [expandedSections, setExpandedSections] = useState({
     grade: true,
     subject: true,
@@ -56,7 +65,7 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
     }));
   };
 
-  const handleFieldChange = (key: keyof CatalogFilterState, value: any) => {
+  const handleFieldChange = (key: keyof CatalogFilterState, value: CatalogFilterState[keyof CatalogFilterState]) => {
     onFilterChange({
       ...filters,
       [key]: value,
@@ -66,11 +75,11 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
   const filterContent = (
     <div className="space-y-6">
       {/* Grade / Class Filter */}
-      <div className="border-b border-slate-100 pb-4">
+      <div className="border-b border-[#DDDCD3]/60 pb-4">
         <button
           type="button"
           onClick={() => toggleSection('grade')}
-          className="flex items-center justify-between w-full text-left font-bold text-xs text-slate-900 uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-[#023859] rounded"
+          className="flex items-center justify-between w-full text-left font-bold text-xs text-[#142C43] uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-[#28657A] rounded"
           aria-expanded={expandedSections.grade}
         >
           <span>Class / Grade</span>
@@ -88,12 +97,12 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
               onClick={() => handleFieldChange('grade', undefined)}
               className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
                 !filters.grade
-                  ? 'bg-[#EBF7FA] text-[#023859] font-semibold'
-                  : 'text-slate-600 hover:bg-slate-50'
+                  ? 'bg-[#EDF2F1] text-[#28657A] font-semibold'
+                  : 'text-[#526570] hover:bg-[#FAF8F3]'
               }`}
             >
               <span>All Grades</span>
-              {!filters.grade && <span className="w-1.5 h-1.5 rounded-full bg-[#54ACBF]" />}
+              {!filters.grade && <span className="w-1.5 h-1.5 rounded-full bg-[#4C8794]" />}
             </button>
             {availableGrades.map((g) => {
               const isSelected = filters.grade === g;
@@ -104,12 +113,12 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
                   onClick={() => handleFieldChange('grade', isSelected ? undefined : g)}
                   className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
                     isSelected
-                      ? 'bg-[#EBF7FA] text-[#023859] font-semibold'
-                      : 'text-slate-600 hover:bg-slate-50'
+                      ? 'bg-[#EDF2F1] text-[#28657A] font-semibold'
+                      : 'text-[#526570] hover:bg-[#FAF8F3]'
                   }`}
                 >
                   <span>{g}</span>
-                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-[#54ACBF]" />}
+                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-[#4C8794]" />}
                 </button>
               );
             })}
@@ -118,11 +127,11 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
       </div>
 
       {/* Subject Filter */}
-      <div className="border-b border-slate-100 pb-4">
+      <div className="border-b border-[#DDDCD3]/60 pb-4">
         <button
           type="button"
           onClick={() => toggleSection('subject')}
-          className="flex items-center justify-between w-full text-left font-bold text-xs text-slate-900 uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-[#023859] rounded"
+          className="flex items-center justify-between w-full text-left font-bold text-xs text-[#142C43] uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-[#28657A] rounded"
           aria-expanded={expandedSections.subject}
         >
           <span>Subject</span>
@@ -140,12 +149,12 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
               onClick={() => handleFieldChange('subject', undefined)}
               className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
                 !filters.subject
-                  ? 'bg-[#EBF7FA] text-[#023859] font-semibold'
-                  : 'text-slate-600 hover:bg-slate-50'
+                  ? 'bg-[#EDF2F1] text-[#28657A] font-semibold'
+                  : 'text-[#526570] hover:bg-[#FAF8F3]'
               }`}
             >
               <span>All Subjects</span>
-              {!filters.subject && <span className="w-1.5 h-1.5 rounded-full bg-[#54ACBF]" />}
+              {!filters.subject && <span className="w-1.5 h-1.5 rounded-full bg-[#4C8794]" />}
             </button>
             {availableSubjects.map((s) => {
               const isSelected = filters.subject === s;
@@ -156,12 +165,12 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
                   onClick={() => handleFieldChange('subject', isSelected ? undefined : s)}
                   className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
                     isSelected
-                      ? 'bg-[#EBF7FA] text-[#023859] font-semibold'
-                      : 'text-slate-600 hover:bg-slate-50'
+                      ? 'bg-[#EDF2F1] text-[#28657A] font-semibold'
+                      : 'text-[#526570] hover:bg-[#FAF8F3]'
                   }`}
                 >
                   <span>{s}</span>
-                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-[#54ACBF]" />}
+                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-[#4C8794]" />}
                 </button>
               );
             })}
@@ -170,11 +179,11 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
       </div>
 
       {/* Category Filter */}
-      <div className="border-b border-slate-100 pb-4">
+      <div className="border-b border-[#DDDCD3]/60 pb-4">
         <button
           type="button"
           onClick={() => toggleSection('category')}
-          className="flex items-center justify-between w-full text-left font-bold text-xs text-slate-900 uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-[#023859] rounded"
+          className="flex items-center justify-between w-full text-left font-bold text-xs text-[#142C43] uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-[#28657A] rounded"
           aria-expanded={expandedSections.category}
         >
           <span>Category</span>
@@ -192,12 +201,12 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
               onClick={() => handleFieldChange('category', undefined)}
               className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
                 !filters.category
-                  ? 'bg-[#EBF7FA] text-[#023859] font-semibold'
-                  : 'text-slate-600 hover:bg-slate-50'
+                  ? 'bg-[#EDF2F1] text-[#28657A] font-semibold'
+                  : 'text-[#526570] hover:bg-[#FAF8F3]'
               }`}
             >
               <span>All Categories</span>
-              {!filters.category && <span className="w-1.5 h-1.5 rounded-full bg-[#54ACBF]" />}
+              {!filters.category && <span className="w-1.5 h-1.5 rounded-full bg-[#4C8794]" />}
             </button>
             {availableCategories.map((c) => {
               const isSelected = filters.category?.toLowerCase() === c.toLowerCase();
@@ -208,12 +217,12 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
                   onClick={() => handleFieldChange('category', isSelected ? undefined : c)}
                   className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
                     isSelected
-                      ? 'bg-[#EBF7FA] text-[#023859] font-semibold'
-                      : 'text-slate-600 hover:bg-slate-50'
+                      ? 'bg-[#EDF2F1] text-[#28657A] font-semibold'
+                      : 'text-[#526570] hover:bg-[#FAF8F3]'
                   }`}
                 >
                   <span>{c}</span>
-                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-[#54ACBF]" />}
+                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-[#4C8794]" />}
                 </button>
               );
             })}
@@ -222,11 +231,11 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
       </div>
 
       {/* Publisher Filter */}
-      <div className="border-b border-slate-100 pb-4">
+      <div className="border-b border-[#DDDCD3]/60 pb-4">
         <button
           type="button"
           onClick={() => toggleSection('publisher')}
-          className="flex items-center justify-between w-full text-left font-bold text-xs text-slate-900 uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-[#023859] rounded"
+          className="flex items-center justify-between w-full text-left font-bold text-xs text-[#142C43] uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-[#28657A] rounded"
           aria-expanded={expandedSections.publisher}
         >
           <span>Publisher</span>
@@ -244,12 +253,12 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
               onClick={() => handleFieldChange('publisher', undefined)}
               className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
                 !filters.publisher
-                  ? 'bg-[#EBF7FA] text-[#023859] font-semibold'
-                  : 'text-slate-600 hover:bg-slate-50'
+                  ? 'bg-[#EDF2F1] text-[#28657A] font-semibold'
+                  : 'text-[#526570] hover:bg-[#FAF8F3]'
               }`}
             >
               <span>All Publishers</span>
-              {!filters.publisher && <span className="w-1.5 h-1.5 rounded-full bg-[#54ACBF]" />}
+              {!filters.publisher && <span className="w-1.5 h-1.5 rounded-full bg-[#4C8794]" />}
             </button>
             {availablePublishers.map((p) => {
               const isSelected = filters.publisher?.toLowerCase() === p.toLowerCase();
@@ -260,12 +269,12 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
                   onClick={() => handleFieldChange('publisher', isSelected ? undefined : p)}
                   className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
                     isSelected
-                      ? 'bg-[#EBF7FA] text-[#023859] font-semibold'
-                      : 'text-slate-600 hover:bg-slate-50'
+                      ? 'bg-[#EDF2F1] text-[#28657A] font-semibold'
+                      : 'text-[#526570] hover:bg-[#FAF8F3]'
                   }`}
                 >
                   <span>{p}</span>
-                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-[#54ACBF]" />}
+                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-[#4C8794]" />}
                 </button>
               );
             })}
@@ -274,11 +283,11 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
       </div>
 
       {/* Stock Availability Filter */}
-      <div className="border-b border-slate-100 pb-4">
+      <div className="border-b border-[#DDDCD3]/60 pb-4">
         <button
           type="button"
           onClick={() => toggleSection('availability')}
-          className="flex items-center justify-between w-full text-left font-bold text-xs text-slate-900 uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-[#023859] rounded"
+          className="flex items-center justify-between w-full text-left font-bold text-xs text-[#142C43] uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-[#28657A] rounded"
           aria-expanded={expandedSections.availability}
         >
           <span>Availability</span>
@@ -311,12 +320,12 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
                   }
                   className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
                     isSelected
-                      ? 'bg-[#EBF7FA] text-[#023859] font-semibold'
-                      : 'text-slate-600 hover:bg-slate-50'
+                      ? 'bg-[#EDF2F1] text-[#28657A] font-semibold'
+                      : 'text-[#526570] hover:bg-[#FAF8F3]'
                   }`}
                 >
                   <span>{option.label}</span>
-                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-[#54ACBF]" />}
+                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-[#4C8794]" />}
                 </button>
               );
             })}
@@ -329,7 +338,7 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
         <button
           type="button"
           onClick={() => toggleSection('price')}
-          className="flex items-center justify-between w-full text-left font-bold text-xs text-slate-900 uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-[#023859] rounded"
+          className="flex items-center justify-between w-full text-left font-bold text-xs text-[#142C43] uppercase tracking-wider py-1 focus:outline-none focus:ring-1 focus:ring-[#28657A] rounded"
           aria-expanded={expandedSections.price}
         >
           <span>Price Range</span>
@@ -363,7 +372,7 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
                         e.target.value ? parseInt(e.target.value, 10) : undefined
                       )
                     }
-                    className="w-full pl-6 pr-2 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#023859]"
+                    className="w-full pl-6 pr-2 py-1.5 text-xs bg-[#FAF8F3] border border-[#DDDCD3] rounded-sm focus:outline-none focus:ring-1 focus:ring-[#28657A]"
                   />
                 </div>
               </div>
@@ -388,7 +397,7 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
                         e.target.value ? parseInt(e.target.value, 10) : undefined
                       )
                     }
-                    className="w-full pl-6 pr-2 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#023859]"
+                    className="w-full pl-6 pr-2 py-1.5 text-xs bg-[#FAF8F3] border border-[#DDDCD3] rounded-sm focus:outline-none focus:ring-1 focus:ring-[#28657A]"
                   />
                 </div>
               </div>
@@ -411,7 +420,7 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
                       maxPrice: bracket.max,
                     })
                   }
-                  className="text-[11px] px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
+                  className="text-[11px] px-2 py-0.5 rounded bg-[#F0EEE7] hover:bg-slate-200 text-[#526570] transition-colors"
                 >
                   {bracket.label}
                 </button>
@@ -426,12 +435,12 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
   return (
     <>
       {/* Desktop Sidebar Container */}
-      <aside className="hidden lg:block w-64 shrink-0" aria-label="Catalog Filters">
-        <div className="bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs sticky top-24 space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+      <aside className="hidden lg:block w-56 xl:w-60 shrink-0" aria-label="Catalog Filters">
+        <div className="bg-white rounded-sm border border-[#DDDCD3] p-5  sticky top-[180px] space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[#DDDCD3]/60">
             <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-[#023859]" />
-              <h2 className="font-bold text-sm text-slate-900">Filters</h2>
+              <Filter className="w-4 h-4 text-[#28657A]" />
+              <h2 className="font-bold text-sm text-[#142C43]">Filters</h2>
               {activeFilterCount > 0 && (
                 <Badge variant="default" size="sm">
                   {activeFilterCount}
@@ -442,7 +451,7 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
               <button
                 type="button"
                 onClick={onReset}
-                className="text-xs text-slate-500 hover:text-red-600 flex items-center gap-1 transition-colors"
+                className="text-xs text-[#61717B] hover:text-red-600 flex items-center gap-1 transition-colors"
                 aria-label="Reset all filters"
               >
                 <RotateCcw className="w-3 h-3" />
@@ -457,7 +466,7 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
 
       {/* Mobile Filter Drawer / Modal */}
       {isMobileDrawerOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true">
+        <dialog ref={filterDialog} className="store-filter-dialog" aria-label="Filter books" onClose={() => setIsMobileDrawerOpen(false)}>
           {/* Backdrop */}
           <div
             className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity"
@@ -466,11 +475,11 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
           />
 
           {/* Drawer panel */}
-          <div className="fixed inset-y-0 right-0 max-w-xs w-full bg-white shadow-xl flex flex-col z-10 animate-in slide-in-from-right duration-200">
-            <div className="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50">
+          <div className="fixed inset-y-0 right-0 max-w-xs w-full bg-white shadow-xl flex flex-col z-10">
+            <div className="flex items-center justify-between p-4 border-b border-[#DDDCD3]/60 bg-[#FAF8F3]">
               <div className="flex items-center gap-2">
-                <Filter className="w-4 h-4 text-[#023859]" />
-                <h2 className="font-bold text-sm text-slate-900">Filter Books</h2>
+                <Filter className="w-4 h-4 text-[#28657A]" />
+                <h2 className="font-bold text-sm text-[#142C43]">Filter Books</h2>
                 {activeFilterCount > 0 && (
                   <Badge variant="default" size="sm">
                     {activeFilterCount}
@@ -480,7 +489,7 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
               <button
                 type="button"
                 onClick={() => setIsMobileDrawerOpen(false)}
-                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg"
+                className="p-1.5 text-slate-400 hover:text-[#526570] rounded-sm"
                 aria-label="Close filters"
               >
                 <X className="w-5 h-5" />
@@ -489,7 +498,7 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
 
             <div className="p-4 flex-1 overflow-y-auto">{filterContent}</div>
 
-            <div className="p-4 border-t border-slate-100 bg-slate-50 flex items-center gap-2">
+            <div className="p-4 border-t border-[#DDDCD3]/60 bg-[#FAF8F3] flex items-center gap-2">
               {activeFilterCount > 0 && (
                 <Button variant="outline" size="sm" onClick={onReset} className="flex-1 text-xs">
                   Reset All
@@ -505,7 +514,7 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
               </Button>
             </div>
           </div>
-        </div>
+        </dialog>
       )}
     </>
   );
