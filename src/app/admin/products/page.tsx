@@ -6,6 +6,7 @@ import {
   Plus,
   BookOpen,
   Boxes,
+  Upload,
   AlertTriangle,
   Archive,
   CheckCircle2,
@@ -152,6 +153,18 @@ export default function AdminProductsPage() {
         }
         actions={
           <div className="flex items-center gap-2">
+            <Link
+              href="/admin/products/import"
+              className={buttonVariants({
+                variant: 'outline',
+                size: 'sm',
+                className: 'gap-1.5',
+              })}
+              title="Bulk import client-approved catalog from CSV/XLSX"
+            >
+              <Upload className="w-4 h-4" />
+              <span>Import Catalog</span>
+            </Link>
             <Link
               href="/admin/inventory"
               className={buttonVariants({

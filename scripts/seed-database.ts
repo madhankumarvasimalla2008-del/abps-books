@@ -22,6 +22,16 @@ if (fs.existsSync(envLocalPath)) {
 }
 dotenv.config();
 
+if (
+  process.env.NODE_ENV === 'production' ||
+  process.env.APP_ENV === 'production' ||
+  process.env.VERCEL_ENV === 'production' ||
+  process.env.APP_ENV === 'staging'
+) {
+  console.error('❌ CRITICAL SAFETY VIOLATION: Development seed script contains synthetic fixtures and is prohibited in staging or production environments. For staging, use scripts/seed-staging.ts.');
+  process.exit(1);
+}
+
 if (!process.env.DATABASE_URL) {
   console.error('❌ Error: DATABASE_URL environment variable is not defined.');
   console.error('   Please provide DATABASE_URL in .env.local or execution environment.');
