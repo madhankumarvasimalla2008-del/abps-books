@@ -81,14 +81,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const syncServerSession = useCallback(async () => {
+  const syncServerSession = useCallback(async (sessionOverride?: { access_token?: string } | null) => {
     try {
       const headers: Record<string, string> = {};
-      if (supabaseBrowser) {
-        const { data: { session } } = await supabaseBrowser.auth.getSession();
-        if (session?.access_token) {
-          headers['Authorization'] = `Bearer ${session.access_token}`;
-        }
+      let accessToken = sessionOverride?.access_token;
+
+      if (!accessToken && supabaseBrowser) {
+        const { data } = await supabaseBrowser.auth.getSession();
+        accessToken = data?.session?.access_token;
+      }
+
+      if (accessToken) {
+        headers['Authorization'] = `Bearer ${accessToken}`;
       }
 
       const res = await fetch('/api/auth/me', { headers });
@@ -120,57 +124,72 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     let mounted = true;
+    let initialResolutionDone = false;
 
-    async function initAuth() {
-      if (!supabaseBrowser) {
-        if (mounted) {
-          setUser(null);
-          setIsLoading(false);
+    if (!supabaseBrowser) {
+      setUser(null);
+      setIsLoading(false);
+      return;
+    }
+
+    const markInitialized = () => {
+      if (mounted && !initialResolutionDone) {
+        initialResolutionDone = true;
+        setIsLoading(false);
+      }
+    };
+
+    // Safety timeout: Ensure loading spinner never hangs indefinitely if network is disconnected
+    const fallbackTimeoutId = setTimeout(() => {
+      markInitialized();
+    }, 4000);
+
+    const { data: { subscription } } = supabaseBrowser.auth.onAuthStateChange(async (event, session) => {
+      if (!mounted) return;
+
+      if (event === 'PASSWORD_RECOVERY') {
+        if (typeof window !== 'undefined' && window.location.pathname !== '/reset-password') {
+          const search = window.location.search || '';
+          const hash = window.location.hash || '';
+          window.location.replace(`/reset-password${search}${hash}`);
+        }
+        markInitialized();
+        return;
+      }
+
+      if (event === 'INITIAL_SESSION') {
+        try {
+          if (session?.user) {
+            if (typeof window === 'undefined' || window.location.pathname !== '/reset-password') {
+              await syncServerSession(session);
+            }
+          } else {
+            // Check if server-side cookies have a valid session even if browser client hasn't loaded it yet
+            await syncServerSession();
+          }
+        } finally {
+          markInitialized();
         }
         return;
       }
 
-      try {
-        await syncServerSession();
-      } catch {
-        if (mounted) setUser(null);
-      } finally {
-        if (mounted) setIsLoading(false);
-      }
-    }
-
-    initAuth();
-
-    if (supabaseBrowser) {
-      const { data: { subscription } } = supabaseBrowser.auth.onAuthStateChange(async (event, session) => {
-        if (event === 'PASSWORD_RECOVERY') {
-          if (typeof window !== 'undefined' && window.location.pathname !== '/reset-password') {
-            const search = window.location.search || '';
-            const hash = window.location.hash || '';
-            window.location.replace(`/reset-password${search}${hash}`);
-          }
-          return;
-        }
-
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         if (session?.user) {
-          // If on /reset-password, avoid overwriting transient recovery state with standard customer session
-          if (typeof window !== 'undefined' && window.location.pathname === '/reset-password') {
-            return;
+          if (typeof window === 'undefined' || window.location.pathname !== '/reset-password') {
+            await syncServerSession(session);
           }
-          await syncServerSession();
-        } else if (event === 'SIGNED_OUT') {
-          setUser(null);
         }
-      });
-
-      return () => {
-        mounted = false;
-        subscription.unsubscribe();
-      };
-    }
+        markInitialized();
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        markInitialized();
+      }
+    });
 
     return () => {
       mounted = false;
+      clearTimeout(fallbackTimeoutId);
+      subscription.unsubscribe();
     };
   }, [syncServerSession]);
 
@@ -195,7 +214,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { error: error.message };
       }
       if (data.user) {
-        const authUser = await syncServerSession();
+        const authUser = await syncServerSession(data.session);
         return { error: null, role: (authUser?.role as Role) || 'customer' };
       }
       return { error: null };
@@ -317,7 +336,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { error: error.message };
       }
       if (data.session || data.user) {
-        const authUser = await syncServerSession();
+        const authUser = await syncServerSession(data.session);
         return { error: null, role: (authUser?.role as Role) || 'customer' };
       }
       return { error: null, role: 'customer' };

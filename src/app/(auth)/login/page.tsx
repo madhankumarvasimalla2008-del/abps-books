@@ -208,8 +208,15 @@ function LoginForm() {
     setIsGoogleLoading(true);
     setErrorMessage(null);
     setSuccessMessage(null);
-    const destination = getSafeRedirectUrl(redirectParam, 'customer');
-    const res = await signInWithGoogle(destination);
+    // Sanitize destination to a safe internal relative path; authoritative role is verified on the server in /auth/callback
+    const target =
+      redirectParam &&
+      redirectParam.startsWith('/') &&
+      !redirectParam.startsWith('//') &&
+      !redirectParam.startsWith('/\\')
+        ? redirectParam
+        : '/';
+    const res = await signInWithGoogle(target);
     if (res.error) {
       setIsGoogleLoading(false);
       setErrorMessage(res.error);

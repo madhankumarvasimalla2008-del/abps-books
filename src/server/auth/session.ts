@@ -3,8 +3,8 @@ import { db } from '@/db';
 import { authUsers, userRoles, roles, customerProfiles, staffProfiles } from '@/db/schema';
 import { AuthContext, UserRole } from './types';
 import { ForbiddenError, UnauthorizedError } from '../errors';
-import { createSupabaseClientFromRequest } from '@/lib/supabase/server';
-import type { User as SupabaseUser } from '@supabase/supabase-js';
+import { createSupabaseClientFromRequest, createSupabaseServerClient } from '@/lib/supabase/server';
+import type { User as SupabaseUser, SupabaseClient } from '@supabase/supabase-js';
 import { normalizeIndianPhone } from '@/lib/phone';
 
 const ROLE_HIERARCHY: Record<UserRole, number> = {
@@ -245,26 +245,42 @@ export async function resolveAuthContextFromRequest(req: Request): Promise<AuthC
 
   // 1. If Supabase token or cookie is available, verify via Supabase Auth
   try {
-    const supabase = createSupabaseClientFromRequest(req);
+    let supabase: SupabaseClient;
+    try {
+      // In Route Handlers where next/headers cookies() is active, createSupabaseServerClient
+      // allows Supabase SSR to persist refreshed session cookies to the response.
+      supabase = await createSupabaseServerClient();
+    } catch {
+      // In test runners or contexts where next/headers is not active, fall back to request client
+      supabase = createSupabaseClientFromRequest(req);
+    }
+
     let supabaseUser: SupabaseUser | null = null;
 
     if (token) {
       const { data, error } = await supabase.auth.getUser(token);
       if (!error && data?.user) {
         supabaseUser = data.user;
+      } else if (error && (process.env.NODE_ENV !== 'production' || process.env.AUTH_DEBUG === 'true')) {
+        console.warn('[auth] Bearer token verification failed:', error.message);
       }
     } else {
       const { data, error } = await supabase.auth.getUser();
       if (!error && data?.user) {
         supabaseUser = data.user;
+      } else if (error && (process.env.NODE_ENV !== 'production' || process.env.AUTH_DEBUG === 'true')) {
+        console.warn('[auth] Cookie session verification failed:', error.message);
       }
     }
 
     if (supabaseUser) {
       return await resolveOrCreateAuthUser(supabaseUser);
     }
-  } catch {
-    // If Supabase call fails or credentials not configured, proceed to fallback logic
+  } catch (err: unknown) {
+    if (process.env.NODE_ENV !== 'production' || process.env.AUTH_DEBUG === 'true') {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.warn('[auth] Unexpected error during session resolution:', msg);
+    }
   }
 
   // 2. Production Safety: Dev headers are NEVER accepted in production
