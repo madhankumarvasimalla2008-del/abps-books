@@ -11,6 +11,7 @@ import { CatalogSearch } from '@/components/customer/catalog/CatalogSearch';
 import { CatalogFilters, CatalogFilterState } from '@/components/customer/catalog/CatalogFilters';
 import { CatalogSort, SortOption } from '@/components/customer/catalog/CatalogSort';
 import { ProductGrid } from '@/components/customer/catalog/ProductGrid';
+import { DemoCatalogNotice } from '@/components/customer/DemoCatalogNotice';
 import { CatalogEmptyState } from '@/components/customer/catalog/CatalogEmptyState';
 
 function BooksCatalogContent() {
@@ -279,6 +280,8 @@ function BooksCatalogContent() {
           ...(filters.subject ? [{ label: filters.subject }] : []),
         ]}
       />
+
+      <DemoCatalogNotice />
 
       {/* Catalog Header & Top Actions */}
       <div className="store-catalog-heading space-y-5">

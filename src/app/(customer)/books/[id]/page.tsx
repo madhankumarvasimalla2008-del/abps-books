@@ -10,6 +10,7 @@ import { ProductInfo } from '@/components/customer/product/ProductInfo';
 import { RelatedProducts } from '@/components/customer/product/RelatedProducts';
 import { ProductNotFound } from '@/components/customer/product/ProductNotFound';
 import { ProductSkeleton } from '@/components/customer/product/ProductSkeleton';
+import { DemoCatalogNotice } from '@/components/customer/DemoCatalogNotice';
 
 interface BookDetailPageProps {
   params: Promise<{ id: string }>;
@@ -28,6 +29,7 @@ function BookDetailContent({ paramsPromise }: { paramsPromise: Promise<{ id: str
 
   return (
     <div className="space-y-8">
+      <DemoCatalogNotice />
       {/* Accessible Navigation Breadcrumb */}
       <Breadcrumbs
         items={[

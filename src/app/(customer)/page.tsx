@@ -8,6 +8,7 @@ import { useCategories } from '@/context/CategoryContext';
 import { useAuth } from '@/context/AuthContext';
 import { ProductCard } from '@/components/customer/ProductCard';
 import { BookCover } from '@/components/customer/BookCover';
+import { DemoCatalogNotice } from '@/components/customer/DemoCatalogNotice';
 
 const collectionImages = [
   { match: /textbook|coursebook/i, image: '/images/category-tile-textbooks.jpg' },
@@ -28,6 +29,7 @@ export default function CustomerHomePage() {
 
   return (
     <div className="store-home">
+      <div className="store-container store-home-notice"><DemoCatalogNotice /></div>
       {user && <div className="store-container store-welcome"><span>Welcome back, {user.name}{user.branchName ? ` · ${user.branchName}` : ''}</span><div><Link href="/profile/addresses">Delivery details</Link><Link href="/orders">Your orders <ArrowRight size={14} /></Link></div></div>}
       <section className="store-container store-hero" aria-labelledby="hero-heading">
         <div className="store-hero-copy">
@@ -40,7 +42,7 @@ export default function CustomerHomePage() {
         <div className="store-hero-visual">
           <Image src="/images/bookstore-hero-shelves.jpg" alt="Wooden bookshelves in a warmly lit bookstore" fill sizes="(max-width: 767px) 100vw, 50vw" preload className="store-hero-photo" />
           <span className="store-visual-caption">A place for curious minds.</span>
-          {heroBook && <Link href={`/books/${heroBook.id}`} className="store-hero-pick" aria-label={`Explore ${heroBook.title}`}><BookCover product={heroBook} size="sm" /><div><span className="store-eyebrow">FROM THE CATALOG</span><h2>{heroBook.title}</h2><p>{heroBook.grade} · {heroBook.publisher}</p><span className="store-pick-link">Take a closer look <ArrowRight size={15} /></span></div></Link>}
+          {heroBook && <Link href={`/books/${heroBook.id}`} className="store-hero-pick" aria-label={`Explore ${heroBook.title}`}><BookCover product={heroBook} size="sm" /><div><span className="store-eyebrow">DEMO CATALOG PICK</span><h2>{heroBook.title}</h2><p>{heroBook.grade} · {heroBook.publisher}</p><span className="store-pick-link">Take a closer look <ArrowRight size={15} /></span></div></Link>}
         </div>
       </section>
       <section className="store-container store-section" aria-labelledby="featured-heading">
