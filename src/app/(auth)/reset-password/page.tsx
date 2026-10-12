@@ -45,26 +45,46 @@ export default function ResetPasswordPage() {
     isMountedRef.current = true;
     let recoveryTimeout: NodeJS.Timeout | null = null;
 
-    // 1. Check for explicit error in URL hash (e.g., #error=access_denied&error_description=...)
-    if (typeof window !== 'undefined' && window.location.hash) {
-      const hashParams = new URLSearchParams(window.location.hash.substring(1));
-      const errorDesc = hashParams.get('error_description');
-      const errorCode = hashParams.get('error_code');
-      const error = hashParams.get('error');
+    // 1. Check for explicit error or code in URL hash and search query
+    let hashError: string | null = null;
+    let hashErrorCode: string | null = null;
+    let hashErrorDesc: string | null = null;
+    let queryCode: string | null = null;
 
-      if (error || errorCode || errorDesc) {
-        if (isMountedRef.current) {
-          setErrorMessage(
-            errorDesc
-              ? decodeURIComponent(errorDesc.replace(/\+/g, ' '))
-              : 'Password reset link is invalid or has expired.'
-          );
-          setStatus('invalid');
-        }
-        return () => {
-          isMountedRef.current = false;
-        };
+    if (typeof window !== 'undefined') {
+      if (window.location.hash) {
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        hashError = hashParams.get('error');
+        hashErrorCode = hashParams.get('error_code');
+        hashErrorDesc = hashParams.get('error_description');
       }
+      if (window.location.search) {
+        const searchParams = new URLSearchParams(window.location.search);
+        hashError = hashError || searchParams.get('error');
+        hashErrorCode = hashErrorCode || searchParams.get('error_code');
+        hashErrorDesc = hashErrorDesc || searchParams.get('error_description');
+        queryCode = searchParams.get('code');
+      }
+    }
+
+    if (hashError || hashErrorCode || hashErrorDesc) {
+      if (isMountedRef.current) {
+        let cleanMsg = hashErrorDesc
+          ? decodeURIComponent(hashErrorDesc.replace(/\+/g, ' '))
+          : 'Password reset link is invalid or has expired.';
+        if (
+          hashErrorCode === 'otp_expired' ||
+          cleanMsg.toLowerCase().includes('expired') ||
+          cleanMsg.toLowerCase().includes('invalid')
+        ) {
+          cleanMsg = 'Your password reset link has expired or has already been used. Please request a new reset link.';
+        }
+        setErrorMessage(cleanMsg);
+        setStatus('invalid');
+      }
+      return () => {
+        isMountedRef.current = false;
+      };
     }
 
     const client = supabaseBrowser;
@@ -78,7 +98,33 @@ export default function ResetPasswordPage() {
       };
     }
 
-    // 2. Listen for PASSWORD_RECOVERY or SIGNED_IN event
+    // 2. If a PKCE 'code' is present in URL (e.g. email link opened in fresh browser tab), exchange it server/client
+    if (queryCode) {
+      client.auth
+        .exchangeCodeForSession(queryCode)
+        .then(({ data, error: exchangeError }) => {
+          if (!isMountedRef.current) return;
+          if (exchangeError) {
+            setErrorMessage(
+              'Your password reset link has expired or has already been used. Please request a new reset link.'
+            );
+            setStatus('invalid');
+          } else if (data?.session) {
+            setStatus('ready');
+            setErrorMessage(null);
+          }
+        })
+        .catch(() => {
+          if (isMountedRef.current) {
+            setErrorMessage(
+              'Your password reset link has expired or has already been used. Please request a new reset link.'
+            );
+            setStatus('invalid');
+          }
+        });
+    }
+
+    // 3. Listen for PASSWORD_RECOVERY or SIGNED_IN event
     const {
       data: { subscription },
     } = client.auth.onAuthStateChange((event, session) => {
@@ -89,20 +135,22 @@ export default function ResetPasswordPage() {
       }
     });
 
-    // 3. Check current session
-    client.auth.getSession().then(({ data: { session }, error }) => {
-      if (!isMountedRef.current) return;
-      if (error) {
-        setErrorMessage(error.message);
-        setStatus('invalid');
-        return;
-      }
-      if (session) {
-        setStatus('ready');
-      }
-    });
+    // 4. Check current session if no query code is currently in flight
+    if (!queryCode) {
+      client.auth.getSession().then(({ data: { session }, error }) => {
+        if (!isMountedRef.current) return;
+        if (error) {
+          setErrorMessage('Your password reset link has expired or has already been used. Please request a new reset link.');
+          setStatus('invalid');
+          return;
+        }
+        if (session) {
+          setStatus('ready');
+        }
+      });
+    }
 
-    // 4. Bounded fallback: Guarantee deterministic resolution from 'checking' within 2500ms
+    // 5. Bounded fallback: Guarantee deterministic resolution from 'checking' within 3000ms
     recoveryTimeout = setTimeout(async () => {
       if (!isMountedRef.current) return;
       try {
@@ -113,7 +161,7 @@ export default function ResetPasswordPage() {
           } else {
             setStatus((current) => {
               if (current === 'checking') {
-                setErrorMessage('No valid password recovery session found. The link may be expired or invalid.');
+                setErrorMessage('Your password reset link has expired or has already been used. Please request a new reset link.');
                 return 'invalid';
               }
               return current;
@@ -124,14 +172,14 @@ export default function ResetPasswordPage() {
         if (isMountedRef.current) {
           setStatus((current) => {
             if (current === 'checking') {
-              setErrorMessage('No valid password recovery session found. The link may be expired or invalid.');
+              setErrorMessage('Your password reset link has expired or has already been used. Please request a new reset link.');
               return 'invalid';
             }
             return current;
           });
         }
       }
-    }, 2500);
+    }, 3000);
 
     return () => {
       isMountedRef.current = false;

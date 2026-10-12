@@ -8,6 +8,10 @@ import { provisionAdminUser } from '../src/server/auth/provisioning';
 describe('Supabase Password Recovery & Redirect Integration', () => {
   const originalEnv = { ...process.env };
 
+  function setNodeEnv(env: string) {
+    (process.env as Record<string, string | undefined>).NODE_ENV = env;
+  }
+
   beforeEach(() => {
     process.env = { ...originalEnv };
   });
@@ -22,6 +26,7 @@ describe('Supabase Password Recovery & Redirect Integration', () => {
   describe('getSiteOrigin helper', () => {
     it('returns NEXT_PUBLIC_SITE_URL with prepended https:// if protocol is omitted', () => {
       delete process.env.NEXT_PUBLIC_VERCEL_URL;
+      delete process.env.VERCEL_PROJECT_PRODUCTION_URL;
       process.env.NEXT_PUBLIC_SITE_URL = 'abpsbooks.example.com';
 
       const origin = getSiteOrigin();
@@ -30,6 +35,7 @@ describe('Supabase Password Recovery & Redirect Integration', () => {
 
     it('strips trailing slashes from NEXT_PUBLIC_SITE_URL', () => {
       delete process.env.NEXT_PUBLIC_VERCEL_URL;
+      delete process.env.VERCEL_PROJECT_PRODUCTION_URL;
       process.env.NEXT_PUBLIC_SITE_URL = 'https://abpsbooks.example.com///';
 
       const origin = getSiteOrigin();
@@ -38,18 +44,49 @@ describe('Supabase Password Recovery & Redirect Integration', () => {
 
     it('returns NEXT_PUBLIC_VERCEL_URL when NEXT_PUBLIC_SITE_URL is not set', () => {
       delete process.env.NEXT_PUBLIC_SITE_URL;
+      delete process.env.VERCEL_PROJECT_PRODUCTION_URL;
       process.env.NEXT_PUBLIC_VERCEL_URL = 'abps-books-staging.vercel.app';
 
       const origin = getSiteOrigin();
       assert.strictEqual(origin, 'https://abps-books-staging.vercel.app');
     });
 
-    it('falls back to http://localhost:3000 when no environment variables are present', () => {
+    it('falls back to http://localhost:3000 when no environment variables are present in dev/test', () => {
       delete process.env.NEXT_PUBLIC_SITE_URL;
       delete process.env.NEXT_PUBLIC_VERCEL_URL;
+      delete process.env.VERCEL_PROJECT_PRODUCTION_URL;
+      setNodeEnv('test');
 
       const origin = getSiteOrigin();
       assert.strictEqual(origin, 'http://localhost:3000');
+    });
+
+    it('RULE: In production, NEVER returns localhost:3000 even if no environment variables are set', () => {
+      delete process.env.NEXT_PUBLIC_SITE_URL;
+      delete process.env.NEXT_PUBLIC_VERCEL_URL;
+      delete process.env.VERCEL_PROJECT_PRODUCTION_URL;
+      setNodeEnv('production');
+
+      const origin = getSiteOrigin();
+      assert.strictEqual(origin, 'https://abps-books.vercel.app');
+      assert.notStrictEqual(origin, 'http://localhost:3000');
+    });
+
+    it('RULE: In production, prevents accidental localhost in NEXT_PUBLIC_SITE_URL', () => {
+      setNodeEnv('production');
+      process.env.NEXT_PUBLIC_SITE_URL = 'http://localhost:3000';
+
+      const origin = getSiteOrigin();
+      assert.strictEqual(origin, 'https://abps-books.vercel.app');
+    });
+
+    it('uses VERCEL_PROJECT_PRODUCTION_URL in production when NEXT_PUBLIC_SITE_URL is unset', () => {
+      setNodeEnv('production');
+      delete process.env.NEXT_PUBLIC_SITE_URL;
+      process.env.VERCEL_PROJECT_PRODUCTION_URL = 'custom-prod.vercel.app';
+
+      const origin = getSiteOrigin();
+      assert.strictEqual(origin, 'https://custom-prod.vercel.app');
     });
   });
 
@@ -57,13 +94,50 @@ describe('Supabase Password Recovery & Redirect Integration', () => {
   // 2. Auth Callback Route Tests
   // --------------------------------------------------------------------------
   describe('Auth Callback Route Handler (/auth/callback)', () => {
-    it('redirects to /login?error=auth_callback_failed when no code is present', async () => {
+    it('redirects to /login?error=auth_callback_failed when no code is present in development', async () => {
+      setNodeEnv('test');
+      delete process.env.NEXT_PUBLIC_SITE_URL;
       const req = new Request('http://localhost:3000/auth/callback');
       const response = await callbackRouteHandler(req);
 
       assert.strictEqual(response.status, 307);
       const location = response.headers.get('location');
       assert.strictEqual(location, 'http://localhost:3000/login?error=auth_callback_failed');
+    });
+
+    it('RULE: In production, redirects to canonical production URL and NEVER to localhost:3000', async () => {
+      setNodeEnv('production');
+      delete process.env.NEXT_PUBLIC_SITE_URL;
+      // Even if internal serverless container URL has localhost host header:
+      const req = new Request('http://localhost:3000/auth/callback');
+      const response = await callbackRouteHandler(req);
+
+      assert.strictEqual(response.status, 307);
+      const location = response.headers.get('location');
+      assert.strictEqual(location, 'https://abps-books.vercel.app/login?error=auth_callback_failed');
+      assert.ok(!location?.includes('localhost:3000'));
+    });
+
+    it('forwards OAuth provider errors and user cancellation gracefully', async () => {
+      setNodeEnv('production');
+      const req = new Request('https://abps-books.vercel.app/auth/callback?error=access_denied&error_description=User+cancelled');
+      const response = await callbackRouteHandler(req);
+
+      assert.strictEqual(response.status, 307);
+      const location = response.headers.get('location');
+      assert.ok(location?.startsWith('https://abps-books.vercel.app/login?error=access_denied'));
+      assert.ok(location?.includes('message=Sign%20in%20was%20cancelled.%20Please%20try%20again.'));
+    });
+
+    it('forwards expired link errors gracefully with actionable message', async () => {
+      setNodeEnv('production');
+      const req = new Request('https://abps-books.vercel.app/auth/callback?error=access_denied&error_code=otp_expired');
+      const response = await callbackRouteHandler(req);
+
+      assert.strictEqual(response.status, 307);
+      const location = response.headers.get('location');
+      assert.ok(location?.includes('error=access_denied'));
+      assert.ok(location?.includes('message=The%20verification%20link%20has%20expired'));
     });
   });
 

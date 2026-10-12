@@ -29,22 +29,15 @@ import { normalizeIndianPhone, formatPhoneDisplay, sanitizeIndianMobileInput } f
  * Sanitizes open redirect parameters to prevent external Phishing / Open Redirect vulnerabilities.
  * Ensures the target route is internal and strictly role-appropriate.
  */
-export function getSafeRedirectUrl(target: string | null | undefined, role: Role): string {
-  if (target && target.startsWith('/') && !target.startsWith('//') && !target.startsWith('/\\')) {
-    // If a customer tries to redirect to /admin, send them to store home
-    if (target.startsWith('/admin') && !['admin', 'branch_admin', 'warehouse', 'sales'].includes(role)) {
-      return '/';
-    }
-    return target;
-  }
-  return ['admin', 'branch_admin', 'warehouse', 'sales'].includes(role) ? '/admin' : '/';
-}
+import { getSafeRedirectUrl } from '@/lib/auth-redirect';
+export { getSafeRedirectUrl };
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectParam = searchParams.get('redirect') || searchParams.get('next');
   const errorParam = searchParams.get('error');
+  const messageParam = searchParams.get('message') || searchParams.get('error_description');
 
   const { loginAs, signIn, signInWithGoogle, sendPhoneOtp, verifyPhoneOtp, role: currentRole } = useAuth();
   const isDev = process.env.NODE_ENV !== 'production';
@@ -69,12 +62,33 @@ function LoginForm() {
 
   // Common UI state
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(
-    errorParam === 'auth_callback_failed'
-      ? 'Authentication via Google was unsuccessful or cancelled. Please try again.'
-      : null
-  );
+  const [errorMessage, setErrorMessage] = useState<string | null>(() => {
+    if (messageParam) {
+      return decodeURIComponent(messageParam.replace(/\+/g, ' '));
+    }
+    if (errorParam === 'auth_callback_failed') {
+      return 'Authentication via Google was unsuccessful or cancelled. Please try again.';
+    }
+    if (errorParam === 'auth_exchange_failed') {
+      return 'Authentication session could not be established. Please try again.';
+    }
+    if (errorParam) {
+      return `Authentication error: ${decodeURIComponent(errorParam)}`;
+    }
+    return null;
+  });
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // Sync error message if query parameters change
+  useEffect(() => {
+    if (messageParam) {
+      setErrorMessage(decodeURIComponent(messageParam.replace(/\+/g, ' ')));
+    } else if (errorParam === 'auth_callback_failed') {
+      setErrorMessage('Authentication via Google was unsuccessful or cancelled. Please try again.');
+    } else if (errorParam === 'auth_exchange_failed') {
+      setErrorMessage('Authentication session could not be established. Please try again.');
+    }
+  }, [errorParam, messageParam]);
 
   // Cooldown countdown effect
   useEffect(() => {
