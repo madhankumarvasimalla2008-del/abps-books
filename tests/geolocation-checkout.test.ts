@@ -26,10 +26,10 @@ describe('ABPS Books — Automatic Location & Checkout Address Autofill Suite', 
   // 1. OpenStreetMap Nominatim Response Parsing & Mapping
   // --------------------------------------------------------------------------
   describe('Nominatim Response Mapping', () => {
-    it('correctly maps full Indian street address and 6-digit PIN code', () => {
+    it('correctly maps full Indian street address and 6-digit PIN code with premises detection', () => {
       const mockNominatimData = {
         place_id: 123456,
-        display_name: 'Birla Cellulosic Campus, Kosamba, Mangrol Taluka, Surat, Gujarat, 394120, India',
+        display_name: 'Campus Block B, Birla Cellulosic Road, Kosamba, Mangrol Taluka, Surat, Gujarat, 394120, India',
         address: {
           house_number: 'Campus Block B',
           road: 'Birla Cellulosic Road',
@@ -52,15 +52,17 @@ describe('ABPS Books — Automatic Location & Checkout Address Autofill Suite', 
       assert.strictEqual(result.state, 'Gujarat');
       assert.strictEqual(result.pincode, '394120');
       assert.strictEqual(result.hasValidPincode, true);
+      assert.strictEqual(result.isLocalityOnly, false);
+      assert.strictEqual(result.hasSpecificPremises, true);
       assert.strictEqual(result.provider, 'OpenStreetMap (Nominatim)');
     });
 
-    it('handles missing street by elevating suburb and locality to addressLine1', () => {
+    it('identifies locality-only GPS results and flags missing premises without inventing street or flat numbers', () => {
       const mockNominatimData = {
         place_id: 234567,
-        display_name: 'Kharach, Kosamba, Gujarat, 394120, India',
+        display_name: 'Mangrol Taluka, Surat, Gujarat, 394120, India',
         address: {
-          suburb: 'Kharach',
+          county: 'Mangrol Taluka',
           town: 'Kosamba',
           state: 'Gujarat',
           postcode: '394120',
@@ -69,11 +71,35 @@ describe('ABPS Books — Automatic Location & Checkout Address Autofill Suite', 
 
       const result = mapNominatimToResult(mockNominatimData);
 
-      assert.strictEqual(result.addressLine1, 'Kharach');
+      assert.strictEqual(result.addressLine1, 'Mangrol Taluka');
       assert.strictEqual(result.city, 'Kosamba');
       assert.strictEqual(result.state, 'Gujarat');
       assert.strictEqual(result.pincode, '394120');
-      assert.strictEqual(result.hasValidPincode, true);
+      assert.strictEqual(result.isLocalityOnly, true);
+      assert.strictEqual(result.hasSpecificPremises, false);
+      assert.strictEqual(result.detectedLocality, 'Mangrol Taluka');
+    });
+
+    it('identifies road-only results where street is known but house/flat number is absent', () => {
+      const mockNominatimData = {
+        place_id: 234568,
+        display_name: 'Station Road, Kosamba, Gujarat, 394120, India',
+        address: {
+          road: 'Station Road',
+          suburb: 'Market Yard',
+          town: 'Kosamba',
+          state: 'Gujarat',
+          postcode: '394120',
+        },
+      };
+
+      const result = mapNominatimToResult(mockNominatimData);
+
+      assert.strictEqual(result.addressLine1, 'Station Road');
+      assert.strictEqual(result.addressLine2, 'Market Yard');
+      assert.strictEqual(result.city, 'Kosamba');
+      assert.strictEqual(result.isLocalityOnly, false); // Street was identified
+      assert.strictEqual(result.hasSpecificPremises, false); // But no house/flat number
     });
 
     it('does not invent or guess missing PIN codes', () => {
@@ -113,7 +139,7 @@ describe('ABPS Books — Automatic Location & Checkout Address Autofill Suite', 
   // 2. BigDataCloud Fallback Provider Mapping
   // --------------------------------------------------------------------------
   describe('BigDataCloud Fallback Provider', () => {
-    it('correctly maps BigDataCloud response into address components', () => {
+    it('correctly maps BigDataCloud response into address components with locality flags', () => {
       const mockBdcData = {
         latitude: 21.48,
         longitude: 72.95,
@@ -137,6 +163,8 @@ describe('ABPS Books — Automatic Location & Checkout Address Autofill Suite', 
       assert.strictEqual(result.state, 'Gujarat');
       assert.strictEqual(result.pincode, '394120');
       assert.strictEqual(result.hasValidPincode, true);
+      assert.strictEqual(result.isLocalityOnly, true);
+      assert.strictEqual(result.hasSpecificPremises, false);
       assert.strictEqual(result.provider, 'BigDataCloud (Fallback)');
     });
   });
@@ -206,11 +234,12 @@ describe('ABPS Books — Automatic Location & Checkout Address Autofill Suite', 
           hasValidPincode: true,
           formattedAddress: 'Cached Address',
           provider: 'OpenStreetMap (Nominatim)',
+          isLocalityOnly: false,
+          hasSpecificPremises: true,
         },
         timestamp: Date.now(),
       });
 
-      // Execute reverse lookup:
       const res = await service.reverseGeocode(21.48, 72.95);
       assert.strictEqual(res.addressLine1, 'Cached Campus Line');
       assert.strictEqual(res.city, 'Kosamba');
@@ -218,12 +247,10 @@ describe('ABPS Books — Automatic Location & Checkout Address Autofill Suite', 
 
     it('enforces rate limits per client identifier and throws RateLimitError when exceeded', () => {
       const testIp = '192.168.1.100';
-      // First 25 calls succeed
       for (let i = 0; i < 25; i++) {
         checkRateLimit(testIp);
       }
 
-      // 26th call should throw RateLimitError (429)
       assert.throws(
         () => {
           checkRateLimit(testIp);
@@ -258,7 +285,6 @@ describe('ABPS Books — Automatic Location & Checkout Address Autofill Suite', 
       global.fetch = (async (url: any) => {
         const urlStr = String(url);
         if (urlStr.includes('nominatim.openstreetmap.org')) {
-          // Simulate Nominatim 503 or network failure
           return {
             ok: false,
             status: 503,
@@ -347,10 +373,33 @@ describe('ABPS Books — Automatic Location & Checkout Address Autofill Suite', 
   // 7. Checkout Address Autofill & Recipient Detail Preservation
   // --------------------------------------------------------------------------
   describe('Customer Recipient Preservation & Form Validation', () => {
-    it('strictly preserves recipientName and phone when autofilling address', () => {
+    const validateAddress = (data: AddressData): AddressErrors => {
+      const errors: AddressErrors = {};
+      if (!data.recipientName.trim() || data.recipientName.trim().length < 2) {
+        errors.recipientName = 'Recipient name is required';
+      }
+      if (!data.phone.trim() || data.phone.length !== 10) {
+        errors.phone = 'Valid phone is required';
+      }
+      if (!data.addressLine1.trim() || data.addressLine1.trim().length < 3) {
+        errors.addressLine1 = 'Address line 1 is required';
+      }
+      if (!data.city.trim() || data.city.trim().length < 2) {
+        errors.city = 'City is required';
+      }
+      if (!data.state.trim() || data.state.trim().length < 2) {
+        errors.state = 'State is required';
+      }
+      if (!data.pincode.trim() || data.pincode.length !== 6) {
+        errors.pincode = 'Valid 6-digit PIN code required';
+      }
+      return errors;
+    };
+
+    it('strictly preserves recipientName, phone, and selectedBranchId when autofilling address', () => {
       const existingAddressData: AddressData = {
-        useBranchAddress: false,
-        selectedBranchId: '',
+        useBranchAddress: true,
+        selectedBranchId: 'b1',
         recipientName: 'Madhan Kumar',
         phone: '9876543210',
         addressLine1: '',
@@ -358,7 +407,7 @@ describe('ABPS Books — Automatic Location & Checkout Address Autofill Suite', 
         city: '',
         state: '',
         pincode: '',
-        deliveryNotes: 'Deliver to main gate',
+        deliveryNotes: 'Deliver to school reception',
       };
 
       const autofillResult = {
@@ -381,15 +430,64 @@ describe('ABPS Books — Automatic Location & Checkout Address Autofill Suite', 
         pincode: autofillResult.pincode,
         recipientName: existingAddressData.recipientName,
         phone: existingAddressData.phone,
+        selectedBranchId: existingAddressData.selectedBranchId,
       };
 
       assert.strictEqual(updatedAddressData.recipientName, 'Madhan Kumar');
       assert.strictEqual(updatedAddressData.phone, '9876543210');
+      assert.strictEqual(updatedAddressData.selectedBranchId, 'b1');
       assert.strictEqual(updatedAddressData.addressLine1, 'Birla Cellulosic Campus');
       assert.strictEqual(updatedAddressData.city, 'Kosamba');
       assert.strictEqual(updatedAddressData.state, 'Gujarat');
       assert.strictEqual(updatedAddressData.pincode, '394120');
-      assert.strictEqual(updatedAddressData.deliveryNotes, 'Deliver to main gate');
+      assert.strictEqual(updatedAddressData.deliveryNotes, 'Deliver to school reception');
+    });
+
+    it('allows customer to manually complete a locality-only GPS result with house/flat number', () => {
+      // 1. Initial state with locality-only GPS autofill
+      const localityOnlyData: AddressData = {
+        useBranchAddress: false,
+        selectedBranchId: '',
+        recipientName: 'Madhan Kumar',
+        phone: '9876543210',
+        addressLine1: 'Kosamba Mandal', // GPS gave only locality/mandal
+        addressLine2: '',
+        city: 'Kosamba',
+        state: 'Gujarat',
+        pincode: '394120',
+        deliveryNotes: '',
+      };
+
+      // 2. Customer edits Address Line 1 to add specific house/flat number & street
+      const customerCompletedData: AddressData = {
+        ...localityOnlyData,
+        addressLine1: 'Flat 402, Green Enclave, Station Road, Kosamba',
+        addressLine2: 'Near Old Bus Stand',
+      };
+
+      const errors = validateAddress(customerCompletedData);
+      assert.strictEqual(Object.keys(errors).length, 0);
+      assert.strictEqual(customerCompletedData.addressLine1, 'Flat 402, Green Enclave, Station Road, Kosamba');
+      assert.strictEqual(customerCompletedData.addressLine2, 'Near Old Bus Stand');
+    });
+
+    it('does NOT block legitimate rural addresses that have no urban street name', () => {
+      // In many rural areas in India, addresses are specified by village and landmark
+      const legitimateRuralAddress: AddressData = {
+        useBranchAddress: false,
+        selectedBranchId: '',
+        recipientName: 'Ramesh Patel',
+        phone: '9876543210',
+        addressLine1: 'Kharach Village, Opposite Gram Panchayat',
+        addressLine2: 'Near Primary School',
+        city: 'Kosamba',
+        state: 'Gujarat',
+        pincode: '394120',
+        deliveryNotes: 'Call at village entrance',
+      };
+
+      const errors = validateAddress(legitimateRuralAddress);
+      assert.strictEqual(Object.keys(errors).length, 0);
     });
 
     it('requires manual PIN code entry if GPS cannot resolve postal code', () => {
@@ -423,17 +521,6 @@ describe('ABPS Books — Automatic Location & Checkout Address Autofill Suite', 
         city: autofillResultWithoutPin.city,
         state: autofillResultWithoutPin.state,
         pincode: autofillResultWithoutPin.pincode,
-      };
-
-      const validateAddress = (data: AddressData): AddressErrors => {
-        const errors: AddressErrors = {};
-        if (!data.recipientName.trim()) errors.recipientName = 'Recipient name is required';
-        if (!data.phone.trim() || data.phone.length !== 10) errors.phone = 'Valid phone is required';
-        if (!data.addressLine1.trim()) errors.addressLine1 = 'Address line 1 is required';
-        if (!data.city.trim()) errors.city = 'City is required';
-        if (!data.state.trim()) errors.state = 'State is required';
-        if (!data.pincode.trim() || data.pincode.length !== 6) errors.pincode = 'Valid 6-digit PIN code required';
-        return errors;
       };
 
       const errors = validateAddress(updatedAddressData);

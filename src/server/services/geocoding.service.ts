@@ -51,6 +51,21 @@ export function parseIndianPinCode(rawCode?: string | null): string {
 export function mapNominatimToResult(data: NominatimResponse): ReverseGeocodeResult {
   const addr = data.address || {};
 
+  const hasSpecificPremises = Boolean(addr.house_number || addr.building || addr.amenity);
+  const hasStreetOrRoad = Boolean(addr.road || addr.pedestrian || addr.footway || addr.street);
+  const isLocalityOnly = !hasSpecificPremises && !hasStreetOrRoad;
+
+  const detectedLocality =
+    addr.suburb ||
+    addr.neighbourhood ||
+    addr.residential ||
+    addr.locality ||
+    addr.village ||
+    addr.hamlet ||
+    addr.subdistrict ||
+    addr.county ||
+    '';
+
   const streetPart = [
     addr.house_number || addr.building || addr.amenity,
     addr.road || addr.pedestrian || addr.footway || addr.street,
@@ -98,6 +113,9 @@ export function mapNominatimToResult(data: NominatimResponse): ReverseGeocodeRes
     hasValidPincode: parsedPincode.length === 6,
     formattedAddress: data.display_name || '',
     provider: 'OpenStreetMap (Nominatim)',
+    isLocalityOnly,
+    hasSpecificPremises,
+    detectedLocality: detectedLocality || city,
   };
 }
 
@@ -119,6 +137,9 @@ export function mapBigDataCloudToResult(data: any): ReverseGeocodeResult {
     hasValidPincode: parsedPincode.length === 6,
     formattedAddress: [city, state, parsedPincode].filter(Boolean).join(', '),
     provider: 'BigDataCloud (Fallback)',
+    isLocalityOnly: true,
+    hasSpecificPremises: false,
+    detectedLocality: data.locality || city || '',
   };
 }
 

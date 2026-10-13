@@ -7,6 +7,9 @@ export interface ReverseGeocodeResult {
   hasValidPincode: boolean;
   formattedAddress: string;
   provider: string;
+  isLocalityOnly?: boolean;
+  hasSpecificPremises?: boolean;
+  detectedLocality?: string;
 }
 
 export interface Coordinates {
@@ -17,4 +20,7 @@ export interface Coordinates {
 export interface GeolocationNotice {
   message: string;
   pincodeMissing: boolean;
+  isLocalityOnly?: boolean;
+  detectedLocality?: string;
+  promptHouseStreet?: boolean;
 }

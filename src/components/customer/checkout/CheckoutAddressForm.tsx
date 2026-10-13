@@ -96,9 +96,23 @@ export const CheckoutAddressForm: React.FC<CheckoutAddressFormProps> = ({
         onLocationAutofill(result);
       }
 
+      const isLocalityOnly = Boolean(result.isLocalityOnly);
+      const missingPremises = !result.hasSpecificPremises;
+      const detectedArea = result.detectedLocality || result.city || 'your area';
+
+      let noticeMessage = 'Address components detected from GPS. Please review all fields and verify your delivery details.';
+      if (isLocalityOnly) {
+        noticeMessage = `📍 Locality Detected (${detectedArea}): GPS resolved your general area. Please enter your House / Flat / Door number and Street name in Address Line 1.`;
+      } else if (missingPremises) {
+        noticeMessage = `📍 Street Located (${result.addressLine1}): Please add your House, Flat, or Building number before placing your order.`;
+      }
+
       setLocationNotice({
-        message: 'Address auto-filled from your current location. Please review all fields, verify the PIN code, and add your house/flat number or landmark if needed.',
+        message: noticeMessage,
         pincodeMissing: !result.hasValidPincode,
+        isLocalityOnly,
+        detectedLocality: detectedArea,
+        promptHouseStreet: isLocalityOnly || missingPremises,
       });
     } catch (err: any) {
       setLocationError(formatGeolocationErrorMessage(err));
@@ -155,18 +169,23 @@ export const CheckoutAddressForm: React.FC<CheckoutAddressFormProps> = ({
         </Button>
       </div>
 
-      {/* Geolocation Success Notice Banner */}
+      {/* Geolocation Success & Completeness Guidance Banner */}
       {locationNotice && (
         <div
           role="status"
-          className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-900 rounded-sm text-xs flex items-start justify-between gap-2 shadow-xs animate-in fade-in duration-150"
+          className="p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-950 rounded-sm text-xs flex items-start justify-between gap-2 shadow-xs animate-in fade-in duration-150"
         >
-          <div className="flex items-start gap-2">
+          <div className="flex items-start gap-2.5">
             <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-            <div className="space-y-1">
-              <p className="font-semibold text-emerald-800">{locationNotice.message}</p>
+            <div className="space-y-1.5">
+              <p className="font-semibold text-emerald-900 leading-snug">{locationNotice.message}</p>
+              {locationNotice.promptHouseStreet && (
+                <p className="text-[11px] text-emerald-800 font-medium bg-emerald-100/70 p-2 rounded-xs border border-emerald-300/60">
+                  ✏️ <strong>Completeness Tip:</strong> GPS alone cannot identify your specific door or flat. Please add your <strong>House / Flat / Door number</strong> and <strong>Street / Landmark</strong> to ensure smooth courier delivery.
+                </p>
+              )}
               {locationNotice.pincodeMissing && (
-                <p className="text-[11px] text-amber-800 font-medium bg-amber-50 p-1.5 rounded-xs border border-amber-200/60">
+                <p className="text-[11px] text-amber-800 font-medium bg-amber-50 p-2 rounded-xs border border-amber-200/80">
                   ⚠️ <strong>Action Required:</strong> PIN code could not be determined from GPS. Please enter your 6-digit postal PIN code manually.
                 </p>
               )}
@@ -278,16 +297,21 @@ export const CheckoutAddressForm: React.FC<CheckoutAddressFormProps> = ({
           />
         </div>
 
-        {/* Address Line 1 with optional location shortcut */}
+        {/* Address Line 1 with guidance helper text */}
         <div className="sm:col-span-2">
           <Input
-            label="Address Line 1"
-            placeholder="e.g. 123 Main Street or Campus Address"
+            label="Address Line 1 (House/Flat No., Building, Street)"
+            placeholder="e.g. Flat 402, Building 3, MG Road or Campus Block"
             required
             value={data.addressLine1}
             error={errors.addressLine1}
             onChange={(e) => onChange('addressLine1', e.target.value)}
             leftIcon={<MapPin className="w-4 h-4" />}
+            helperText={
+              locationNotice?.promptHouseStreet
+                ? "💡 Include house/flat number, building name, and street or village landmark"
+                : "House/flat number, building name, and street or campus address"
+            }
             rightElement={
               <button
                 type="button"
@@ -310,18 +334,19 @@ export const CheckoutAddressForm: React.FC<CheckoutAddressFormProps> = ({
         {/* Address Line 2 */}
         <div className="sm:col-span-2">
           <Input
-            label="Address Line 2 (Optional)"
-            placeholder="e.g. Apartment, suite, unit, or landmark"
+            label="Address Line 2 (Area, Locality or Landmark - Optional)"
+            placeholder="e.g. Near Water Tank, Sector 4, or Opposite Birla Temple"
             value={data.addressLine2}
             onChange={(e) => onChange('addressLine2', e.target.value)}
+            helperText="Nearby landmark, colony, sector, or post office to guide the courier"
           />
         </div>
 
         {/* City */}
         <div>
           <Input
-            label="City"
-            placeholder="e.g. Kosamba"
+            label="City / Town / Taluka"
+            placeholder="e.g. Kosamba, Mangrol, or Bharuch"
             required
             value={data.city}
             error={errors.city}
@@ -368,7 +393,7 @@ export const CheckoutAddressForm: React.FC<CheckoutAddressFormProps> = ({
             rows={2}
             value={data.deliveryNotes}
             onChange={(e) => onChange('deliveryNotes', e.target.value)}
-            placeholder="e.g. Deliver between 9 AM to 4 PM on working days (Optional)"
+            placeholder="e.g. Deliver between 9 AM to 4 PM on working days, call upon arrival at gate (Optional)"
             className="w-full rounded-sm border border-[#DDDCD3] bg-white px-3.5 py-2 text-xs sm:text-sm text-[#142C43] placeholder-[#61717B] transition-colors focus:outline-none focus:ring-2 focus:ring-[#28657A] hover:border-[#4C8794]"
           />
         </div>
