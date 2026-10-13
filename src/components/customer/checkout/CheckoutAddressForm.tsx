@@ -1,9 +1,24 @@
 'use client';
 
-import React from 'react';
-import { MapPin, Building2, User as UserIcon, Phone, CheckCircle2 } from 'lucide-react';
+import React, { useState } from 'react';
+import {
+  MapPin,
+  Building2,
+  User as UserIcon,
+  Phone,
+  CheckCircle2,
+  AlertCircle,
+  Loader2,
+} from 'lucide-react';
 import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
 import { MOCK_BRANCHES } from '@/data/mockData';
+import {
+  getUserCurrentCoordinates,
+  resolveAddressFromCoordinates,
+  formatGeolocationErrorMessage,
+} from '@/lib/location/geolocation';
+import { ReverseGeocodeResult, GeolocationNotice } from '@/lib/location/types';
 
 export interface AddressData {
   useBranchAddress: boolean;
@@ -32,6 +47,7 @@ export interface CheckoutAddressFormProps {
   errors: AddressErrors;
   onChange: (field: keyof AddressData, value: string | boolean) => void;
   onBranchSelect: (branchId: string) => void;
+  onLocationAutofill?: (result: ReverseGeocodeResult) => void;
 }
 
 export const CheckoutAddressForm: React.FC<CheckoutAddressFormProps> = ({
@@ -39,7 +55,58 @@ export const CheckoutAddressForm: React.FC<CheckoutAddressFormProps> = ({
   errors,
   onChange,
   onBranchSelect,
+  onLocationAutofill,
 }) => {
+  const [isDetectingLocation, setIsDetectingLocation] = useState(false);
+  const [locationNotice, setLocationNotice] = useState<GeolocationNotice | null>(null);
+  const [locationError, setLocationError] = useState<string | null>(null);
+
+  const handleUseCurrentLocation = async () => {
+    if (isDetectingLocation) return;
+    setIsDetectingLocation(true);
+    setLocationNotice(null);
+    setLocationError(null);
+
+    try {
+      const coords = await getUserCurrentCoordinates({
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 30000,
+      });
+
+      const result = await resolveAddressFromCoordinates(coords);
+
+      // Autofill address fields while strictly preserving recipientName and phone
+      onChange('addressLine1', result.addressLine1);
+      if (result.addressLine2) {
+        onChange('addressLine2', result.addressLine2);
+      }
+      if (result.city) {
+        onChange('city', result.city);
+      }
+      if (result.state) {
+        onChange('state', result.state);
+      }
+      if (result.hasValidPincode) {
+        onChange('pincode', result.pincode);
+      }
+
+      // Notify parent if callback provided
+      if (onLocationAutofill) {
+        onLocationAutofill(result);
+      }
+
+      setLocationNotice({
+        message: 'Address auto-filled from your current location. Please review all fields, verify the PIN code, and add your house/flat number or landmark if needed.',
+        pincodeMissing: !result.hasValidPincode,
+      });
+    } catch (err: any) {
+      setLocationError(formatGeolocationErrorMessage(err));
+    } finally {
+      setIsDetectingLocation(false);
+    }
+  };
+
   const branchOptions = [
     { value: '', label: 'Select Institutional Branch (Optional Autofill)' },
     ...MOCK_BRANCHES.map((b) => ({
@@ -52,19 +119,93 @@ export const CheckoutAddressForm: React.FC<CheckoutAddressFormProps> = ({
 
   return (
     <div className="store-form-section space-y-5">
-      <div className="flex items-center justify-between border-b border-[#DDDCD3]/60 pb-3">
+      {/* Section Header with Location Button */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#DDDCD3]/60 pb-3">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-sm bg-[#EDF2F1] text-[#28657A] flex items-center justify-center font-bold text-xs">
             2
           </div>
-          <h2 className="text-sm sm:text-base font-bold text-[#142C43]">
-            Delivery Address
-          </h2>
+          <div>
+            <h2 className="text-sm sm:text-base font-bold text-[#142C43]">
+              Delivery Address
+            </h2>
+            <span className="text-[11px] text-[#61717B] font-medium hidden sm:inline">
+              Delivery details and shipping address
+            </span>
+          </div>
         </div>
-        <span className="text-[11px] text-[#61717B] font-medium hidden sm:inline">
-          Delivery details and shipping address
-        </span>
+
+        {/* Primary Location Trigger */}
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleUseCurrentLocation}
+          disabled={isDetectingLocation}
+          leftIcon={
+            isDetectingLocation ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-[#28657A]" />
+            ) : (
+              <MapPin className="w-3.5 h-3.5 text-[#28657A]" />
+            )
+          }
+          className="text-xs font-bold text-[#28657A] bg-[#EDF2F1]/70 hover:bg-[#28657A] hover:text-white border-[#DDDCD3] shadow-2xs self-start sm:self-auto cursor-pointer"
+        >
+          {isDetectingLocation ? 'Detecting Location...' : 'Use My Current Location'}
+        </Button>
       </div>
+
+      {/* Geolocation Success Notice Banner */}
+      {locationNotice && (
+        <div
+          role="status"
+          className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-900 rounded-sm text-xs flex items-start justify-between gap-2 shadow-xs animate-in fade-in duration-150"
+        >
+          <div className="flex items-start gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <p className="font-semibold text-emerald-800">{locationNotice.message}</p>
+              {locationNotice.pincodeMissing && (
+                <p className="text-[11px] text-amber-800 font-medium bg-amber-50 p-1.5 rounded-xs border border-amber-200/60">
+                  ⚠️ <strong>Action Required:</strong> PIN code could not be determined from GPS. Please enter your 6-digit postal PIN code manually.
+                </p>
+              )}
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setLocationNotice(null)}
+            className="text-emerald-700 hover:text-emerald-900 font-bold text-xs cursor-pointer p-0.5"
+            aria-label="Dismiss location success message"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
+      {/* Geolocation Actionable Error Banner */}
+      {locationError && (
+        <div
+          role="alert"
+          className="p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-sm text-xs flex items-start justify-between gap-2 shadow-xs animate-in fade-in duration-150"
+        >
+          <div className="flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+            <div className="space-y-0.5">
+              <p className="font-semibold text-amber-800">Location Detection Notice</p>
+              <p className="text-[11px] text-[#526570]">{locationError}</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setLocationError(null)}
+            className="text-amber-700 hover:text-amber-900 font-bold text-xs cursor-pointer p-0.5"
+            aria-label="Dismiss location error"
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       {/* Preset Branch Selector Convenience */}
       <div className="space-y-3">
@@ -137,7 +278,7 @@ export const CheckoutAddressForm: React.FC<CheckoutAddressFormProps> = ({
           />
         </div>
 
-        {/* Address Line 1 */}
+        {/* Address Line 1 with optional location shortcut */}
         <div className="sm:col-span-2">
           <Input
             label="Address Line 1"
@@ -147,6 +288,22 @@ export const CheckoutAddressForm: React.FC<CheckoutAddressFormProps> = ({
             error={errors.addressLine1}
             onChange={(e) => onChange('addressLine1', e.target.value)}
             leftIcon={<MapPin className="w-4 h-4" />}
+            rightElement={
+              <button
+                type="button"
+                onClick={handleUseCurrentLocation}
+                disabled={isDetectingLocation}
+                title="Use current location"
+                className="text-[11px] font-semibold text-[#28657A] hover:text-[#142C43] hover:underline flex items-center gap-1 cursor-pointer pr-1"
+              >
+                {isDetectingLocation ? (
+                  <Loader2 className="w-3 h-3 animate-spin text-[#28657A]" />
+                ) : (
+                  <MapPin className="w-3 h-3 text-[#28657A]" />
+                )}
+                <span>{isDetectingLocation ? 'Locating...' : 'GPS'}</span>
+              </button>
+            }
           />
         </div>
 

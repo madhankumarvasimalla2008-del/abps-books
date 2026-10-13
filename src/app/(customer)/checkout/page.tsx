@@ -19,6 +19,7 @@ import { CheckoutEmptyState } from '@/components/customer/checkout/CheckoutEmpty
 import { PaymentProcessingModal } from '@/components/customer/checkout/PaymentProcessingModal';
 import { Button } from '@/components/ui/Button';
 import { PaymentMethod, UPISubMethod, SupportedUPIApp, Order } from '@/types';
+import { ReverseGeocodeResult } from '@/lib/location/types';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -110,6 +111,17 @@ export default function CheckoutPage() {
     if (addressErrors[field as keyof AddressErrors]) {
       setAddressErrors((prev) => ({ ...prev, [field]: undefined }));
     }
+  };
+
+  const handleLocationAutofill = (result: ReverseGeocodeResult) => {
+    // Clear field errors for populated address components
+    setAddressErrors((prev) => ({
+      ...prev,
+      addressLine1: undefined,
+      city: result.city ? undefined : prev.city,
+      state: result.state ? undefined : prev.state,
+      pincode: result.hasValidPincode ? undefined : prev.pincode,
+    }));
   };
 
   const handleBranchSelect = (branchId: string) => {
@@ -322,6 +334,7 @@ export default function CheckoutPage() {
             errors={addressErrors}
             onChange={handleAddressChange}
             onBranchSelect={handleBranchSelect}
+            onLocationAutofill={handleLocationAutofill}
           />
 
           <CheckoutOrderReview cart={cart} />
