@@ -68,6 +68,7 @@
 .store-account { position: relative; }
 .store-account summary { list-style: none; }
 .store-account summary::-webkit-details-marker { display: none; }
+.store-account summary .store-action-label { max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .store-account-panel { position: absolute; right: 0; top: calc(100% + 14px); width: 280px; padding: 12px; background: var(--store-surface); border: 1px solid var(--store-line); box-shadow: 0 12px 32px #142c431a; }
 .store-account-panel > a, .store-account-panel > button { display: flex; width: 100%; align-items: center; gap: 10px; min-height: 44px; padding: 10px; font-size: 13px; }
 .store-account-panel > a:hover, .store-account-panel > button:hover { background: var(--store-wash); }

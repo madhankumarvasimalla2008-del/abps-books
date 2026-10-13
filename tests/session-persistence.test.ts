@@ -7,7 +7,7 @@ import { parseSafeCookies, createSupabaseClientFromRequest } from '../src/lib/su
 import { resolveAuthContextFromRequest } from '../src/server/auth/session';
 import { proxy, config as proxyConfig } from '../src/proxy';
 import { getSafeRedirectUrl } from '../src/lib/auth-redirect';
-import { CustomerHeader } from '../src/components/customer/CustomerHeader';
+import { CustomerHeader, normalizeDisplayName, getAccountDisplayName } from '../src/components/customer/CustomerHeader';
 import { AuthContext } from '../src/context/AuthContext';
 import { CartContext } from '../src/context/CartContext';
 import { CustomerContext } from '../src/context/CustomerContext';
@@ -291,7 +291,7 @@ describe('ABPS Books — Session Persistence & Cookie Resilience Suite', () => {
       refreshAddresses: async () => {},
     };
 
-    function renderHeader(authOverrides: Partial<any> = {}) {
+    function renderHeader(authOverrides: Partial<any> = {}, customerOverrides: Partial<any> = {}) {
       const authValue = {
         user: null,
         role: 'customer',
@@ -310,6 +310,11 @@ describe('ABPS Books — Session Persistence & Cookie Resilience Suite', () => {
         ...authOverrides,
       };
 
+      const custValue = {
+        ...mockCustomerContext,
+        ...customerOverrides,
+      };
+
       return renderToStaticMarkup(
         React.createElement(
           AppRouterContext.Provider,
@@ -322,7 +327,7 @@ describe('ABPS Books — Session Persistence & Cookie Resilience Suite', () => {
               { value: mockCartContext as any },
               React.createElement(
                 CustomerContext.Provider,
-                { value: mockCustomerContext as any },
+                { value: custValue as any },
                 React.createElement(CustomerHeader)
               )
             )
@@ -374,7 +379,8 @@ describe('ABPS Books — Session Persistence & Cookie Resilience Suite', () => {
 
       // Verifies authenticated account dropdown
       assert.ok(html.includes('aria-label="Your account"'), 'Must render account dropdown for signed-in user');
-      assert.ok(html.includes('Madan Kumar'), 'Must display user name');
+      assert.ok(html.includes('<span class="store-action-label">Madan Kumar</span>'), 'Must display user name in trigger label');
+      assert.ok(html.includes('<strong>Madan Kumar</strong>'), 'Must display user name in dropdown panel');
       assert.ok(html.includes('madan@example.com'), 'Must display user email');
       assert.ok(html.includes('My profile'), 'Must display profile links');
 
@@ -382,6 +388,52 @@ describe('ABPS Books — Session Persistence & Cookie Resilience Suite', () => {
       assert.ok(!html.includes('store-auth-skeleton'), 'Must not show skeleton when authenticated');
       assert.ok(!html.includes('href="/login"'), 'Must not show /login link when authenticated');
       assert.ok(!html.includes('Admin dashboard'), 'Must not show admin dashboard link for customer role');
+    });
+
+    it('normalizes lowercase user name to title case in desktop header trigger and panel', () => {
+      const lowercaseUser = {
+        id: 'user-cust-prod',
+        name: 'madhan kumar',
+        email: 'madhankumarvasimalla2008@gmail.com',
+        role: 'customer',
+      };
+
+      const html = renderHeader({ isLoading: false, user: lowercaseUser });
+
+      assert.ok(html.includes('aria-label="Your account"'), 'Must retain aria-label for accessibility');
+      assert.ok(html.includes('<span class="store-action-label">Madhan Kumar</span>'), 'Must display Title Case name on trigger');
+      assert.ok(html.includes('<strong>Madhan Kumar</strong>'), 'Must display Title Case name in account panel');
+      assert.ok(!html.includes('store-action-label">Account<'), 'Must NOT show generic "Account" label when name is available');
+    });
+
+    it('derives and title-cases name from email prefix when user name is missing', () => {
+      const emailOnlyUser = {
+        id: 'user-email-only',
+        name: '',
+        email: 'priya.desai@abps.edu',
+        role: 'customer',
+      };
+
+      const html = renderHeader({ isLoading: false, user: emailOnlyUser });
+
+      assert.ok(html.includes('<span class="store-action-label">Priya Desai</span>'), 'Must derive "Priya Desai" from email prefix');
+      assert.ok(html.includes('<strong>Priya Desai</strong>'), 'Must display derived name in panel');
+      assert.ok(!html.includes('store-action-label">Account<'), 'Must NOT fall back to "Account" when email is present');
+    });
+
+    it('uses Supabase user_metadata full_name or name when user.name is empty or generic', () => {
+      const metadataUser = {
+        id: 'user-meta-1',
+        email: 'aditya.v@example.com',
+        role: 'customer',
+        user_metadata: {
+          full_name: 'aditya verma',
+        },
+      };
+
+      const html = renderHeader({ isLoading: false, user: metadataUser });
+
+      assert.ok(html.includes('<span class="store-action-label">Aditya Verma</span>'), 'Must use user_metadata full_name');
     });
 
     it('renders admin dashboard link when authenticated staff user resolves', () => {
@@ -399,6 +451,56 @@ describe('ABPS Books — Session Persistence & Cookie Resilience Suite', () => {
       assert.ok(html.includes('href="/admin"'), 'Must link to /admin');
     });
 
+    it('normalizeDisplayName correctly formats varied casing and separators', () => {
+      assert.strictEqual(normalizeDisplayName('madhan kumar'), 'Madhan Kumar');
+      assert.strictEqual(normalizeDisplayName('MADHAN KUMAR'), 'Madhan Kumar');
+      assert.strictEqual(normalizeDisplayName('priya.desai'), 'Priya Desai');
+      assert.strictEqual(normalizeDisplayName('rajesh_kumar'), 'Rajesh Kumar');
+      assert.strictEqual(normalizeDisplayName('anna-marie'), 'Anna Marie');
+      assert.strictEqual(normalizeDisplayName('  dr.   r.k.   narayan  '), 'Dr R K Narayan');
+      assert.strictEqual(normalizeDisplayName(''), '');
+      assert.strictEqual(normalizeDisplayName(null as any), '');
+    });
+
+    it('getAccountDisplayName respects fallback hierarchy', () => {
+      // 1. Profile display name takes precedence
+      assert.strictEqual(
+        getAccountDisplayName(
+          { name: 'madhan kumar', email: 'test@abps.edu' },
+          { name: 'Dr. Madhan Kumar', email: 'test@abps.edu' }
+        ),
+        'Dr Madhan Kumar'
+      );
+
+      // 2. Metadata takes precedence if profile is missing/generic
+      assert.strictEqual(
+        getAccountDisplayName(
+          {
+            email: 'test@abps.edu',
+            user_metadata: { full_name: 'aditya verma' },
+          },
+          { name: 'Customer' }
+        ),
+        'Aditya Verma'
+      );
+
+      // 3. User name used if metadata missing
+      assert.strictEqual(
+        getAccountDisplayName({ name: 'madhan kumar', email: 'test@abps.edu' }),
+        'Madhan Kumar'
+      );
+
+      // 4. Email prefix used if name is missing
+      assert.strictEqual(
+        getAccountDisplayName({ email: 'kavita.sharma@abps.edu' }),
+        'Kavita Sharma'
+      );
+
+      // 5. Default "Account" if user is null or empty
+      assert.strictEqual(getAccountDisplayName(null), 'Account');
+      assert.strictEqual(getAccountDisplayName({ name: '', email: '' }), 'Account');
+    });
+
     it('verifies storefront.css contains layout-stable skeleton rules and keyframes', async () => {
       const fs = await import('node:fs');
       const cssContent = fs.readFileSync('src/app/(customer)/storefront.css', 'utf-8');
@@ -409,6 +511,11 @@ describe('ABPS Books — Session Persistence & Cookie Resilience Suite', () => {
       assert.ok(cssContent.includes('.store-drawer-account-skeleton'), 'storefront.css must define .store-drawer-account-skeleton');
       assert.ok(cssContent.includes('store-skeleton-pulse'), 'storefront.css must define store-skeleton-pulse animation');
       assert.ok(cssContent.includes('prefers-reduced-motion'), 'storefront.css must include prefers-reduced-motion query');
+      assert.ok(
+        cssContent.includes('.store-account summary .store-action-label'),
+        'storefront.css must define .store-account summary .store-action-label'
+      );
+      assert.ok(cssContent.includes('text-overflow: ellipsis'), 'Must include text-overflow: ellipsis');
     });
   });
 

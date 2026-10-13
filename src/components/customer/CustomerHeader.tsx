@@ -11,6 +11,84 @@ import { useCustomer } from '@/context/CustomerContext';
 const navigation = [{ href: '/books', label: 'All books' }, { href: '/categories', label: 'Categories & classes' }, { href: '/branches', label: 'Branches' }, { href: '/orders', label: 'Your orders' }, { href: '/tracking', label: 'Track an order' }];
 const accountLinks = [{ href: '/profile', label: 'My profile' }, { href: '/orders', label: 'Order history' }, { href: '/tracking', label: 'Track an order' }, { href: '/profile/addresses', label: 'Saved addresses' }, { href: '/profile/security', label: 'Security settings' }];
 
+function isGenericAccountName(val: string): boolean {
+  const lower = val.toLowerCase().trim();
+  return (
+    lower === 'customer' ||
+    lower === 'abps customer' ||
+    lower === 'abps user' ||
+    lower === 'user' ||
+    lower === 'account'
+  );
+}
+
+/**
+ * Normalizes string capitalization to Title Case without mutating stored values.
+ * Handles single/multi-word names, lowercase names, uppercase names, and email prefixes.
+ */
+export function normalizeDisplayName(raw: string): string {
+  if (!raw || typeof raw !== 'string') return '';
+  const trimmed = raw.trim();
+  if (!trimmed) return '';
+
+  return trimmed
+    .replace(/[._-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase()
+    .replace(/\b[a-z]/g, (char) => char.toUpperCase());
+}
+
+/**
+ * Resolves the account trigger label following the specified fallback hierarchy:
+ * 1. Profile display name
+ * 2. Supabase user_metadata.full_name or user_metadata.name
+ * 3. User name (from AuthContext)
+ * 4. Email-derived name
+ * 5. Default "Account"
+ */
+export function getAccountDisplayName(
+  user: { name?: string | null; email?: string | null; user_metadata?: { full_name?: string; name?: string } } | null | undefined,
+  profile?: { name?: string | null; email?: string | null } | null
+): string {
+  if (!user) return 'Account';
+
+  // 1. Profile display name
+  const profileName = profile?.name?.trim();
+  if (profileName && !isGenericAccountName(profileName)) {
+    return normalizeDisplayName(profileName);
+  }
+
+  // 2. Supabase user_metadata.full_name or user_metadata.name
+  const meta = (user as any)?.user_metadata;
+  const metaFullName = meta?.full_name?.trim();
+  if (metaFullName && !isGenericAccountName(metaFullName)) {
+    return normalizeDisplayName(metaFullName);
+  }
+  const metaName = meta?.name?.trim();
+  if (metaName && !isGenericAccountName(metaName)) {
+    return normalizeDisplayName(metaName);
+  }
+
+  // 3. User object name
+  const userName = user?.name?.trim();
+  if (userName && !isGenericAccountName(userName)) {
+    return normalizeDisplayName(userName);
+  }
+
+  // 4. Email-derived name
+  const email = (user?.email || profile?.email || '')?.trim();
+  if (email && email.includes('@')) {
+    const emailPrefix = email.split('@')[0].trim();
+    if (emailPrefix && !isGenericAccountName(emailPrefix)) {
+      return normalizeDisplayName(emailPrefix);
+    }
+  }
+
+  // 5. Fallback
+  return 'Account';
+}
+
 export function CustomerHeader() {
   const { cart } = useCart();
   const { user, logout, isLoading } = useAuth();
@@ -22,7 +100,7 @@ export function CustomerHeader() {
   const account = useRef<HTMLDetailsElement>(null);
   const menuButton = useRef<HTMLButtonElement>(null);
   const priorOverflow = useRef('');
-  const name = profile?.name || user?.name || 'Customer';
+  const displayName = getAccountDisplayName(user, profile);
   const email = profile?.email || user?.email || '';
   const branch = profile?.branchName || user?.branchName || '';
   const isStaff = ['admin', 'branch_admin', 'warehouse', 'sales'].includes(user?.role || '');
@@ -78,11 +156,11 @@ export function CustomerHeader() {
           <details ref={account} className="store-account">
             <summary aria-label="Your account">
               <User size={21} strokeWidth={1.5} />
-              <span className="store-action-label">Account</span>
+              <span className="store-action-label">{displayName}</span>
             </summary>
             <div className="store-account-panel">
               <div className="store-account-identity">
-                <strong>{name}</strong>
+                <strong>{displayName}</strong>
                 <span>{email}</span>
                 {branch && <span>{branch}</span>}
               </div>
@@ -124,7 +202,7 @@ export function CustomerHeader() {
             </div>
           ) : user ? (
             <>
-              <strong>{name}</strong>
+              <strong>{displayName}</strong>
               <p>{email}</p>
               {branch && <p>{branch}</p>}
               {accountLinks.filter((link) => link.href.startsWith('/profile')).map((link) => (
