@@ -75,7 +75,7 @@ export const DEMO_USERS: Record<Role, User> = {
   },
 };
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -84,9 +84,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const syncServerSession = useCallback(async (sessionOverride?: { access_token?: string } | null) => {
     try {
       const headers: Record<string, string> = {};
-      let accessToken = sessionOverride?.access_token;
+      let accessToken: string | undefined;
 
-      if (!accessToken && supabaseBrowser) {
+      if (sessionOverride !== undefined) {
+        accessToken = sessionOverride?.access_token;
+      } else if (supabaseBrowser) {
         const { data } = await supabaseBrowser.auth.getSession();
         accessToken = data?.session?.access_token;
       }
@@ -165,7 +167,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
           } else {
             // Check if server-side cookies have a valid session even if browser client hasn't loaded it yet
-            await syncServerSession();
+            await syncServerSession(null);
           }
         } finally {
           markInitialized();

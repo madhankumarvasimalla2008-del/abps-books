@@ -47,6 +47,24 @@
 .store-header-search button, .store-drawer-search button { width: 48px; display: grid; place-items: center; color: var(--store-blue); }
 .store-header-actions { display: flex; align-items: center; gap: 18px; }
 .store-icon-action, .store-account summary { display: flex; align-items: center; gap: 7px; min-height: 44px; min-width: 44px; font-size: 12px; cursor: pointer; }
+.store-auth-skeleton { cursor: default; user-select: none; }
+.store-auth-skeleton-icon { display: block; width: 21px; height: 21px; border-radius: 50%; background: var(--store-line); opacity: 0.65; animation: store-skeleton-pulse 1.8s ease-in-out infinite; }
+.store-auth-skeleton-label { display: block; width: 44px; height: 12px; border-radius: 3px; background: var(--store-line); opacity: 0.65; animation: store-skeleton-pulse 1.8s ease-in-out infinite; }
+.store-drawer-account-skeleton { display: flex; flex-direction: column; gap: 8px; padding-block: 4px; }
+.store-drawer-skeleton-line { border-radius: 3px; background: var(--store-line); opacity: 0.65; animation: store-skeleton-pulse 1.8s ease-in-out infinite; }
+.store-drawer-skeleton-name { width: 140px; height: 16px; }
+.store-drawer-skeleton-detail { width: 190px; height: 12px; }
+@keyframes store-skeleton-pulse {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 0.85; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .store-auth-skeleton-icon,
+  .store-auth-skeleton-label,
+  .store-drawer-skeleton-line {
+    animation: none;
+  }
+}
 .store-account { position: relative; }
 .store-account summary { list-style: none; }
 .store-account summary::-webkit-details-marker { display: none; }

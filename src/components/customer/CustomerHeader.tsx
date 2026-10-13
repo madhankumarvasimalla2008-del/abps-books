@@ -13,7 +13,7 @@ const accountLinks = [{ href: '/profile', label: 'My profile' }, { href: '/order
 
 export function CustomerHeader() {
   const { cart } = useCart();
-  const { user, logout } = useAuth();
+  const { user, logout, isLoading } = useAuth();
   const { profile } = useCustomer();
   const pathname = usePathname();
   const router = useRouter();
@@ -61,7 +61,7 @@ export function CustomerHeader() {
     event.preventDefault();
     if (query.trim()) { closeDrawer(); router.push(`/search?q=${encodeURIComponent(query.trim())}`); }
   }
-  function isActive(href: string) { return pathname === href || pathname.startsWith(`${href}/`); }
+  function isActive(href: string) { return Boolean(pathname && (pathname === href || pathname.startsWith(`${href}/`))); }
 
   return <header className="store-header">
     <div className="store-topbar"><div className="store-container"><span>Textbooks &amp; resources for curious minds</span><Link href="/tracking">Track your order <ArrowRight size={13} /></Link></div></div>
@@ -69,7 +69,44 @@ export function CustomerHeader() {
       <Link href="/" className="store-brand" aria-label="ABPS Books home"><BookOpen size={30} strokeWidth={1.5} /><span>ABPS <em>Books</em><small>THE LEARNING BOOKSTORE</small></span></Link>
       <form onSubmit={search} className="store-header-search" role="search"><label htmlFor="store-search" className="sr-only">Search books, ISBN, author or class</label><input id="store-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search books, ISBN, author or class" /><button type="submit" aria-label="Search the bookstore"><Search size={20} strokeWidth={1.5} /></button></form>
       <div className="store-header-actions">
-        {user ? <details ref={account} className="store-account"><summary aria-label="Your account"><User size={21} strokeWidth={1.5} /><span className="store-action-label">Account</span></summary><div className="store-account-panel"><div className="store-account-identity"><strong>{name}</strong><span>{email}</span>{branch && <span>{branch}</span>}</div>{accountLinks.map((link) => <Link href={link.href} key={link.href}>{link.label}</Link>)}{isStaff && <Link href="/admin">Admin dashboard</Link>}<button type="button" onClick={() => { if (account.current) account.current.open = false; logout(); }}><LogOut size={16} /> Sign out</button></div></details> : <Link href="/login" className="store-icon-action" aria-label="Sign in"><User size={21} strokeWidth={1.5} /><span className="store-action-label">Sign in</span></Link>}
+        {isLoading ? (
+          <div className="store-icon-action store-auth-skeleton" aria-label="Loading account" aria-busy="true">
+            <span className="store-auth-skeleton-icon" aria-hidden="true" />
+            <span className="store-action-label store-auth-skeleton-label" aria-hidden="true" />
+          </div>
+        ) : user ? (
+          <details ref={account} className="store-account">
+            <summary aria-label="Your account">
+              <User size={21} strokeWidth={1.5} />
+              <span className="store-action-label">Account</span>
+            </summary>
+            <div className="store-account-panel">
+              <div className="store-account-identity">
+                <strong>{name}</strong>
+                <span>{email}</span>
+                {branch && <span>{branch}</span>}
+              </div>
+              {accountLinks.map((link) => (
+                <Link href={link.href} key={link.href}>{link.label}</Link>
+              ))}
+              {isStaff && <Link href="/admin">Admin dashboard</Link>}
+              <button
+                type="button"
+                onClick={() => {
+                  if (account.current) account.current.open = false;
+                  logout();
+                }}
+              >
+                <LogOut size={16} /> Sign out
+              </button>
+            </div>
+          </details>
+        ) : (
+          <Link href="/login" className="store-icon-action" aria-label="Sign in">
+            <User size={21} strokeWidth={1.5} />
+            <span className="store-action-label">Sign in</span>
+          </Link>
+        )}
         <Link href="/cart" className="store-icon-action store-cart-action" aria-label={`Shopping cart with ${cart.totalItems} items`}><ShoppingBag size={21} strokeWidth={1.5} /><span className="store-action-label">Bag</span><span className="store-cart-count">{cart.totalItems}</span></Link>
         <button type="button" className="store-menu-toggle" ref={menuButton} onClick={openDrawer} aria-label="Open navigation" aria-haspopup="dialog"><Menu size={23} strokeWidth={1.5} /></button>
       </div>
@@ -79,7 +116,30 @@ export function CustomerHeader() {
       <div className="store-drawer-content"><div className="store-drawer-heading"><h2 id="store-menu-title">The bookstore</h2><button type="button" onClick={closeDrawer} aria-label="Close navigation" autoFocus><X size={22} /></button></div>
         <form onSubmit={search} className="store-drawer-search" role="search"><label htmlFor="store-menu-search" className="sr-only">Search the catalog</label><input id="store-menu-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search books or ISBN" /><button type="submit" aria-label="Search books"><Search size={20} /></button></form>
         <nav aria-label="Mobile navigation"><Link href="/" onClick={closeDrawer} aria-current={pathname === '/' ? 'page' : undefined}>Home <ArrowRight size={18} /></Link>{navigation.map((link) => <Link key={link.href} href={link.href} onClick={closeDrawer} aria-current={isActive(link.href) ? 'page' : undefined}>{link.label}<ArrowRight size={18} /></Link>)}<Link href="/cart" onClick={closeDrawer}>Shopping bag ({cart.totalItems})<ShoppingBag size={18} /></Link></nav>
-        <div className="store-drawer-account">{user ? <><strong>{name}</strong><p>{email}</p>{branch && <p>{branch}</p>}{accountLinks.filter((link) => link.href.startsWith('/profile')).map((link) => <Link key={link.href} href={link.href} onClick={closeDrawer}>{link.label}</Link>)}{isStaff && <Link href="/admin" onClick={closeDrawer}>Admin dashboard</Link>}<button type="button" onClick={() => { closeDrawer(); logout(); }}><LogOut size={16} /> Sign out</button></> : <><p>Your books, orders and account in one place.</p><Link href="/login" className="store-button" onClick={closeDrawer}>Sign in to your account <ArrowRight size={17} /></Link></>}</div>
+        <div className="store-drawer-account">
+          {isLoading ? (
+            <div className="store-drawer-account-skeleton" aria-label="Loading account" aria-busy="true">
+              <span className="store-drawer-skeleton-line store-drawer-skeleton-name" aria-hidden="true" />
+              <span className="store-drawer-skeleton-line store-drawer-skeleton-detail" aria-hidden="true" />
+            </div>
+          ) : user ? (
+            <>
+              <strong>{name}</strong>
+              <p>{email}</p>
+              {branch && <p>{branch}</p>}
+              {accountLinks.filter((link) => link.href.startsWith('/profile')).map((link) => (
+                <Link key={link.href} href={link.href} onClick={closeDrawer}>{link.label}</Link>
+              ))}
+              {isStaff && <Link href="/admin" onClick={closeDrawer}>Admin dashboard</Link>}
+              <button type="button" onClick={() => { closeDrawer(); logout(); }}><LogOut size={16} /> Sign out</button>
+            </>
+          ) : (
+            <>
+              <p>Your books, orders and account in one place.</p>
+              <Link href="/login" className="store-button" onClick={closeDrawer}>Sign in to your account <ArrowRight size={17} /></Link>
+            </>
+          )}
+        </div>
       </div>
     </dialog>
   </header>;

@@ -1,10 +1,17 @@
 import './setup';
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import React from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { parseSafeCookies, createSupabaseClientFromRequest } from '../src/lib/supabase/server';
 import { resolveAuthContextFromRequest } from '../src/server/auth/session';
 import { proxy, config as proxyConfig } from '../src/proxy';
 import { getSafeRedirectUrl } from '../src/lib/auth-redirect';
+import { CustomerHeader } from '../src/components/customer/CustomerHeader';
+import { AuthContext } from '../src/context/AuthContext';
+import { CartContext } from '../src/context/CartContext';
+import { CustomerContext } from '../src/context/CustomerContext';
+import { AppRouterContext } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { NextRequest } from 'next/server';
 
 describe('ABPS Books — Session Persistence & Cookie Resilience Suite', () => {
@@ -229,6 +236,179 @@ describe('ABPS Books — Session Persistence & Cookie Resilience Suite', () => {
       assert.strictEqual(getSafeRedirectUrl('//evil.com', 'customer'), '/');
       assert.strictEqual(getSafeRedirectUrl('/\\\\evil.com', 'customer'), '/');
       assert.strictEqual(getSafeRedirectUrl('javascript:alert(1)', 'admin'), '/admin');
+    });
+  });
+
+  // --------------------------------------------------------------------------
+  // 6. Customer Header Authentication Loading & Skeleton Resilience
+  // --------------------------------------------------------------------------
+  describe('Customer Header Loading State & Skeleton Resilience', () => {
+    const mockRouter = {
+      push: () => {},
+      replace: () => {},
+      refresh: () => {},
+      back: () => {},
+      forward: () => {},
+      prefetch: () => {},
+    };
+
+    const mockCart = {
+      items: [],
+      totalItems: 0,
+      subtotal: 0,
+      discountTotal: 0,
+      total: 0,
+    };
+
+    const mockCartContext = {
+      cart: mockCart,
+      addItem: () => {},
+      removeItem: () => {},
+      updateQuantity: () => {},
+      clearCart: () => {},
+      isInitialized: true,
+    };
+
+    const mockCustomerContext = {
+      profile: { name: '', email: '', phone: '', branchName: '' },
+      updateProfile: () => {},
+      addresses: [],
+      defaultAddress: undefined,
+      addAddress: () => ({} as any),
+      updateAddress: () => {},
+      deleteAddress: () => {},
+      setDefaultAddress: () => {},
+      customers: [],
+      getCustomer: () => undefined,
+      addCustomer: () => ({ success: true }),
+      updateCustomer: () => ({ success: true }),
+      toggleCustomerStatus: () => ({ success: true }),
+      resetCustomersToDefaults: () => {},
+      isInitialized: true,
+      isLoading: false,
+      error: null,
+      refreshCustomers: async () => {},
+      refreshAddresses: async () => {},
+    };
+
+    function renderHeader(authOverrides: Partial<any> = {}) {
+      const authValue = {
+        user: null,
+        role: 'customer',
+        isLoading: false,
+        loginAs: () => {},
+        signIn: async () => ({ error: null }),
+        signUp: async () => ({ error: null }),
+        signOut: async () => {},
+        logout: () => {},
+        resetPassword: async () => ({ error: null }),
+        updatePassword: async () => ({ error: null }),
+        refreshSession: async () => {},
+        signInWithGoogle: async () => ({ error: null }),
+        sendPhoneOtp: async () => ({ error: null }),
+        verifyPhoneOtp: async () => ({ error: null }),
+        ...authOverrides,
+      };
+
+      return renderToStaticMarkup(
+        React.createElement(
+          AppRouterContext.Provider,
+          { value: mockRouter as any },
+          React.createElement(
+            AuthContext.Provider,
+            { value: authValue as any },
+            React.createElement(
+              CartContext.Provider,
+              { value: mockCartContext as any },
+              React.createElement(
+                CustomerContext.Provider,
+                { value: mockCustomerContext as any },
+                React.createElement(CustomerHeader)
+              )
+            )
+          )
+        )
+      );
+    }
+
+    it('renders layout-stable skeleton during isLoading without displaying "Sign in"', () => {
+      const html = renderHeader({ isLoading: true, user: null });
+
+      // Verifies loading skeleton is present
+      assert.ok(html.includes('store-auth-skeleton'), 'Header must contain store-auth-skeleton during loading');
+      assert.ok(html.includes('aria-label="Loading account"'), 'Must have aria-label Loading account');
+      assert.ok(html.includes('aria-busy="true"'), 'Must have aria-busy="true" during loading');
+      assert.ok(html.includes('store-auth-skeleton-icon'), 'Must have skeleton icon placeholder');
+      assert.ok(html.includes('store-auth-skeleton-label'), 'Must have skeleton label placeholder');
+      assert.ok(html.includes('store-drawer-account-skeleton'), 'Drawer must render drawer account skeleton');
+
+      // Crucial: Must NEVER show "Sign in" or login link while session is loading!
+      assert.ok(!html.includes('href="/login"'), 'Must not render /login link while session is resolving');
+      assert.ok(!html.includes('store-action-label">Sign in<'), 'Must not render "Sign in" label while loading');
+      assert.ok(!html.includes('Sign in to your account'), 'Must not render "Sign in to your account" button in drawer while loading');
+    });
+
+    it('renders Sign in action when session resolution completes with no user', () => {
+      const html = renderHeader({ isLoading: false, user: null });
+
+      // Verifies signed-out UI
+      assert.ok(html.includes('href="/login"'), 'Must render /login link when resolved unauthenticated');
+      assert.ok(html.includes('aria-label="Sign in"'), 'Must have aria-label="Sign in"');
+      assert.ok(html.includes('store-action-label">Sign in<'), 'Must show "Sign in" label');
+      assert.ok(html.includes('Sign in to your account'), 'Drawer must offer sign in button');
+
+      // Must not show skeleton or account dropdown
+      assert.ok(!html.includes('store-auth-skeleton'), 'Must not show skeleton when loading complete');
+      assert.ok(!html.includes('aria-label="Your account"'), 'Must not show account dropdown when not logged in');
+    });
+
+    it('renders account dropdown immediately when authenticated customer resolves', () => {
+      const authenticatedUser = {
+        id: 'user-cust-123',
+        name: 'Madan Kumar',
+        email: 'madan@example.com',
+        role: 'customer',
+      };
+
+      const html = renderHeader({ isLoading: false, user: authenticatedUser });
+
+      // Verifies authenticated account dropdown
+      assert.ok(html.includes('aria-label="Your account"'), 'Must render account dropdown for signed-in user');
+      assert.ok(html.includes('Madan Kumar'), 'Must display user name');
+      assert.ok(html.includes('madan@example.com'), 'Must display user email');
+      assert.ok(html.includes('My profile'), 'Must display profile links');
+
+      // Must not show Sign in link or loading skeleton
+      assert.ok(!html.includes('store-auth-skeleton'), 'Must not show skeleton when authenticated');
+      assert.ok(!html.includes('href="/login"'), 'Must not show /login link when authenticated');
+      assert.ok(!html.includes('Admin dashboard'), 'Must not show admin dashboard link for customer role');
+    });
+
+    it('renders admin dashboard link when authenticated staff user resolves', () => {
+      const adminUser = {
+        id: 'user-admin-123',
+        name: 'Admin Staff',
+        email: 'admin@birlabooks.in',
+        role: 'admin',
+      };
+
+      const html = renderHeader({ isLoading: false, user: adminUser });
+
+      assert.ok(html.includes('aria-label="Your account"'), 'Must render account dropdown');
+      assert.ok(html.includes('Admin dashboard'), 'Must include Admin dashboard link for admin role');
+      assert.ok(html.includes('href="/admin"'), 'Must link to /admin');
+    });
+
+    it('verifies storefront.css contains layout-stable skeleton rules and keyframes', async () => {
+      const fs = await import('node:fs');
+      const cssContent = fs.readFileSync('src/app/(customer)/storefront.css', 'utf-8');
+
+      assert.ok(cssContent.includes('.store-auth-skeleton'), 'storefront.css must define .store-auth-skeleton');
+      assert.ok(cssContent.includes('.store-auth-skeleton-icon'), 'storefront.css must define .store-auth-skeleton-icon');
+      assert.ok(cssContent.includes('.store-auth-skeleton-label'), 'storefront.css must define .store-auth-skeleton-label');
+      assert.ok(cssContent.includes('.store-drawer-account-skeleton'), 'storefront.css must define .store-drawer-account-skeleton');
+      assert.ok(cssContent.includes('store-skeleton-pulse'), 'storefront.css must define store-skeleton-pulse animation');
+      assert.ok(cssContent.includes('prefers-reduced-motion'), 'storefront.css must include prefers-reduced-motion query');
     });
   });
 });

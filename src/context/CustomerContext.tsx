@@ -67,7 +67,7 @@ interface CustomerContextType {
   refreshAddresses: () => Promise<void>;
 }
 
-const CustomerContext = createContext<CustomerContextType | undefined>(undefined);
+export const CustomerContext = createContext<CustomerContextType | undefined>(undefined);
 
 const DEFAULT_PROFILE: CustomerProfile = {
   name: '',

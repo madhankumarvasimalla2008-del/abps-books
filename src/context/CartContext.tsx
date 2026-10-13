@@ -12,7 +12,7 @@ interface CartContextType {
   isInitialized: boolean;
 }
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
+export const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const CART_STORAGE_KEY = 'abps_customer_cart_v1';
 
