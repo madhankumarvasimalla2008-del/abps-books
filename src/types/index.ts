@@ -293,6 +293,7 @@ export interface Order {
   shippingAddress: Address;
   carrier: string;
   estimatedDelivery: string;
+  isDemo?: boolean;
 }
 
 export interface Supplier {

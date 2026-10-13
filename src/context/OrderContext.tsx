@@ -85,10 +85,66 @@ export interface UpdateTrackingResult {
   error?: string;
 }
 
-interface OrderContextType {
+export function isValidUuid(id?: string | null): boolean {
+  if (!id) return false;
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id.trim());
+}
+
+export function isRealOrderEligible(input: {
+  userId?: string | null;
+  branchId?: string | null;
+  items: Array<{ product?: { id: string } | null; productId?: string }>;
+}): boolean {
+  if (!isValidUuid(input.userId)) return false;
+  if (!isValidUuid(input.branchId)) return false;
+  if (!input.items || input.items.length === 0) return false;
+  return input.items.every((item) => {
+    const pId = item.product?.id || item.productId;
+    return isValidUuid(pId);
+  });
+}
+
+export function getDemoOrdersStorageKey(userId?: string | null): string {
+  if (userId && userId.trim()) {
+    return `abps_demo_orders_user_${userId.trim()}`;
+  }
+  return 'abps_demo_orders_guest';
+}
+
+export function mergeOrders({
+  serverOrders,
+  demoOrders,
+  isStaff,
+}: {
+  serverOrders: Order[];
+  demoOrders: Order[];
+  isStaff: boolean;
+}): Order[] {
+  if (isStaff) {
+    // Admin and staff views rely exclusively on authoritative server/database data
+    return serverOrders.filter((o) => !o.isDemo);
+  }
+
+  const serverIdSet = new Set(serverOrders.map((o) => o.id.toLowerCase()));
+  const serverNumSet = new Set(
+    serverOrders.map((o) => (o.orderNumber || '').toLowerCase()).filter(Boolean)
+  );
+
+  const nonDuplicatedDemo = demoOrders.filter(
+    (d) =>
+      !serverIdSet.has(d.id.toLowerCase()) &&
+      (!d.orderNumber || !serverNumSet.has(d.orderNumber.toLowerCase()))
+  );
+
+  return [...serverOrders, ...nonDuplicatedDemo];
+}
+
+export interface OrderContextType {
   orders: Order[];
+  serverOrders?: Order[];
+  demoOrders?: Order[];
   getOrder: (id: string) => Order | undefined;
-  createOrder: (input: CreateOrderInput) => Order;
+  createOrder: (input: CreateOrderInput) => Promise<Order>;
   confirmOrderPayment: (orderId: string, paymentData: ConfirmPaymentInput) => Order | undefined;
   failOrderPayment: (orderId: string, errorData: FailPaymentInput) => Order | undefined;
   cancelOrderPayment: (orderId: string, reason?: string) => Order | undefined;
@@ -117,8 +173,6 @@ interface OrderContextType {
 }
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
-
-const ORDERS_STORAGE_KEY = 'abps_customer_orders_v1';
 
 const VALID_ORDER_STATUSES: OrderStatus[] = [
   'Pending',
@@ -330,37 +384,68 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
   const { addItem } = useCart();
   const { recordTransaction } = useTransactions();
   const { user } = useAuth();
-  const [customOrders, setCustomOrders] = useState<Order[]>([]);
+  const [serverOrders, setServerOrders] = useState<Order[]>([]);
+  const [demoOrders, setDemoOrders] = useState<Order[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Restore user-created orders from localStorage safely after hydration
+  const isStaffUser = Boolean(
+    user?.role && ['admin', 'branch_admin', 'warehouse', 'sales'].includes(user.role)
+  );
+
+  const currentStorageKey = useMemo(() => {
+    return getDemoOrdersStorageKey(user?.id);
+  }, [user?.id]);
+
+  // Restore scoped demo orders safely when storage key changes
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(ORDERS_STORAGE_KEY);
+      const saved = localStorage.getItem(currentStorageKey);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setCustomOrders(parsed);
+        if (Array.isArray(parsed)) {
+          setDemoOrders(parsed.map((o) => ({ ...o, isDemo: true })));
+        } else {
+          setDemoOrders([]);
+        }
+      } else {
+        // Fallback check for legacy guest orders key if guest session
+        if (currentStorageKey === 'abps_demo_orders_guest') {
+          const legacy = localStorage.getItem('abps_customer_orders_v1');
+          if (legacy) {
+            const parsed = JSON.parse(legacy);
+            if (Array.isArray(parsed)) {
+              const sanitized = parsed.map((o) => ({ ...o, isDemo: true }));
+              setDemoOrders(sanitized);
+              localStorage.setItem(currentStorageKey, JSON.stringify(sanitized));
+            } else {
+              setDemoOrders([]);
+            }
+          } else {
+            setDemoOrders([]);
+          }
+        } else {
+          setDemoOrders([]);
         }
       }
     } catch (err) {
-      console.warn('Could not restore orders from storage', err);
+      console.warn('Could not restore demo orders from storage', err);
+      setDemoOrders([]);
     } finally {
       setIsInitialized(true);
     }
-  }, []);
+  }, [currentStorageKey]);
 
-  // Save custom orders to localStorage on change
+  // Save scoped demo orders to localStorage on change
   useEffect(() => {
     if (!isInitialized) return;
     try {
-      localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(customOrders));
+      localStorage.setItem(currentStorageKey, JSON.stringify(demoOrders));
     } catch (err) {
-      console.warn('Could not save orders to storage', err);
+      console.warn('Could not save demo orders to storage', err);
     }
-  }, [customOrders, isInitialized]);
+  }, [demoOrders, currentStorageKey, isInitialized]);
 
   // Fetch orders from API
   const refreshOrders = useCallback(async () => {
@@ -371,15 +456,16 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
       if (response.ok) {
         const json = await response.json();
         const rawList = json?.data || (Array.isArray(json) ? json : []);
-        if (Array.isArray(rawList) && rawList.length > 0) {
+        if (Array.isArray(rawList)) {
           const mapped = rawList.map(mapApiOrderToFrontend);
-          setCustomOrders(mapped);
-        } else if (process.env.NODE_ENV === 'production') {
-          setCustomOrders([]);
+          setServerOrders(mapped);
         }
+      } else if (response.status === 401) {
+        // Guest user - no server orders available
+        setServerOrders([]);
       }
     } catch (err: any) {
-      console.warn('Orders list API fetch fallback:', err.message);
+      console.warn('Orders list API fetch notice:', err.message);
       setError(err.message || 'Error loading orders');
     } finally {
       setIsLoading(false);
@@ -391,18 +477,20 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
     refreshOrders();
   }, [refreshOrders]);
 
-  // Merge custom orders (newest first) with default mock orders (preventing duplicate IDs)
-  const allOrders: Order[] = useMemo(() => {
-    const customIds = new Set(customOrders.map((o) => o.id.toLowerCase()));
-    const remainingMock = MOCK_ORDERS.filter((o) => !customIds.has(o.id.toLowerCase()));
-    return [...customOrders, ...remainingMock];
-  }, [customOrders]);
+  // Merge server and demo orders using strict role scoping
+  const activeOrders = useMemo(() => {
+    return mergeOrders({
+      serverOrders,
+      demoOrders,
+      isStaff: isStaffUser,
+    });
+  }, [serverOrders, demoOrders, isStaffUser]);
 
   const getOrder = useCallback(
     (id: string): Order | undefined => {
       if (!id) return undefined;
       const cleanId = id.trim().toLowerCase();
-      return allOrders.find(
+      const found = activeOrders.find(
         (o) =>
           o.id.toLowerCase() === cleanId ||
           o.orderNumber.toLowerCase() === cleanId ||
@@ -410,12 +498,47 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
           (o.poNumber && o.poNumber.toLowerCase() === cleanId) ||
           (o.schoolPoNumber && o.schoolPoNumber.toLowerCase() === cleanId)
       );
+      if (found) return found;
+
+      // Allow looking up in scoped demo orders or mock previews for non-staff
+      if (!isStaffUser) {
+        const demoFound = demoOrders.find(
+          (o) =>
+            o.id.toLowerCase() === cleanId ||
+            o.orderNumber.toLowerCase() === cleanId ||
+            (o.trackingNumber && o.trackingNumber.toLowerCase() === cleanId)
+        );
+        if (demoFound) return demoFound;
+
+        return MOCK_ORDERS.find(
+          (o) =>
+            o.id.toLowerCase() === cleanId ||
+            o.orderNumber.toLowerCase() === cleanId ||
+            (o.trackingNumber && o.trackingNumber.toLowerCase() === cleanId)
+        );
+      }
+
+      return undefined;
     },
-    [allOrders]
+    [activeOrders, isStaffUser, demoOrders]
   );
 
+  const updateOrderInState = useCallback((updatedOrder: Order) => {
+    if (updatedOrder.isDemo) {
+      setDemoOrders((prev) => [
+        updatedOrder,
+        ...prev.filter((o) => o.id.toLowerCase() !== updatedOrder.id.toLowerCase()),
+      ]);
+    } else {
+      setServerOrders((prev) => [
+        updatedOrder,
+        ...prev.filter((o) => o.id.toLowerCase() !== updatedOrder.id.toLowerCase()),
+      ]);
+    }
+  }, []);
+
   const createOrder = useCallback(
-    (input: CreateOrderInput): Order => {
+    async (input: CreateOrderInput): Promise<Order> => {
       const {
         cart,
         contactData,
@@ -453,6 +576,69 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
         pincode: addressData.pincode,
       };
 
+      const mappedMethod = normalizePaymentMethod(paymentMethod as string);
+      const targetOrderStatus: OrderStatus = initialOrderStatus || 'Pending';
+      const targetPaymentStatus: PaymentStatus = initialPaymentStatus || 'Pending';
+
+      // Check whether order qualifies for authoritative server persistence
+      const canPersistRealOrder = isRealOrderEligible({
+        userId: user?.id,
+        branchId: addressData.selectedBranchId,
+        items: cart.items,
+      });
+
+      if (canPersistRealOrder) {
+        // Authoritative server order creation
+        const res = await fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: user!.id,
+            branchId: addressData.selectedBranchId,
+            paymentMethod: mappedMethod,
+            upiSubMethod: mappedMethod === 'UPI' ? upiSubMethod : undefined,
+            upiApp: mappedMethod === 'UPI' && upiSubMethod === 'intent' ? upiApp : undefined,
+            customerNotes: addressData.deliveryNotes || '',
+            shippingAddress: {
+              recipientName: addressData.recipientName,
+              recipientPhone: addressData.phone,
+              addressLine1: addressData.addressLine1,
+              addressLine2: addressData.addressLine2 || '',
+              landmark: undefined,
+              city: addressData.city,
+              state: addressData.state,
+              pincode: addressData.pincode,
+            },
+            items: cart.items.map((ci) => ({
+              productId: ci.product.id,
+              quantity: ci.quantity,
+            })),
+          }),
+        });
+
+        if (!res.ok) {
+          const errJson = await res.json().catch(() => ({}));
+          const errMsg =
+            errJson?.error?.message ||
+            errJson?.message ||
+            `Order creation failed on server (${res.status} ${res.statusText})`;
+          throw new Error(errMsg);
+        }
+
+        const resJson = await res.json();
+        const serverOrderData = resJson.data || resJson;
+        const realOrder = mapApiOrderToFrontend(serverOrderData);
+        realOrder.isDemo = false;
+
+        setServerOrders((prev) => [
+          realOrder,
+          ...prev.filter((o) => o.id.toLowerCase() !== realOrder.id.toLowerCase()),
+        ]);
+
+        return realOrder;
+      }
+
+      // Explicit Demo Order Path: Never send placeholder UUIDs to the server API
       const orderItems: OrderItem[] = cart.items.map((item, idx) => ({
         id: `oi-${Date.now()}-${idx}`,
         productId: item.product.id,
@@ -472,20 +658,16 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
       }));
 
       const now = new Date();
-      const mappedMethod = normalizePaymentMethod(paymentMethod as string);
-      const targetOrderStatus: OrderStatus = initialOrderStatus || 'Pending';
-      const targetPaymentStatus: PaymentStatus = initialPaymentStatus || 'Pending';
-
-      const newOrder: Order = {
+      const newDemoOrder: Order = {
         id: orderId,
         orderNumber,
-        customerId: user?.id || 'u1',
+        customerId: user?.id || 'demo-guest',
         customerName: contactData.fullName,
         customerEmail: contactData.email,
         customerPhone: contactData.phone,
         branchId: activeBranch.id,
         branchName: activeBranch.name,
-        branchCode: activeBranch.code || 'ABPS-GEN',
+        branchCode: activeBranch.code || 'ABPS-DEMO',
         items: orderItems,
         totalQuantity: cart.totalItems,
         subtotal: cart.subtotal,
@@ -504,11 +686,11 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
         deliveryAddress,
         shippingAddress: deliveryAddress,
         notes: addressData.deliveryNotes || '',
-        poNumber: poNumber || `PO-ABPS-${Math.floor(1000 + Math.random() * 9000)}`,
-        schoolPoNumber: poNumber || `PO-ABPS-${Math.floor(1000 + Math.random() * 9000)}`,
-        courierPartner: 'Delhivery Logistics',
-        carrier: 'Delhivery Logistics',
-        trackingNumber: `TRK-${Math.floor(10000000 + Math.random() * 90000000)}`,
+        poNumber: poNumber || `PO-DEMO-${Math.floor(1000 + Math.random() * 9000)}`,
+        schoolPoNumber: poNumber || `PO-DEMO-${Math.floor(1000 + Math.random() * 9000)}`,
+        courierPartner: 'Delhivery Logistics (Simulated)',
+        carrier: 'Delhivery Logistics (Simulated)',
+        trackingNumber: `TRK-DEMO-${Math.floor(10000000 + Math.random() * 90000000)}`,
         createdAt: now.toLocaleDateString('en-IN', {
           year: 'numeric',
           month: 'short',
@@ -522,67 +704,15 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
         estimatedDeliveryDate: new Date(now.getTime() + 5 * 86400000).toISOString(),
         estimatedDelivery: 'Standard Processing (3-5 Business Days)',
         timeline: createMockTimeline(targetOrderStatus),
+        isDemo: true,
       };
 
-      setCustomOrders((prev) => [newOrder, ...prev]);
+      setDemoOrders((prev) => [
+        newDemoOrder,
+        ...prev.filter((o) => o.id.toLowerCase() !== newDemoOrder.id.toLowerCase()),
+      ]);
 
-      // Fire background POST to /api/orders if cart has items
-      if (cart.items.length > 0) {
-        const targetBranchId =
-          addressData.selectedBranchId && addressData.selectedBranchId.includes('-')
-            ? addressData.selectedBranchId
-            : 'b1a2c3d4-0000-0000-0000-000000000001';
-
-        const targetUserId =
-          user?.id && user.id.includes('-')
-            ? user.id
-            : 'u1a2c3d4-0000-0000-0000-000000000001';
-
-        fetch('/api/orders', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userId: targetUserId,
-            branchId: targetBranchId,
-            paymentMethod: mappedMethod,
-            upiSubMethod: mappedMethod === 'UPI' ? upiSubMethod : undefined,
-            upiApp: mappedMethod === 'UPI' && upiSubMethod === 'intent' ? upiApp : undefined,
-            customerNotes: addressData.deliveryNotes || '',
-            shippingAddress: {
-              recipientName: addressData.recipientName,
-              recipientPhone: addressData.phone,
-              addressLine1: addressData.addressLine1,
-              addressLine2: addressData.addressLine2 || '',
-              landmark: undefined,
-              city: addressData.city,
-              state: addressData.state,
-              pincode: addressData.pincode,
-            },
-            items: cart.items.map((ci) => ({
-              productId: ci.product.id.includes('-')
-                ? ci.product.id
-                : 'p1a2c3d4-0000-0000-0000-000000000001',
-              quantity: ci.quantity,
-            })),
-          }),
-        })
-          .then(async (res) => {
-            if (res.ok) {
-              const resJson = await res.json();
-              const serverOrder = resJson.data || resJson;
-              if (serverOrder?.id) {
-                setCustomOrders((prev) =>
-                  prev.map((o) => (o.id === orderId ? mapApiOrderToFrontend(serverOrder) : o))
-                );
-              }
-            }
-          })
-          .catch((err) => {
-            console.warn('Background order create sync notice:', err);
-          });
-      }
-
-      return newOrder;
+      return newDemoOrder;
     },
     [user?.id]
   );
@@ -635,10 +765,7 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
         timeline: newTimeline,
       };
 
-      setCustomOrders((prev) => [
-        updatedOrder,
-        ...prev.filter((o) => o.id.toLowerCase() !== existing.id.toLowerCase()),
-      ]);
+      updateOrderInState(updatedOrder);
 
       // Record unified Transaction
       recordTransaction({
@@ -667,7 +794,7 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
 
       return updatedOrder;
     },
-    [getOrder, recordTransaction]
+    [getOrder, recordTransaction, updateOrderInState]
   );
 
   const failOrderPayment = useCallback(
@@ -715,10 +842,7 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
         updatedAt: updatedDateStr,
       };
 
-      setCustomOrders((prev) => [
-        updatedOrder,
-        ...prev.filter((o) => o.id.toLowerCase() !== existing.id.toLowerCase()),
-      ]);
+      updateOrderInState(updatedOrder);
 
       // Record failed transaction for ledger audit
       recordTransaction({
@@ -742,7 +866,7 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
 
       return updatedOrder;
     },
-    [getOrder, recordTransaction]
+    [getOrder, recordTransaction, updateOrderInState]
   );
 
   const cancelOrderPayment = useCallback(
@@ -767,14 +891,11 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
         updatedAt: updatedDateStr,
       };
 
-      setCustomOrders((prev) => [
-        updatedOrder,
-        ...prev.filter((o) => o.id.toLowerCase() !== existing.id.toLowerCase()),
-      ]);
+      updateOrderInState(updatedOrder);
 
       return updatedOrder;
     },
-    [getOrder]
+    [getOrder, updateOrderInState]
   );
 
   const updateOrderPaymentStatus = useCallback(
@@ -812,14 +933,11 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
             : existing.timeline,
       };
 
-      setCustomOrders((prev) => [
-        updatedOrder,
-        ...prev.filter((o) => o.id.toLowerCase() !== existing.id.toLowerCase()),
-      ]);
+      updateOrderInState(updatedOrder);
 
       return updatedOrder;
     },
-    [getOrder]
+    [getOrder, updateOrderInState]
   );
 
   const retryOrderPayment = useCallback(
@@ -841,14 +959,11 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
         updatedAt: updatedDateStr,
       };
 
-      setCustomOrders((prev) => [
-        updatedOrder,
-        ...prev.filter((o) => o.id.toLowerCase() !== existing.id.toLowerCase()),
-      ]);
+      updateOrderInState(updatedOrder);
 
       return updatedOrder;
     },
-    [getOrder]
+    [getOrder, updateOrderInState]
   );
 
   const reorder = useCallback(
@@ -1004,13 +1119,10 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
         timeline: updatedTimeline,
       };
 
-      setCustomOrders((prev) => [
-        updatedOrder,
-        ...prev.filter((o) => o.id.toLowerCase() !== existingOrder.id.toLowerCase()),
-      ]);
+      updateOrderInState(updatedOrder);
 
-      // Background sync to API if UUID
-      if (id.includes('-')) {
+      // Background sync to API if real UUID
+      if (isValidUuid(id)) {
         fetch(`/api/orders/${id}/status`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -1028,7 +1140,7 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
         order: updatedOrder,
       };
     },
-    [getOrder]
+    [getOrder, updateOrderInState]
   );
 
   const updateOrderTracking = useCallback(
@@ -1070,32 +1182,31 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
         updatedAt: updatedDateStr,
       };
 
-      setCustomOrders((prev) => [
-        updatedOrder,
-        ...prev.filter((o) => o.id.toLowerCase() !== existingOrder.id.toLowerCase()),
-      ]);
+      updateOrderInState(updatedOrder);
 
       return {
         success: true,
         order: updatedOrder,
       };
     },
-    [getOrder]
+    [getOrder, updateOrderInState]
   );
 
   const resetToDefaults = useCallback(() => {
-    setCustomOrders([]);
+    setDemoOrders([]);
     try {
-      localStorage.removeItem(ORDERS_STORAGE_KEY);
+      localStorage.removeItem(currentStorageKey);
     } catch (err) {
-      console.warn('Could not reset orders in storage', err);
+      console.warn('Could not reset demo orders in storage', err);
     }
-  }, []);
+  }, [currentStorageKey]);
 
   return (
     <OrderContext.Provider
       value={{
-        orders: allOrders,
+        orders: activeOrders,
+        serverOrders,
+        demoOrders,
         getOrder,
         createOrder,
         confirmOrderPayment,

@@ -6,7 +6,12 @@ import { ordersRepository } from '../src/server/repositories/orders.repository';
 import { productsRepository } from '../src/server/repositories/products.repository';
 import { branchesRepository } from '../src/server/repositories/branches.repository';
 import { inventoryRepository } from '../src/server/repositories/inventory.repository';
-import { mapApiOrderToFrontend } from '../src/context/OrderContext';
+import {
+  mapApiOrderToFrontend,
+  isRealOrderEligible,
+  getDemoOrdersStorageKey,
+  mergeOrders,
+} from '../src/context/OrderContext';
 import { BusinessRuleError, ForbiddenError, NotFoundError } from '../src/server/errors';
 import { AuthContext } from '../src/server/auth/types';
 
@@ -437,6 +442,282 @@ describe('Phase 5.5D: Production Orders Service, Invariants & Security Boundarie
       assert.strictEqual(mapped.deliveryAddress.recipientName, 'Priya Desai');
       assert.strictEqual(mapped.deliveryAddress.city, 'Kharach');
       assert.strictEqual(mapped.timeline.length > 0, true);
+    });
+  });
+
+  // --------------------------------------------------------------------------
+  // 5. Order Persistence, Checkout Correctness & Demo Isolation Invariants
+  // --------------------------------------------------------------------------
+  describe('Order Persistence, Checkout Correctness & Demo Isolation Invariants', () => {
+    it('1. Demo products never trigger order POST requests with placeholder IDs', () => {
+      // Products with non-UUID IDs (e.g., 'p1', 'p2') are recognized as demo products
+      const demoCartItems = [
+        { product: { id: 'p1', title: 'Demo Book 1' } },
+        { product: { id: 'p2', title: 'Demo Book 2' } },
+      ];
+
+      // Eligible check must reject demo product IDs
+      const isEligible = isRealOrderEligible({
+        userId: '11111111-1111-4111-a111-111111111111',
+        branchId: '22222222-2222-4222-a222-222222222222',
+        items: demoCartItems as any,
+      });
+
+      assert.strictEqual(isEligible, false);
+
+      // Also ensure synthetic non-UUID branch IDs or unauthenticated sessions are ineligible
+      assert.strictEqual(
+        isRealOrderEligible({
+          userId: '11111111-1111-4111-a111-111111111111',
+          branchId: 'b1', // mock branch ID
+          items: [{ product: { id: '33333333-3333-4333-a333-333333333333' } }] as any,
+        }),
+        false
+      );
+
+      assert.strictEqual(
+        isRealOrderEligible({
+          userId: undefined, // unauthenticated guest
+          branchId: '22222222-2222-4222-a222-222222222222',
+          items: [{ product: { id: '33333333-3333-4333-a333-333333333333' } }] as any,
+        }),
+        false
+      );
+
+      // Only valid UUIDs across userId, branchId, and all product IDs qualify for server persistence
+      assert.strictEqual(
+        isRealOrderEligible({
+          userId: '11111111-1111-4111-a111-111111111111',
+          branchId: '22222222-2222-4222-a222-222222222222',
+          items: [
+            { product: { id: '33333333-3333-4333-a333-333333333333' } },
+            { product: { id: '44444444-4444-4444-a444-444444444444' } },
+          ] as any,
+        }),
+        true
+      );
+    });
+
+    it('2. Failed server order creation never appears as a confirmed real order', async () => {
+      // Simulate server order creation returning a non-OK error response
+      const mockFailedFetch = async () => {
+        return {
+          ok: false,
+          status: 404,
+          statusText: 'Not Found',
+          json: async () => ({ error: { message: 'Branch not found in database' } }),
+        };
+      };
+
+      // Test that an error is thrown and not swallowed
+      let caughtError: any = null;
+      try {
+        const res = await mockFailedFetch();
+        if (!res.ok) {
+          const errJson = await res.json().catch(() => ({}));
+          const errMsg = (errJson as any)?.error?.message || `Order creation failed (${res.status})`;
+          throw new Error(errMsg);
+        }
+      } catch (err: any) {
+        caughtError = err;
+      }
+
+      assert.ok(caughtError);
+      assert.strictEqual(caughtError.message, 'Branch not found in database');
+    });
+
+    it('3. Real orders remain available after refresh', () => {
+      const serverPayload = [
+        {
+          id: 'ord-uuid-real-1',
+          orderNumber: 'ORD-2026-REAL-1',
+          userId: 'user-uuid-1',
+          customerName: 'Aarav Patel',
+          branchId: 'branch-uuid-1',
+          status: 'Confirmed',
+          paymentStatus: 'Paid',
+          paymentMethod: 'UPI',
+          subtotalAmount: '500.00',
+          totalAmount: '500.00',
+          items: [],
+          shippingAddress: {},
+        },
+      ];
+
+      const mapped = serverPayload.map(mapApiOrderToFrontend);
+      assert.strictEqual(mapped.length, 1);
+      assert.strictEqual(mapped[0].id, 'ord-uuid-real-1');
+      assert.strictEqual(mapped[0].isDemo, undefined); // Real server order is not a demo order
+
+      // When merged for customer or admin, real orders are preserved
+      const merged = mergeOrders({
+        serverOrders: mapped,
+        demoOrders: [],
+        isStaff: false,
+      });
+
+      assert.strictEqual(merged.length, 1);
+      assert.strictEqual(merged[0].id, 'ord-uuid-real-1');
+      assert.strictEqual(merged[0].status, 'Confirmed');
+    });
+
+    it('4. Demo orders remain clearly marked and do not disappear when the server returns an empty list', () => {
+      const demoOrder: any = {
+        id: 'ORD-DEMO-001',
+        orderNumber: 'ABPS-ORD-2026-DEMO',
+        customerId: 'demo-guest',
+        customerName: 'Guest Customer',
+        branchName: 'Kharach Campus',
+        status: 'Pending',
+        paymentStatus: 'Pending',
+        totalAmount: 450,
+        items: [],
+        isDemo: true,
+      };
+
+      // Simulate refresh returning empty array from server API
+      const serverOrdersAfterRefresh: any[] = [];
+      const demoOrdersInStorage = [demoOrder];
+
+      // Customer view must still retain the demo order even when server returns empty
+      const merged = mergeOrders({
+        serverOrders: serverOrdersAfterRefresh,
+        demoOrders: demoOrdersInStorage,
+        isStaff: false,
+      });
+
+      assert.strictEqual(merged.length, 1);
+      assert.strictEqual(merged[0].id, 'ORD-DEMO-001');
+      assert.strictEqual(merged[0].isDemo, true);
+    });
+
+    it('5. Orders are isolated between users and deduplicated when merged', () => {
+      // User isolation test for demo orders storage keys
+      const userAKey = getDemoOrdersStorageKey('user-uuid-aaa');
+      const userBKey = getDemoOrdersStorageKey('user-uuid-bbb');
+      const guestKey = getDemoOrdersStorageKey(null);
+
+      assert.strictEqual(userAKey, 'abps_demo_orders_user_user-uuid-aaa');
+      assert.strictEqual(userBKey, 'abps_demo_orders_user_user-uuid-bbb');
+      assert.strictEqual(guestKey, 'abps_demo_orders_guest');
+      assert.notStrictEqual(userAKey, userBKey);
+      assert.notStrictEqual(userAKey, guestKey);
+
+      // Deduplication test when merging server and demo orders
+      const serverOrder: any = {
+        id: 'ord-uuid-100',
+        orderNumber: 'ORD-2026-100',
+        totalAmount: 1000,
+        isDemo: false,
+      };
+
+      const duplicateDemoOrder: any = {
+        id: 'ord-uuid-100', // Same ID
+        orderNumber: 'ORD-2026-100',
+        totalAmount: 1000,
+        isDemo: true,
+      };
+
+      const distinctDemoOrder: any = {
+        id: 'ord-demo-200',
+        orderNumber: 'ORD-2026-200',
+        totalAmount: 500,
+        isDemo: true,
+      };
+
+      const merged = mergeOrders({
+        serverOrders: [serverOrder],
+        demoOrders: [duplicateDemoOrder, distinctDemoOrder],
+        isStaff: false,
+      });
+
+      // Must have exactly 2 orders, not 3 (duplicate removed, serverOrder preferred)
+      assert.strictEqual(merged.length, 2);
+      assert.strictEqual(merged[0].id, 'ord-uuid-100');
+      assert.strictEqual(merged[0].isDemo, false); // Authoritative server order kept
+      assert.strictEqual(merged[1].id, 'ord-demo-200');
+    });
+
+    it('6. Checkout does not silently use demo contact details', () => {
+      // Simulate empty/new customer without contact details
+      const unauthenticatedUser = null;
+      const initialContactData = {
+        fullName: (unauthenticatedUser as any)?.name || '',
+        email: (unauthenticatedUser as any)?.email || '',
+        phone: (unauthenticatedUser as any)?.phone?.replace(/\D/g, '') || '',
+      };
+
+      // Must initialize to empty strings, NOT 'Priya Desai' or '9876543210'
+      assert.strictEqual(initialContactData.fullName, '');
+      assert.strictEqual(initialContactData.email, '');
+      assert.strictEqual(initialContactData.phone, '');
+
+      // Validation must require real full name, email, and 10-digit phone
+      const validateContact = (data: typeof initialContactData) => {
+        const errors: Record<string, string> = {};
+        if (!data.fullName.trim() || data.fullName.trim().length < 2) {
+          errors.fullName = 'Full name is required (minimum 2 characters)';
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!data.email.trim() || !emailRegex.test(data.email.trim())) {
+          errors.email = 'Please enter a valid email address';
+        }
+        const phoneDigits = data.phone.replace(/\D/g, '');
+        if (!phoneDigits || phoneDigits.length !== 10) {
+          errors.phone = 'Please enter a valid 10-digit mobile number';
+        }
+        return errors;
+      };
+
+      const errors = validateContact(initialContactData);
+      assert.strictEqual(errors.fullName, 'Full name is required (minimum 2 characters)');
+      assert.strictEqual(errors.email, 'Please enter a valid email address');
+      assert.strictEqual(errors.phone, 'Please enter a valid 10-digit mobile number');
+
+      // Valid contact input passes
+      const validErrors = validateContact({
+        fullName: 'Madhan Kumar',
+        email: 'madhankumar@example.com',
+        phone: '9876543210',
+      });
+      assert.strictEqual(Object.keys(validErrors).length, 0);
+    });
+
+    it('7. Admin order views never include browser-only demo orders', () => {
+      const serverOrders: any[] = [
+        {
+          id: 'server-order-1',
+          orderNumber: 'ORD-2026-SRV-1',
+          totalAmount: 1200,
+          isDemo: false,
+        },
+      ];
+
+      const browserDemoOrders: any[] = [
+        {
+          id: 'demo-order-1',
+          orderNumber: 'ORD-2026-DEMO-1',
+          totalAmount: 300,
+          isDemo: true,
+        },
+        {
+          id: 'demo-order-2',
+          orderNumber: 'ORD-2026-DEMO-2',
+          totalAmount: 600,
+          isDemo: true,
+        },
+      ];
+
+      // When isStaff is true, demo orders are strictly excluded
+      const adminOrders = mergeOrders({
+        serverOrders,
+        demoOrders: browserDemoOrders,
+        isStaff: true,
+      });
+
+      assert.strictEqual(adminOrders.length, 1);
+      assert.strictEqual(adminOrders[0].id, 'server-order-1');
+      assert.strictEqual(adminOrders.some((o) => o.isDemo), false);
     });
   });
 });

@@ -23,33 +23,73 @@ function ConfirmationContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get('orderId');
   const queryBranch = searchParams.get('branch');
-  const { getOrder } = useOrders();
+  const { getOrder, isInitialized } = useOrders();
 
   // Retrieve actual order snapshot if orderId is provided
   const order = orderId ? getOrder(orderId) : undefined;
 
-  // Fallback / default data if opened directly without an orderId
-  const displayId = order?.id || orderId || 'ORD-894102';
-  const displayBranch = order?.branchName || queryBranch || 'Aditya Birla Public School, Kharach';
-  const displayDate = order?.createdAt || new Date().toISOString().split('T')[0];
+  if (!isInitialized) {
+    return (
+      <div className="max-w-4xl mx-auto py-12 text-center text-xs text-[#61717B]">
+        Verifying order details...
+      </div>
+    );
+  }
+
+  if (!order) {
+    return (
+      <div className="max-w-4xl mx-auto py-8">
+        <div className="bg-white p-6 sm:p-8 rounded-sm border border-[#DDDCD3] text-center space-y-4">
+          <div className="w-16 h-16 bg-amber-50 text-amber-600 rounded-sm flex items-center justify-center mx-auto ring-8 ring-amber-50/60">
+            <AlertCircle className="w-9 h-9" />
+          </div>
+          <div className="space-y-1.5">
+            <h1 className="text-xl sm:text-2xl font-bold text-[#142C43]">Order Record Not Found</h1>
+            <p className="text-xs sm:text-sm text-[#61717B] max-w-lg mx-auto">
+              We could not find a confirmed order with reference{' '}
+              <strong className="font-mono">{orderId || 'unknown'}</strong> in your active session.
+            </p>
+          </div>
+          <div className="pt-2">
+            <Link
+              href="/orders"
+              className={buttonVariants({
+                variant: 'primary',
+                size: 'md',
+              })}
+            >
+              Go to Order History
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const isDemo = Boolean(order.isDemo);
+  const displayId = order.orderNumber || order.id;
+  const displayBranch = order.branchName || queryBranch || 'School Campus Delivery';
+  const displayDate = order.createdAt || new Date().toISOString().split('T')[0];
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 py-4 sm:py-6">
       {/* Top success card */}
-      <div className="bg-white p-6 sm:p-8 rounded-sm border border-[#DDDCD3]  text-center space-y-4">
+      <div className="bg-white p-6 sm:p-8 rounded-sm border border-[#DDDCD3] text-center space-y-4">
         <div className="w-16 h-16 bg-[#EDF2F1] text-[#28657A] rounded-sm flex items-center justify-center mx-auto ring-8 ring-[#EDF2F1]/60">
           <CheckCircle2 className="w-9 h-9" />
         </div>
 
         <div className="space-y-1.5">
           <span className="text-xs font-bold text-[#28657A] uppercase tracking-wider bg-[#EDF2F1] px-2.5 py-1 rounded-full">
-            Order Confirmed
+            {isDemo ? 'Demo Order Recorded' : 'Order Confirmed'}
           </span>
           <h1 className="text-2xl sm:text-3xl font-bold text-[#142C43] pt-1">
-            Order Confirmed
+            {isDemo ? 'Demo Order Recorded' : 'Order Confirmed'}
           </h1>
           <p className="text-xs sm:text-sm text-[#61717B] max-w-lg mx-auto">
-            Your order has been recorded in this demo session.
+            {isDemo
+              ? 'Your order has been recorded in this demo session.'
+              : 'Thank you for your order. Your purchase has been confirmed and submitted for fulfillment.'}
           </p>
         </div>
 
@@ -71,13 +111,15 @@ function ConfirmationContent() {
           </div>
         </div>
 
-        {/* Prototype demo banner */}
-        <div className="max-w-lg mx-auto p-2.5 bg-amber-50 text-amber-800 rounded-sm border border-amber-200/80 text-[11px] text-left flex items-start gap-2">
-          <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
-          <span>
-            <strong>Demo Mode:</strong> This order has been recorded in your local browser session for testing.
-          </span>
-        </div>
+        {/* Prototype demo banner only for demo orders */}
+        {isDemo && (
+          <div className="max-w-lg mx-auto p-2.5 bg-amber-50 text-amber-800 rounded-sm border border-amber-200/80 text-[11px] text-left flex items-start gap-2">
+            <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
+            <span>
+              <strong>Demo Mode:</strong> This order was created using demo catalog items and recorded in your local browser session for testing.
+            </span>
+          </div>
+        )}
 
         {/* Action Buttons */}
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">

@@ -60,6 +60,11 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
               </span>
               <OrderStatusBadge status={order.status} type="order" />
               <OrderStatusBadge status={order.paymentStatus} type="payment" />
+              {order.isDemo && (
+                <span className="text-[10px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                  Demo
+                </span>
+              )}
             </div>
             <div className="flex items-center gap-2 sm:gap-3 text-[11px] text-[#61717B] mt-1 flex-wrap">
               <span className="flex items-center gap-1">

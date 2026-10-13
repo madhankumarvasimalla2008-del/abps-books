@@ -105,6 +105,11 @@ export default function CustomerOrderDetailPage({
             </h1>
             <OrderStatusBadge status={activeOrder.status} type="order" />
             <OrderStatusBadge status={activeOrder.paymentStatus} type="payment" />
+            {activeOrder.isDemo && (
+              <span className="text-[10px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                Demo Session
+              </span>
+            )}
           </div>
           <p className="text-xs text-[#61717B] flex items-center gap-2 flex-wrap">
             <span className="flex items-center gap-1">

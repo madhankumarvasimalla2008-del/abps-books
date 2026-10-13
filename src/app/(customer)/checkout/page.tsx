@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ShoppingBag, ArrowRight, ShieldCheck } from 'lucide-react';
+import { ShoppingBag, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useOrders } from '@/context/OrderContext';
 import { useAuth } from '@/context/AuthContext';
@@ -26,47 +26,27 @@ export default function CheckoutPage() {
   const { createOrder } = useOrders();
   const { user } = useAuth();
 
-  // Find initial branch
-  const initialBranch =
-    MOCK_BRANCHES.find((b) => b.id === user?.branchId) ||
-    MOCK_BRANCHES[0] || {
-      id: 'b1',
-      name: 'The Aditya Birla Public School, Kharach',
-      city: 'Kosamba',
-      state: 'Gujarat',
-      pincode: '394120',
-      address: 'Birla Cellulosic Campus, Kharach, Kosamba, Gujarat 394120',
-      shippingAddress: {
-        recipientName: 'Priya Desai',
-        phone: '9876543210',
-        addressLine1: 'Birla Cellulosic Campus',
-        addressLine2: 'Post Kharach, Taluka Hansot',
-        city: 'Kosamba',
-        state: 'Gujarat',
-        pincode: '394120',
-      },
-    };
-
-  // Contact Form State
+  // Contact Form State: initialize strictly from authenticated user profile without mock coordinator defaults
   const [contactData, setContactData] = useState<ContactData>({
-    fullName: user?.name || 'Priya Desai',
-    email: user?.email || 'priya.desai@abps.edu',
-    phone: user?.phone?.replace(/\D/g, '') || '9876543210',
+    fullName: user?.name || '',
+    email: user?.email || '',
+    phone: user?.phone?.replace(/\D/g, '') || '',
   });
   const [contactErrors, setContactErrors] = useState<ContactErrors>({});
 
-  // Address Form State
+  // Address Form State: initialize strictly from user's assigned branch or profile without mock coordinator defaults
+  const userBranch = MOCK_BRANCHES.find((b) => b.id === user?.branchId);
   const [addressData, setAddressData] = useState<AddressData>({
-    useBranchAddress: true,
-    selectedBranchId: initialBranch.id,
-    recipientName: initialBranch.shippingAddress?.recipientName || initialBranch.principalName || 'Priya Desai',
-    phone: initialBranch.shippingAddress?.recipientPhone || initialBranch.phone?.replace(/\D/g, '') || '9876543210',
-    addressLine1: initialBranch.shippingAddress?.addressLine1 || initialBranch.address || 'Birla Cellulosic Campus',
-    addressLine2: initialBranch.shippingAddress?.addressLine2 || 'Post Kharach, Taluka Hansot',
-    city: initialBranch.shippingAddress?.city || initialBranch.city || 'Kosamba',
-    state: initialBranch.shippingAddress?.state || initialBranch.state || 'Gujarat',
-    pincode: initialBranch.shippingAddress?.pincode || initialBranch.pincode || '394120',
-    deliveryNotes: 'Deliver during regular working hours (9 AM - 4 PM).',
+    useBranchAddress: Boolean(userBranch),
+    selectedBranchId: userBranch?.id || '',
+    recipientName: user?.name || '',
+    phone: user?.phone?.replace(/\D/g, '') || '',
+    addressLine1: userBranch?.shippingAddress?.addressLine1 || userBranch?.address || '',
+    addressLine2: userBranch?.shippingAddress?.addressLine2 || '',
+    city: userBranch?.shippingAddress?.city || userBranch?.city || '',
+    state: userBranch?.shippingAddress?.state || userBranch?.state || '',
+    pincode: userBranch?.shippingAddress?.pincode || userBranch?.pincode || '',
+    deliveryNotes: '',
   });
   const [addressErrors, setAddressErrors] = useState<AddressErrors>({});
 
@@ -82,6 +62,7 @@ export default function CheckoutPage() {
 
   // Submitting State
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
 
   // Check for invalid items (out of stock or exceeding stock)
   const hasInvalidItems = cart.items.some(
@@ -96,10 +77,24 @@ export default function CheckoutPage() {
   useEffect(() => {
     if (user) {
       setContactData((prev) => ({
-        fullName: prev.fullName || user.name,
+        fullName: prev.fullName || user.name || '',
         email: prev.email || user.email || '',
         phone: prev.phone || user.phone?.replace(/\D/g, '') || '',
       }));
+      setAddressData((prev) => {
+        const uBranch = MOCK_BRANCHES.find((b) => b.id === user.branchId);
+        return {
+          ...prev,
+          recipientName: prev.recipientName || user.name || '',
+          phone: prev.phone || user.phone?.replace(/\D/g, '') || '',
+          selectedBranchId: prev.selectedBranchId || uBranch?.id || '',
+          addressLine1: prev.addressLine1 || uBranch?.shippingAddress?.addressLine1 || uBranch?.address || '',
+          addressLine2: prev.addressLine2 || uBranch?.shippingAddress?.addressLine2 || '',
+          city: prev.city || uBranch?.shippingAddress?.city || uBranch?.city || '',
+          state: prev.state || uBranch?.shippingAddress?.state || uBranch?.state || '',
+          pincode: prev.pincode || uBranch?.shippingAddress?.pincode || uBranch?.pincode || '',
+        };
+      });
     }
   }, [user]);
 
@@ -123,13 +118,14 @@ export default function CheckoutPage() {
       setAddressData((prev) => ({
         ...prev,
         selectedBranchId: branchId,
-        recipientName: branch.shippingAddress?.recipientName || branch.principalName || prev.recipientName,
-        phone: branch.shippingAddress?.recipientPhone?.replace(/\D/g, '') || branch.phone?.replace(/\D/g, '') || prev.phone,
-        addressLine1: branch.shippingAddress?.addressLine1 || branch.address,
+        // Preserve customer's recipientName and phone; never overwrite with mock coordinator
+        recipientName: prev.recipientName || contactData.fullName || user?.name || '',
+        phone: prev.phone || contactData.phone || user?.phone?.replace(/\D/g, '') || '',
+        addressLine1: branch.shippingAddress?.addressLine1 || branch.address || '',
         addressLine2: branch.shippingAddress?.addressLine2 || '',
-        city: branch.shippingAddress?.city || branch.city,
-        state: branch.shippingAddress?.state || branch.state,
-        pincode: branch.shippingAddress?.pincode || branch.pincode,
+        city: branch.shippingAddress?.city || branch.city || '',
+        state: branch.shippingAddress?.state || branch.state || '',
+        pincode: branch.shippingAddress?.pincode || branch.pincode || '',
       }));
       setAddressErrors({});
     } else {
@@ -192,7 +188,7 @@ export default function CheckoutPage() {
     return !hasContactErrors && !hasAddressErrors;
   };
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     if (isSubmitting) return;
 
     if (hasInvalidItems) {
@@ -205,31 +201,36 @@ export default function CheckoutPage() {
     }
 
     setIsSubmitting(true);
+    setSubmissionError(null);
 
-    // Initial state machine: Order created with Pending/Pending
-    const newOrder = createOrder({
-      cart,
-      contactData,
-      addressData,
-      paymentMethod,
-      upiSubMethod: paymentMethod === 'UPI' ? upiSubMethod : undefined,
-      upiApp: paymentMethod === 'UPI' && upiSubMethod === 'intent' ? upiApp : undefined,
-      initialPaymentStatus: 'Pending',
-      initialOrderStatus: 'Pending',
-    });
+    try {
+      const newOrder = await createOrder({
+        cart,
+        contactData,
+        addressData,
+        paymentMethod,
+        upiSubMethod: paymentMethod === 'UPI' ? upiSubMethod : undefined,
+        upiApp: paymentMethod === 'UPI' && upiSubMethod === 'intent' ? upiApp : undefined,
+        initialPaymentStatus: 'Pending',
+        initialOrderStatus: 'Pending',
+      });
 
-    setIsSubmitting(false);
+      setIsSubmitting(false);
 
-    if (paymentMethod === 'Manual Payment') {
-      // Offline/Institutional order can route straight to confirmation
-      clearCart();
-      router.push(
-        `/orders/confirmation?orderId=${encodeURIComponent(newOrder.id)}&branch=${encodeURIComponent(newOrder.branchName)}`
-      );
-    } else {
-      // Launch live interactive payment processing simulation modal
-      setActiveOrderForPayment(newOrder);
-      setIsPaymentModalOpen(true);
+      if (paymentMethod === 'Manual Payment') {
+        // Offline/Institutional order can route straight to confirmation
+        clearCart();
+        router.push(
+          `/orders/confirmation?orderId=${encodeURIComponent(newOrder.id)}&branch=${encodeURIComponent(newOrder.branchName)}`
+        );
+      } else {
+        // Launch live interactive payment processing simulation modal
+        setActiveOrderForPayment(newOrder);
+        setIsPaymentModalOpen(true);
+      }
+    } catch (err: any) {
+      setIsSubmitting(false);
+      setSubmissionError(err?.message || 'Failed to place order. Please check your details and try again.');
     }
   };
 
@@ -282,6 +283,26 @@ export default function CheckoutPage() {
           {cart.items.length} {cart.items.length === 1 ? 'Title' : 'Titles'} • {cart.totalItems} {cart.totalItems === 1 ? 'Copy' : 'Copies'}
         </div>
       </div>
+
+      {/* Submission Error Alert */}
+      {submissionError && (
+        <div
+          role="alert"
+          className="p-4 bg-red-50 border border-red-200 text-red-800 rounded-sm text-xs flex items-center justify-between gap-3 shadow-xs"
+        >
+          <div className="flex items-center gap-2.5">
+            <AlertCircle className="w-4 h-4 text-red-600 shrink-0" aria-hidden="true" />
+            <span className="font-medium">{submissionError}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setSubmissionError(null)}
+            className="text-red-700 hover:text-red-900 font-bold text-xs underline cursor-pointer"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
 
       {/* Cart Validation Alert */}
       <CheckoutValidation cart={cart} />
