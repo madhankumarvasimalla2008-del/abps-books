@@ -39,21 +39,29 @@ export async function resolveOrCreateAuthUser(supabaseUser: SupabaseUser): Promi
     throw new UnauthorizedError('Invalid Supabase user identity: Missing both email and phone number');
   }
 
-  // 1. Check if user already exists in PostgreSQL auth_users by Supabase user.id
-  const [existingUser] = await db
-    .select({
-      id: authUsers.id,
-      email: authUsers.email,
-      fullName: authUsers.fullName,
-      phone: authUsers.phone,
-      isActive: authUsers.isActive,
-      deletedAt: authUsers.deletedAt,
-      emailVerifiedAt: authUsers.emailVerifiedAt,
-      phoneVerifiedAt: authUsers.phoneVerifiedAt,
-    })
-    .from(authUsers)
-    .where(and(eq(authUsers.id, userId), isNull(authUsers.deletedAt)))
-    .limit(1);
+  // 1. Check if user exists in PostgreSQL auth_users and fetch assigned roles concurrently
+  const [[existingUser], assignedRoles] = await Promise.all([
+    db
+      .select({
+        id: authUsers.id,
+        email: authUsers.email,
+        fullName: authUsers.fullName,
+        phone: authUsers.phone,
+        isActive: authUsers.isActive,
+        deletedAt: authUsers.deletedAt,
+        emailVerifiedAt: authUsers.emailVerifiedAt,
+        phoneVerifiedAt: authUsers.phoneVerifiedAt,
+      })
+      .from(authUsers)
+      .where(and(eq(authUsers.id, userId), isNull(authUsers.deletedAt)))
+      .limit(1),
+    db
+      .select({
+        roleId: userRoles.roleId,
+      })
+      .from(userRoles)
+      .where(eq(userRoles.userId, userId)),
+  ]);
 
   if (existingUser) {
     // Account Status Gating: Inactive accounts are denied access
@@ -104,14 +112,7 @@ export async function resolveOrCreateAuthUser(supabaseUser: SupabaseUser): Promi
         .where(eq(authUsers.id, userId));
     }
 
-    // 2. Fetch authoritative roles from user_roles + roles
-    const assignedRoles = await db
-      .select({
-        roleId: userRoles.roleId,
-      })
-      .from(userRoles)
-      .where(eq(userRoles.userId, userId));
-
+    // 2. Authoritative role resolution from user_roles
     let effectiveRole: UserRole = 'customer';
     if (assignedRoles.length > 0) {
       // Pick highest privilege role according to hierarchy

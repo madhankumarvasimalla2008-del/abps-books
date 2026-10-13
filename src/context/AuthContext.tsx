@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { User, Role } from '@/types';
 import { supabaseBrowser } from '@/lib/supabase/client';
 import { getSiteOrigin } from '@/lib/site-url';
@@ -77,11 +77,44 @@ export const DEMO_USERS: Record<Role, User> = {
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const AUTH_PROFILE_CACHE_KEY = 'abps_auth_profile_v1';
+
+function getCachedProfile(userId?: string): User | null {
+  if (typeof window === 'undefined' || typeof localStorage === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(AUTH_PROFILE_CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === 'object') {
+      if (!userId || parsed.id === userId) {
+        return parsed as User;
+      }
+    }
+  } catch {
+    // Ignore storage parse issues
+  }
+  return null;
+}
+
+function setCachedProfile(profile: User | null): void {
+  if (typeof window === 'undefined' || typeof localStorage === 'undefined') return;
+  try {
+    if (profile) {
+      localStorage.setItem(AUTH_PROFILE_CACHE_KEY, JSON.stringify(profile));
+    } else {
+      localStorage.removeItem(AUTH_PROFILE_CACHE_KEY);
+    }
+  } catch {
+    // Ignore quota or private mode issues
+  }
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const activeSessionUserIdRef = useRef<string | null>(null);
 
-  const syncServerSession = useCallback(async (sessionOverride?: { access_token?: string } | null) => {
+  const syncServerSession = useCallback(async (sessionOverride?: { access_token?: string; user?: { id?: string } } | null) => {
     try {
       const headers: Record<string, string> = {};
       let accessToken: string | undefined;
@@ -102,7 +135,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const json = await res.json();
         if (json?.data?.authenticated && json.data.user) {
           const authUser = json.data.user;
-          setUser({
+          // Race guard: If user signed out or switched sessions while request was in-flight, discard response
+          if (activeSessionUserIdRef.current && activeSessionUserIdRef.current !== authUser.userId) {
+            return null;
+          }
+          if (activeSessionUserIdRef.current === null && sessionOverride !== undefined) {
+            return null;
+          }
+          const userObj: User = {
             id: authUser.userId,
             name: authUser.fullName || (authUser.email ? authUser.email.split('@')[0] : null) || authUser.phone || 'ABPS User',
             email: authUser.email || '',
@@ -110,13 +150,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             role: authUser.role as Role,
             branchId: authUser.branchId || undefined,
             createdAt: new Date().toISOString(),
-          });
+          };
+          activeSessionUserIdRef.current = authUser.userId;
+          setUser(userObj);
+          setCachedProfile(userObj);
           return authUser;
         } else {
+          activeSessionUserIdRef.current = null;
           setUser(null);
+          setCachedProfile(null);
         }
       } else {
+        activeSessionUserIdRef.current = null;
         setUser(null);
+        setCachedProfile(null);
       }
     } catch {
       // Offline or network error
@@ -129,6 +176,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     let initialResolutionDone = false;
 
     if (!supabaseBrowser) {
+      activeSessionUserIdRef.current = null;
       setUser(null);
       setIsLoading(false);
       return;
@@ -162,12 +210,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (event === 'INITIAL_SESSION') {
         try {
           if (session?.user) {
+            activeSessionUserIdRef.current = session.user.id;
+            // Instant session restoration from cached profile or Supabase session metadata
+            const cached = getCachedProfile(session.user.id);
+            if (cached) {
+              setUser(cached);
+            } else {
+              const meta = session.user.user_metadata || {};
+              const immediateUser: User = {
+                id: session.user.id,
+                name:
+                  meta.full_name ||
+                  meta.name ||
+                  (session.user.email ? session.user.email.split('@')[0] : null) ||
+                  session.user.phone ||
+                  'ABPS User',
+                email: session.user.email || '',
+                phone: session.user.phone || meta.phone || '',
+                role: (session.user.app_metadata?.role as Role) || 'customer',
+                createdAt: session.user.created_at || new Date().toISOString(),
+              };
+              setUser(immediateUser);
+            }
+            // Immediately resolve loading state: account UI appears with zero skeleton delay
+            markInitialized();
+
+            // Revalidate authoritative database role & branch assignments asynchronously in background
             if (typeof window === 'undefined' || window.location.pathname !== '/reset-password') {
-              await syncServerSession(session);
+              syncServerSession(session).catch(() => {});
             }
           } else {
-            // Check if server-side cookies have a valid session even if browser client hasn't loaded it yet
-            await syncServerSession(null);
+            activeSessionUserIdRef.current = null;
+            // Robust guest detection: only skip /api/auth/me if no auth cookie format exists
+            const hasAuthCookie =
+              typeof document !== 'undefined' &&
+              Boolean(document.cookie) &&
+              (document.cookie.includes('-auth-token') ||
+                document.cookie.includes('sb-') ||
+                document.cookie.includes('supabase'));
+            if (hasAuthCookie) {
+              await syncServerSession(null);
+            } else {
+              setUser(null);
+              setCachedProfile(null);
+            }
+            markInitialized();
           }
         } finally {
           markInitialized();
@@ -177,12 +264,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         if (session?.user) {
+          activeSessionUserIdRef.current = session.user.id;
           if (typeof window === 'undefined' || window.location.pathname !== '/reset-password') {
             await syncServerSession(session);
           }
         }
         markInitialized();
       } else if (event === 'SIGNED_OUT') {
+        activeSessionUserIdRef.current = null;
+        setCachedProfile(null);
         setUser(null);
         markInitialized();
       }
@@ -348,6 +438,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async () => {
+    activeSessionUserIdRef.current = null;
+    setCachedProfile(null);
     if (supabaseBrowser) {
       try {
         await supabaseBrowser.auth.signOut();

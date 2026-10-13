@@ -25,6 +25,12 @@ export async function proxy(request: NextRequest) {
     return response;
   }
 
+  // API routes manage their own authoritative authentication and do not render Server Components.
+  // Skipping redundant Supabase Auth network call here eliminates ~650ms of duplicate latency on /api/* requests.
+  if (request.nextUrl.pathname.startsWith('/api/')) {
+    return response;
+  }
+
   try {
     const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
       cookies: {

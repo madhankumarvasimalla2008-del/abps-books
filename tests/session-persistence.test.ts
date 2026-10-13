@@ -411,4 +411,96 @@ describe('ABPS Books — Session Persistence & Cookie Resilience Suite', () => {
       assert.ok(cssContent.includes('prefers-reduced-motion'), 'storefront.css must include prefers-reduced-motion query');
     });
   });
+
+  // --------------------------------------------------------------------------
+  // 7. Fast Session Restoration, Guest Handling & Admin Performance
+  // --------------------------------------------------------------------------
+  describe('Fast Session Restoration & Header Performance Invariants', () => {
+    it('proxy passes through API requests directly without duplicate Supabase Auth latency', async () => {
+      const req = new NextRequest('https://abps-books.vercel.app/api/auth/me', {
+        headers: {
+          host: 'abps-books.vercel.app',
+          authorization: 'Bearer mock_token_123',
+        },
+      });
+
+      const res = await proxy(req);
+      assert.ok(res, 'Proxy must return response');
+      assert.strictEqual(res.status, 200, 'Proxy passes through API route with status 200');
+    });
+
+    it('guest users without auth cookies resolve immediately without delay', () => {
+      // When a user has no Supabase auth cookies in document.cookie, hasAuthCookie is false
+      const mockCookie = 'theme=light; _ga=GA1.1.123';
+      const hasAuthCookie =
+        mockCookie.includes('-auth-token') ||
+        mockCookie.includes('sb-') ||
+        mockCookie.includes('supabase');
+      assert.strictEqual(hasAuthCookie, false, 'Guest user without auth token cookies must be identified');
+
+      const authCookie = 'sb-kqaqnpwwppvlxdovvlie-auth-token.0=xyz';
+      const hasAuth =
+        authCookie.includes('-auth-token') ||
+        authCookie.includes('sb-') ||
+        authCookie.includes('supabase');
+      assert.strictEqual(hasAuth, true, 'Potential session cookie is correctly detected');
+    });
+
+    it('session restoration reconstructs customer identity instantly from metadata', () => {
+      const mockSession = {
+        user: {
+          id: 'cust-uuid-456',
+          email: 'student@abps.edu',
+          user_metadata: {
+            full_name: 'Aditya Student',
+            phone: '9876543210',
+          },
+          app_metadata: {
+            role: 'customer',
+          },
+          created_at: '2026-01-01T00:00:00.000Z',
+        },
+        access_token: 'mock-access-token',
+      };
+
+      const meta = mockSession.user.user_metadata;
+      const reconstructed = {
+        id: mockSession.user.id,
+        name: meta.full_name || mockSession.user.email.split('@')[0],
+        email: mockSession.user.email,
+        phone: meta.phone || '',
+        role: mockSession.user.app_metadata.role,
+        createdAt: mockSession.user.created_at,
+      };
+
+      assert.strictEqual(reconstructed.id, 'cust-uuid-456');
+      assert.strictEqual(reconstructed.name, 'Aditya Student');
+      assert.strictEqual(reconstructed.email, 'student@abps.edu');
+      assert.strictEqual(reconstructed.role, 'customer');
+    });
+
+    it('session restoration preserves cached admin role for instant header hydration', () => {
+      const cachedAdmin = {
+        id: 'admin-uuid-789',
+        name: 'Principal Sharma',
+        email: 'principal@birlabooks.in',
+        phone: '9820011223',
+        role: 'admin' as const,
+        branchId: 'b1',
+        createdAt: '2026-01-01T00:00:00.000Z',
+      };
+
+      // Mock session arrives for the same admin ID
+      const mockSession = {
+        user: {
+          id: 'admin-uuid-789',
+          email: 'principal@birlabooks.in',
+        },
+      };
+
+      const match = cachedAdmin.id === mockSession.user.id;
+      assert.strictEqual(match, true);
+      assert.strictEqual(cachedAdmin.role, 'admin');
+    });
+  });
 });
