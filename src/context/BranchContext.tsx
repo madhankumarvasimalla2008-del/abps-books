@@ -2,7 +2,6 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { Branch, Address } from '@/types';
-import { MOCK_BRANCHES } from '@/data/mockData';
 
 export interface CreateBranchInput {
   name: string;
@@ -71,15 +70,16 @@ interface BranchContextType {
 
 const BranchContext = createContext<BranchContextType | undefined>(undefined);
 
-function mapApiBranchToFrontend(item: any): Branch {
+export function mapApiBranchToFrontend(item: any): Branch {
   const code = item.code || 'ABPS-MAIN';
   const name = item.name || 'Aditya Birla Public School';
-  const city = item.city || 'Kharach';
-  const state = item.state || 'Gujarat';
-  const pincode = item.pincode || '394120';
-  const addressStr = item.address || `${item.addressLine1 || ''}, ${city}, ${state} ${pincode}`.trim();
-  const phone = item.contactPhone || item.phone || '02646-276000';
-  const email = item.contactEmail || item.email || 'info@abps.edu';
+  const city = item.city || '';
+  const state = item.state || '';
+  const pincode = item.pincode || '';
+  const addressParts = [item.addressLine1, item.addressLine2, `${city}, ${state} ${pincode}`.trim()].filter(Boolean);
+  const addressStr = item.address || addressParts.join(', ');
+  const phone = item.contactPhone || item.phone || '';
+  const email = item.contactEmail || item.email || '';
   const affiliation = `CBSE-${code}`;
 
   return {
@@ -111,6 +111,7 @@ function mapApiBranchToFrontend(item: any): Branch {
       recipientName: item.principalName || name,
       phone,
       addressLine1: item.addressLine1 || addressStr,
+      addressLine2: item.addressLine2 || '',
       city,
       state,
       pincode,
@@ -121,38 +122,34 @@ function mapApiBranchToFrontend(item: any): Branch {
 }
 
 export function BranchProvider({ children }: { children: React.ReactNode }) {
-  const [branchesList, setBranchesList] = useState<Branch[]>(MOCK_BRANCHES);
+  const [branchesList, setBranchesList] = useState<Branch[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const refreshBranches = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch('/api/branches?pageSize=100');
+      const response = await fetch('/api/branches?status=active&pageSize=100');
       if (response.ok) {
         const json = await response.json();
         const rawList = json?.data || (Array.isArray(json) ? json : []);
-        if (Array.isArray(rawList) && rawList.length > 0) {
+        if (Array.isArray(rawList)) {
           const mapped = rawList.map(mapApiBranchToFrontend);
           setBranchesList(mapped);
-        } else if (process.env.NODE_ENV === 'production') {
-          setBranchesList([]);
         } else {
-          setBranchesList(MOCK_BRANCHES);
+          setBranchesList([]);
         }
       } else {
-        if (process.env.NODE_ENV !== 'production') {
-          setBranchesList(MOCK_BRANCHES);
-        }
+        const errJson = await response.json().catch(() => ({}));
+        const errMsg = errJson?.error?.message || errJson?.message || response.statusText || 'Failed to load school branches';
+        setError(errMsg);
+        setBranchesList([]);
       }
     } catch (err: any) {
-      console.warn('Branch list API fetch fallback:', err.message);
-      setError(err.message || 'Error loading branches');
-      if (process.env.NODE_ENV !== 'production') {
-        setBranchesList(MOCK_BRANCHES);
-      }
+      setError(err?.message || 'Error connecting to branch service');
+      setBranchesList([]);
     } finally {
       setIsLoading(false);
       setIsInitialized(true);

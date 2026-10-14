@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ShoppingBag, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
+import { ShoppingBag, ArrowRight, AlertCircle } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
-import { useOrders } from '@/context/OrderContext';
+import { useOrders, isValidUuid } from '@/context/OrderContext';
 import { useAuth } from '@/context/AuthContext';
-import { MOCK_BRANCHES } from '@/data/mockData';
+import { useBranches } from '@/context/BranchContext';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { CheckoutContactForm, ContactData, ContactErrors } from '@/components/customer/checkout/CheckoutContactForm';
 import { CheckoutAddressForm, AddressData, AddressErrors } from '@/components/customer/checkout/CheckoutAddressForm';
@@ -23,9 +23,26 @@ import { ReverseGeocodeResult } from '@/lib/location/types';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cart, clearCart, isInitialized } = useCart();
+  const { cart, clearCart } = useCart();
   const { createOrder } = useOrders();
   const { user } = useAuth();
+  const {
+    branches: rawBranches,
+    isLoading: isBranchesLoading,
+    error: branchesError,
+    refreshBranches,
+  } = useBranches();
+
+  // Filter only active branches that the user is authorized to select
+  const authorizedBranches = useMemo(() => {
+    if (!Array.isArray(rawBranches)) return [];
+    const active = rawBranches.filter((b) => b.status === 'active');
+    // Staff roles (branch_admin, warehouse) are strictly scoped to their assigned branch
+    if (user?.branchId && (user.role === 'branch_admin' || user.role === 'warehouse')) {
+      return active.filter((b) => b.id === user.branchId);
+    }
+    return active;
+  }, [rawBranches, user]);
 
   // Contact Form State: initialize strictly from authenticated user profile without mock coordinator defaults
   const [contactData, setContactData] = useState<ContactData>({
@@ -35,18 +52,17 @@ export default function CheckoutPage() {
   });
   const [contactErrors, setContactErrors] = useState<ContactErrors>({});
 
-  // Address Form State: initialize strictly from user's assigned branch or profile without mock coordinator defaults
-  const userBranch = MOCK_BRANCHES.find((b) => b.id === user?.branchId);
+  // Address Form State: initialize empty or from authenticated user profile without synthetic mock branches
   const [addressData, setAddressData] = useState<AddressData>({
-    useBranchAddress: Boolean(userBranch),
-    selectedBranchId: userBranch?.id || '',
+    useBranchAddress: false,
+    selectedBranchId: '',
     recipientName: user?.name || '',
     phone: user?.phone?.replace(/\D/g, '') || '',
-    addressLine1: userBranch?.shippingAddress?.addressLine1 || userBranch?.address || '',
-    addressLine2: userBranch?.shippingAddress?.addressLine2 || '',
-    city: userBranch?.shippingAddress?.city || userBranch?.city || '',
-    state: userBranch?.shippingAddress?.state || userBranch?.state || '',
-    pincode: userBranch?.shippingAddress?.pincode || userBranch?.pincode || '',
+    addressLine1: '',
+    addressLine2: '',
+    city: '',
+    state: '',
+    pincode: '',
     deliveryNotes: '',
   });
   const [addressErrors, setAddressErrors] = useState<AddressErrors>({});
@@ -74,7 +90,12 @@ export default function CheckoutPage() {
         item.quantity > item.product.stockQuantity)
   );
 
-  // Sync with auth user on load if available
+  // Check whether cart contains demonstration items that cannot be fulfilled through live delivery
+  const hasDemoProducts = cart.items.some(
+    (item) => !isValidUuid(item.product.id)
+  );
+
+  // Sync contact details with auth user on load
   useEffect(() => {
     if (user) {
       setContactData((prev) => ({
@@ -82,22 +103,71 @@ export default function CheckoutPage() {
         email: prev.email || user.email || '',
         phone: prev.phone || user.phone?.replace(/\D/g, '') || '',
       }));
+    }
+  }, [user]);
+
+  // Sync assigned branch from database when authorized branches load
+  useEffect(() => {
+    if (user && authorizedBranches.length > 0) {
       setAddressData((prev) => {
-        const uBranch = MOCK_BRANCHES.find((b) => b.id === user.branchId);
+        const matchingBranch = user.branchId
+          ? authorizedBranches.find((b) => b.id === user.branchId)
+          : undefined;
+
+        if (matchingBranch && !prev.selectedBranchId) {
+          return {
+            ...prev,
+            recipientName: prev.recipientName || user.name || '',
+            phone: prev.phone || user.phone?.replace(/\D/g, '') || '',
+            useBranchAddress: true,
+            selectedBranchId: matchingBranch.id,
+            addressLine1:
+              prev.addressLine1 ||
+              matchingBranch.shippingAddress?.addressLine1 ||
+              matchingBranch.address ||
+              '',
+            addressLine2:
+              prev.addressLine2 || matchingBranch.shippingAddress?.addressLine2 || '',
+            city:
+              prev.city ||
+              matchingBranch.shippingAddress?.city ||
+              matchingBranch.city ||
+              '',
+            state:
+              prev.state ||
+              matchingBranch.shippingAddress?.state ||
+              matchingBranch.state ||
+              '',
+            pincode:
+              prev.pincode ||
+              matchingBranch.shippingAddress?.pincode ||
+              matchingBranch.pincode ||
+              '',
+          };
+        }
+
         return {
           ...prev,
           recipientName: prev.recipientName || user.name || '',
           phone: prev.phone || user.phone?.replace(/\D/g, '') || '',
-          selectedBranchId: prev.selectedBranchId || uBranch?.id || '',
-          addressLine1: prev.addressLine1 || uBranch?.shippingAddress?.addressLine1 || uBranch?.address || '',
-          addressLine2: prev.addressLine2 || uBranch?.shippingAddress?.addressLine2 || '',
-          city: prev.city || uBranch?.shippingAddress?.city || uBranch?.city || '',
-          state: prev.state || uBranch?.shippingAddress?.state || uBranch?.state || '',
-          pincode: prev.pincode || uBranch?.shippingAddress?.pincode || uBranch?.pincode || '',
         };
       });
     }
-  }, [user]);
+  }, [user, authorizedBranches]);
+
+  // If a previously selected branch is no longer in authorized branches (e.g. became inactive), clear it
+  useEffect(() => {
+    if (authorizedBranches.length > 0 && addressData.selectedBranchId) {
+      const exists = authorizedBranches.some((b) => b.id === addressData.selectedBranchId);
+      if (!exists) {
+        setAddressData((prev) => ({
+          ...prev,
+          selectedBranchId: '',
+          useBranchAddress: false,
+        }));
+      }
+    }
+  }, [authorizedBranches, addressData.selectedBranchId]);
 
   const handleContactChange = (field: keyof ContactData, value: string) => {
     setContactData((prev) => ({ ...prev, [field]: value }));
@@ -125,12 +195,23 @@ export default function CheckoutPage() {
   };
 
   const handleBranchSelect = (branchId: string) => {
-    const branch = MOCK_BRANCHES.find((b) => b.id === branchId);
+    if (!branchId) {
+      // Clear branch selection while preserving customer's entered recipient, phone, and address
+      setAddressData((prev) => ({
+        ...prev,
+        selectedBranchId: '',
+        useBranchAddress: false,
+      }));
+      return;
+    }
+
+    const branch = authorizedBranches.find((b) => b.id === branchId);
     if (branch) {
       setAddressData((prev) => ({
         ...prev,
-        selectedBranchId: branchId,
-        // Preserve customer's recipientName and phone; never overwrite with mock coordinator
+        selectedBranchId: branch.id,
+        useBranchAddress: true,
+        // Strictly preserve customer's recipientName and phone; never overwrite with mock coordinator/principal
         recipientName: prev.recipientName || contactData.fullName || user?.name || '',
         phone: prev.phone || contactData.phone || user?.phone?.replace(/\D/g, '') || '',
         addressLine1: branch.shippingAddress?.addressLine1 || branch.address || '',
@@ -139,9 +220,16 @@ export default function CheckoutPage() {
         state: branch.shippingAddress?.state || branch.state || '',
         pincode: branch.shippingAddress?.pincode || branch.pincode || '',
       }));
-      setAddressErrors({});
+      setAddressErrors((prev) => ({
+        ...prev,
+        selectedBranchId: undefined,
+        addressLine1: undefined,
+        city: undefined,
+        state: undefined,
+        pincode: undefined,
+      }));
     } else {
-      setAddressData((prev) => ({ ...prev, selectedBranchId: '' }));
+      setAddressData((prev) => ({ ...prev, selectedBranchId: '', useBranchAddress: false }));
     }
   };
 
@@ -162,6 +250,16 @@ export default function CheckoutPage() {
     const phoneDigits = contactData.phone.replace(/\D/g, '');
     if (!phoneDigits || phoneDigits.length !== 10) {
       cErrors.phone = 'Please enter a valid 10-digit mobile number';
+    }
+
+    // Validate Branch Selection: Real database UUID is required for order fulfillment
+    if (!addressData.selectedBranchId || !isValidUuid(addressData.selectedBranchId)) {
+      aErrors.selectedBranchId = 'Please select a valid ABPS school branch for campus delivery';
+    } else {
+      const isAuthorized = authorizedBranches.some((b) => b.id === addressData.selectedBranchId);
+      if (!isAuthorized) {
+        aErrors.selectedBranchId = 'Selected school branch is not active or authorized for your account';
+      }
     }
 
     // Validate Address
@@ -204,6 +302,14 @@ export default function CheckoutPage() {
     if (isSubmitting) return;
 
     if (hasInvalidItems) {
+      return;
+    }
+
+    if (hasDemoProducts) {
+      setSubmissionError(
+        'Your cart contains demonstration catalog items that cannot be fulfilled through the live branch delivery system. Please remove demo books from your cart before placing an order.'
+      );
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
@@ -316,6 +422,27 @@ export default function CheckoutPage() {
         </div>
       )}
 
+      {/* Demo Products Warning Alert */}
+      {hasDemoProducts && (
+        <div
+          role="alert"
+          className="p-4 bg-amber-50 border border-amber-300 text-amber-900 rounded-sm text-xs flex items-center justify-between gap-3 shadow-xs"
+        >
+          <div className="flex items-center gap-2.5">
+            <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" aria-hidden="true" />
+            <span className="font-medium">
+              Your cart contains demonstration catalog items that cannot be fulfilled through the live branch delivery system. Please remove demo books from your cart before placing an order.
+            </span>
+          </div>
+          <Link
+            href="/cart"
+            className="text-amber-800 hover:text-amber-950 font-bold text-xs underline cursor-pointer shrink-0"
+          >
+            Review Cart
+          </Link>
+        </div>
+      )}
+
       {/* Cart Validation Alert */}
       <CheckoutValidation cart={cart} />
 
@@ -335,6 +462,10 @@ export default function CheckoutPage() {
             onChange={handleAddressChange}
             onBranchSelect={handleBranchSelect}
             onLocationAutofill={handleLocationAutofill}
+            branches={authorizedBranches}
+            isBranchesLoading={isBranchesLoading}
+            branchesError={branchesError}
+            onRefreshBranches={refreshBranches}
           />
 
           <CheckoutOrderReview cart={cart} />
@@ -356,7 +487,7 @@ export default function CheckoutPage() {
           <CheckoutSummary
             cart={cart}
             isSubmitting={isSubmitting}
-            hasErrors={hasInvalidItems}
+            hasErrors={hasInvalidItems || hasDemoProducts}
             onSubmit={handlePlaceOrder}
           />
         </div>
@@ -374,7 +505,7 @@ export default function CheckoutPage() {
             <Button
               type="button"
               onClick={handlePlaceOrder}
-              disabled={isSubmitting || hasInvalidItems}
+              disabled={isSubmitting || hasInvalidItems || hasDemoProducts}
               isLoading={isSubmitting}
               variant="primary"
               size="md"

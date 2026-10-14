@@ -44,6 +44,7 @@ export interface CreateOrderInput {
   poNumber?: string;
   initialPaymentStatus?: PaymentStatus;
   initialOrderStatus?: OrderStatus;
+  allowDemoFallback?: boolean;
 }
 
 export interface ConfirmPaymentInput {
@@ -638,7 +639,22 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
         return realOrder;
       }
 
-      // Explicit Demo Order Path: Never send placeholder UUIDs to the server API
+      // Explicit Demo Order Path: Never silently trigger demo orders in production checkout
+      if (process.env.NODE_ENV === 'production' || !input.allowDemoFallback) {
+        if (!isValidUuid(user?.id)) {
+          throw new Error('Please sign in with a verified account to place your delivery order.');
+        }
+        if (!isValidUuid(addressData.selectedBranchId)) {
+          throw new Error('Please select a valid ABPS school branch for order fulfillment.');
+        }
+        if (cart.items.some((ci) => !isValidUuid(ci.product?.id))) {
+          throw new Error(
+            'Your cart contains demonstration items that cannot be purchased for delivery. Please remove demo books from your cart before proceeding.'
+          );
+        }
+        throw new Error('This order cannot be submitted for real delivery. Please check your order details.');
+      }
+
       const orderItems: OrderItem[] = cart.items.map((item, idx) => ({
         id: `oi-${Date.now()}-${idx}`,
         productId: item.product.id,
@@ -665,7 +681,7 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
         customerName: contactData.fullName,
         customerEmail: contactData.email,
         customerPhone: contactData.phone,
-        branchId: activeBranch.id,
+        branchId: addressData.selectedBranchId || activeBranch.id,
         branchName: activeBranch.name,
         branchCode: activeBranch.code || 'ABPS-DEMO',
         items: orderItems,

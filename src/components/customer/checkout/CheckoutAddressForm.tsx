@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   MapPin,
   Building2,
@@ -12,7 +12,8 @@ import {
 } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { MOCK_BRANCHES } from '@/data/mockData';
+import { Branch } from '@/types';
+import { useBranches } from '@/context/BranchContext';
 import {
   getUserCurrentCoordinates,
   resolveAddressFromCoordinates,
@@ -40,6 +41,7 @@ export interface AddressErrors {
   city?: string;
   state?: string;
   pincode?: string;
+  selectedBranchId?: string;
 }
 
 export interface CheckoutAddressFormProps {
@@ -48,6 +50,10 @@ export interface CheckoutAddressFormProps {
   onChange: (field: keyof AddressData, value: string | boolean) => void;
   onBranchSelect: (branchId: string) => void;
   onLocationAutofill?: (result: ReverseGeocodeResult) => void;
+  branches?: Branch[];
+  isBranchesLoading?: boolean;
+  branchesError?: string | null;
+  onRefreshBranches?: () => void;
 }
 
 export const CheckoutAddressForm: React.FC<CheckoutAddressFormProps> = ({
@@ -56,7 +62,28 @@ export const CheckoutAddressForm: React.FC<CheckoutAddressFormProps> = ({
   onChange,
   onBranchSelect,
   onLocationAutofill,
+  branches: branchesProp,
+  isBranchesLoading: isBranchesLoadingProp,
+  branchesError: branchesErrorProp,
+  onRefreshBranches: onRefreshBranchesProp,
 }) => {
+  const branchContext = useBranches();
+  const rawBranches = branchesProp ?? branchContext.branches;
+  const isBranchesLoading = isBranchesLoadingProp ?? branchContext.isLoading ?? false;
+  const branchesError = branchesErrorProp ?? branchContext.error ?? null;
+  const onRefreshBranches = onRefreshBranchesProp ?? branchContext.refreshBranches;
+
+  // Filter only active branches
+  const activeBranches = useMemo(
+    () => (Array.isArray(rawBranches) ? rawBranches.filter((b) => b.status === 'active') : []),
+    [rawBranches]
+  );
+
+  const activeBranch = useMemo(
+    () => activeBranches.find((b) => b.id === data.selectedBranchId),
+    [activeBranches, data.selectedBranchId]
+  );
+
   const [isDetectingLocation, setIsDetectingLocation] = useState(false);
   const [locationNotice, setLocationNotice] = useState<GeolocationNotice | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
@@ -121,15 +148,24 @@ export const CheckoutAddressForm: React.FC<CheckoutAddressFormProps> = ({
     }
   };
 
-  const branchOptions = [
-    { value: '', label: 'Select Institutional Branch (Optional Autofill)' },
-    ...MOCK_BRANCHES.map((b) => ({
-      value: b.id,
-      label: `${b.name} (${b.city}, ${b.state})`,
-    })),
-  ];
-
-  const activeBranch = MOCK_BRANCHES.find((b) => b.id === data.selectedBranchId);
+  const branchOptions = useMemo(() => {
+    if (isBranchesLoading) {
+      return [{ value: '', label: 'Loading verified school branches...' }];
+    }
+    if (branchesError) {
+      return [{ value: '', label: 'Unable to load school branches' }];
+    }
+    if (activeBranches.length === 0) {
+      return [{ value: '', label: 'No school branches available' }];
+    }
+    return [
+      { value: '', label: 'Select an ABPS school branch...' },
+      ...activeBranches.map((b) => ({
+        value: b.id,
+        label: `${b.name} (${b.city}, ${b.state})`,
+      })),
+    ];
+  }, [isBranchesLoading, branchesError, activeBranches]);
 
   return (
     <div className="store-form-section space-y-5">
@@ -228,18 +264,65 @@ export const CheckoutAddressForm: React.FC<CheckoutAddressFormProps> = ({
 
       {/* Preset Branch Selector Convenience */}
       <div className="space-y-3">
+        {branchesError && (
+          <div
+            role="alert"
+            className="p-3 bg-red-50 border border-red-200 text-red-900 rounded-sm text-xs flex items-center justify-between gap-2 shadow-xs animate-in fade-in duration-150"
+          >
+            <div className="flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+              <div>
+                <span className="font-semibold text-red-900 block">Unable to load school branches</span>
+                <p className="text-[11px] text-red-700">{branchesError}</p>
+              </div>
+            </div>
+            {onRefreshBranches && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={onRefreshBranches}
+                className="text-xs h-7 px-2.5 bg-white hover:bg-red-50 border-red-200 text-red-800 shrink-0"
+              >
+                Retry
+              </Button>
+            )}
+          </div>
+        )}
+
+        {!isBranchesLoading && !branchesError && activeBranches.length === 0 && (
+          <div
+            role="status"
+            className="p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-sm text-xs flex items-center gap-2 shadow-xs"
+          >
+            <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+            <span>No active school branches available at this time. Please enter delivery address manually or contact support.</span>
+          </div>
+        )}
+
         <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-2 p-3 bg-[#FAF8F3] rounded-sm border border-[#DDDCD3]">
           <div className="flex items-center gap-2">
             <Building2 className="w-4 h-4 text-[#28657A] shrink-0" />
             <span className="text-xs font-semibold text-[#142C43]">
               Prefill address from branch:
             </span>
+            {isBranchesLoading && (
+              <span className="text-[11px] text-[#526570] flex items-center gap-1 ml-1">
+                <Loader2 className="w-3 h-3 animate-spin text-[#28657A]" />
+                <span className="hidden sm:inline">Loading...</span>
+              </span>
+            )}
           </div>
-          <div className="w-full xl:w-64">
+          <div className="w-full xl:w-72">
             <select
               value={data.selectedBranchId}
               onChange={(e) => onBranchSelect(e.target.value)}
-              className="w-full px-3 py-1.5 text-xs bg-white border border-[#DDDCD3] rounded-sm focus:outline-none focus:ring-2 focus:ring-[#28657A] font-medium text-[#142C43]"
+              disabled={isBranchesLoading || Boolean(branchesError) || activeBranches.length === 0}
+              className={`w-full px-3 py-1.5 text-xs bg-white border rounded-sm focus:outline-none focus:ring-2 font-medium text-[#142C43] transition-colors ${
+                errors.selectedBranchId
+                  ? 'border-red-500 focus:ring-red-400 bg-red-50/20'
+                  : 'border-[#DDDCD3] focus:ring-[#28657A]'
+              } ${isBranchesLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
               aria-label="Select branch to prefill address"
             >
               {branchOptions.map((opt) => (
@@ -248,17 +331,32 @@ export const CheckoutAddressForm: React.FC<CheckoutAddressFormProps> = ({
                 </option>
               ))}
             </select>
+            {errors.selectedBranchId && (
+              <p className="text-[11px] text-red-600 font-medium mt-1">
+                {errors.selectedBranchId}
+              </p>
+            )}
           </div>
         </div>
 
         {activeBranch && (
-          <div className="p-3 bg-[#EDF2F1]/60 rounded-sm border border-[#DDDCD3] text-xs flex items-start gap-2.5 text-[#142C43]">
+          <div className="p-3 bg-[#EDF2F1]/60 rounded-sm border border-[#DDDCD3] text-xs flex items-start gap-2.5 text-[#142C43] animate-in fade-in duration-150">
             <CheckCircle2 className="w-4 h-4 text-[#28657A] shrink-0 mt-0.5" />
-            <div className="space-y-0.5">
-              <span className="font-bold text-[#142C43] block">{activeBranch.name}</span>
-              <p className="text-[#526570] text-[11px]">
-                {activeBranch.address}
+            <div className="space-y-0.5 flex-1 min-w-0">
+              <div className="flex items-center justify-between gap-2">
+                <span className="font-bold text-[#142C43]">{activeBranch.name}</span>
+                <span className="text-[10px] font-mono font-semibold bg-[#28657A]/10 text-[#28657A] px-1.5 py-0.5 rounded-xs">
+                  {activeBranch.code}
+                </span>
+              </div>
+              <p className="text-[#526570] text-[11px] leading-relaxed">
+                {activeBranch.address || activeBranch.shippingAddress?.addressLine1}
               </p>
+              {activeBranch.city && (
+                <p className="text-[#526570] text-[10px]">
+                  Zone: {activeBranch.zone || 'Central'} • {activeBranch.city}, {activeBranch.state} - {activeBranch.pincode}
+                </p>
+              )}
             </div>
           </div>
         )}

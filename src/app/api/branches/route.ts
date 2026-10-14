@@ -7,11 +7,16 @@ import { handleApiError, paginatedResponse, successResponse } from '@/server/uti
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
+    const statusParam = searchParams.get('status');
+    const isActiveParam = searchParams.get('isActive');
+    const resolvedStatus = statusParam || (isActiveParam === 'true' ? 'active' : isActiveParam === 'false' ? 'inactive' : undefined);
+
     const rawParams = {
       search: searchParams.get('search') || undefined,
       city: searchParams.get('city') || undefined,
       state: searchParams.get('state') || undefined,
-      isActive: searchParams.get('isActive') === null ? undefined : searchParams.get('isActive') === 'true',
+      zone: searchParams.get('zone') || undefined,
+      status: resolvedStatus || undefined,
       page: searchParams.get('page') || undefined,
       pageSize: searchParams.get('pageSize') || undefined,
     };
